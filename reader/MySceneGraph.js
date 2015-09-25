@@ -96,6 +96,10 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 		return "INITIALS element is missing.";
 	}
 
+	if(elemsList.length != 1){
+		return "INITIALS element is missing or there is more than one.";
+	}
+
 	// FRUSTRUM
 	var frustum = elemsList.getElementsByTagName('frustum');
 
@@ -108,6 +112,8 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 	this.fnear = this.reader.getItem(f, 'near');
 	this.ffar = this.reader.getItem(f,'far');
 
+	console.log("Read INITIALS/frustum item with value near "+this.fnear + "and value far " + this.ffar);
+
 	// TRANSLATE
 	var translate = elemsList.getElementsByTagName('translate');
 
@@ -119,17 +125,33 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 
 	this.tx = this.reader.getItem(t, 'x');
 	this.ty = this.reader.getItem(t, 'y');
-	this.ty = this.reader.getItem(t, 'z');
+	this.tz = this.reader.getItem(t, 'z');
+
+	console.log("Read INITIALS/translate item with value x "+this.tx + ", value y " + this.ty + " and value z " + this.tz);
 
 	// ROTATION
 	var rotation = elemsList.getElementsByTagName('rotation');
 
 	if(rotation.length != 3){
-		return "the 3 rotation elements are missing.";
+		return "The 3 rotation elements are missing.";
 	}
 	var r1 = rotation[0];
+	this.r1axis = this.reader.getItem(r1, 'axis');
+	this.r1angle = this.reader.getItem(r1, 'angle');
+
+	console.log("Read INITIALS/rotation item with value axis "+this.r1axis + "and value angle " + this.r1angle);
+
 	var r2 = rotation[1];
+	this.r2axis = this.reader.getItem(r2, 'axis');
+	this.r2angle = this.reader.getItem(r2, 'angle');
+
+	console.log("Read INITIALS/rotation item with value axis "+this.r2axis + "and value angle " + this.r2angle);
+
 	var r3 = rotation[2];
+	this.r3axis = this.reader.getItem(r3, 'axis');
+	this.r3angle = this.reader.getItem(r3, 'angle');
+
+	console.log("Read INITIALS/rotation item with value axis "+this.r3axis + "and value angle " + this.r3angle);
 	
 	// SCALE
 	var scale = elemsList.getElementsByTagName('scale');
@@ -138,6 +160,15 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 		return "scale element is missing or there is more than one";
 	} 
 
+	var sc = scale[0];
+
+	this.sx = this.reader.getItem(sc,'sx');
+	this.sy = this.reader.getItem(sc,'sy');
+	this.sz = this.reader.getItem(sc,'sz');
+
+	console.log("Read INITIALS/scale item with value x "+this.sx + ", value y " + this.sy + " and value z " + this.sz);
+
+
 	// REFERENCE
 	var reference = elemsList.getElementsByTagName('reference');
 
@@ -145,7 +176,11 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 		return "reference element is missing or there is more than one";
 	} 
 
+	var ref = reference[0];
 
+	this.rlength = this.reader.getItem(ref,'length');
+
+	console.log("Read INITIALS/reference item with value axis "+this.rlength);
 }
 
 /*
