@@ -98,7 +98,7 @@ MySceneGraph.prototype.parseGlobalsExample= function(rootElement) {
 */
 MySceneGraph.prototype.parseInitials = function(rootElement){
 
-	var elemsList =  rootElement.getElementsByTagName('initials');
+	var elemsList =  rootElement.getElementsByTagName('INITIALS');
 	if (elemsList == null) {
 		return "INITIALS element is missing.";
 	}
