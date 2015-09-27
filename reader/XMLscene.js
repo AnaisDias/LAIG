@@ -20,6 +20,11 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+	//added code for application defaults
+    this.gl.frontFace(this.gl.CCW);
+    this.gl.cullFace(this.gl.BACK);
+
+
 	this.axis=new CGFaxis(this);
 };
 

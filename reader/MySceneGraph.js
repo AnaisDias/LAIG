@@ -34,6 +34,13 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}	
 
+	var error = this.parseInitials(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
 	this.loadedOk=true;
 	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
@@ -91,8 +98,8 @@ MySceneGraph.prototype.parseGlobalsExample= function(rootElement) {
 */
 MySceneGraph.prototype.parseInitials = function(rootElement){
 
-	var elemsList =  rootElement.getElementsByTagName('INITIALS');
-	if (elemsList == null || tempList.length == 0) {
+	var elemsList =  rootElement.getElementsByTagName('initials');
+	if (elemsList == null) {
 		return "INITIALS element is missing.";
 	}
 
@@ -101,87 +108,157 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 	}
 
 	// FRUSTRUM
-	var frustum = elemsList.getElementsByTagName('frustum');
+
+	this.initials=[];
+
+	// iterate over every element
+	var nnodes=elemsList[0].children.length;
+	if(nnodes != 7){
+		return "INITIALS element must have exactly 7 children.";
+	}
+
+	var frustum = elemsList[0].children[0];
+
+/*	for (var i=0; i< nnodes; i++)
+	{
+		var e=elemsList[0].children[i];
+
+		// process each element and store its information
+		this.initials[e.id]=e.attributes.getNamedItem("detalhes").value;
+		console.log("Read initials item id "+ e.id+" with value "+this.initials[e.id]);
+	};
+	var frustum = elemsList.getNamedItem('frustum');
 
 	if(frustum.length != 1){
 		return "frustum element is missing or there is more than one.";
 	}
 
-	var f = frustum[0];
-
+	var f = frustum;
+*/
+	this.fnear = frustum.attributes.getNamedItem("near").value;
+	this.ffar = frustum.attributes.getNamedItem("far").value;
+	/*
 	this.fnear = this.reader.getItem(f, 'near');
 	this.ffar = this.reader.getItem(f,'far');
 
-	console.log("Read INITIALS/frustum item with value near "+this.fnear + "and value far " + this.ffar);
+*/
+	if (isNaN(this.fnear) || isNaN(this.ffar)){
+		return "frustum values must be floats.";
+	} 
+
+	console.log("Read INITIALS/frustum item with value near "+this.fnear + " and value far " + this.ffar);
 
 	// TRANSLATE
-	var translate = elemsList.getElementsByTagName('translate');
+	var translate = elemsList[0].children[1];
 
-	if(translate.length != 1){
-		return "translate element is missing or there is more than one.";
+
+	if(translate == null){
+		return "translate element is missing.";
 	}
 
-	var t = translate[0];
+	this.tx = translate.attributes.getNamedItem("x").value;
+	this.ty = translate.attributes.getNamedItem("y").value;
+	this.tz = translate.attributes.getNamedItem("z").value;
 
-	this.tx = this.reader.getItem(t, 'x');
-	this.ty = this.reader.getItem(t, 'y');
-	this.tz = this.reader.getItem(t, 'z');
+	if (isNaN(this.tx) || isNaN(this.ty) || isNaN(this.tz)){
+		return "translate values must be floats.";
+	} 
 
 	console.log("Read INITIALS/translate item with value x "+this.tx + ", value y " + this.ty + " and value z " + this.tz);
 
 	// ROTATION
-	var rotation = elemsList.getElementsByTagName('rotation');
+	var rotation1 = elemsList[0].children[2];
 
-	if(rotation.length != 3){
+	if(rotation1 == null){
 		return "The 3 rotation elements are missing.";
 	}
-	var r1 = rotation[0];
-	this.r1axis = this.reader.getItem(r1, 'axis');
-	this.r1angle = this.reader.getItem(r1, 'angle');
 
-	console.log("Read INITIALS/rotation item with value axis "+this.r1axis + "and value angle " + this.r1angle);
+	this.r1axis = rotation1.attributes.getNamedItem("axis").value;
+	this.r1angle = rotation1.attributes.getNamedItem("angle").value;
 
-	var r2 = rotation[1];
-	this.r2axis = this.reader.getItem(r2, 'axis');
-	this.r2angle = this.reader.getItem(r2, 'angle');
-
-	console.log("Read INITIALS/rotation item with value axis "+this.r2axis + "and value angle " + this.r2angle);
-
-	var r3 = rotation[2];
-	this.r3axis = this.reader.getItem(r3, 'axis');
-	this.r3angle = this.reader.getItem(r3, 'angle');
-
-	console.log("Read INITIALS/rotation item with value axis "+this.r3axis + "and value angle " + this.r3angle);
-	
-	// SCALE
-	var scale = elemsList.getElementsByTagName('scale');
-
-	if(scale.length != 1){
-		return "scale element is missing or there is more than one";
+	if (isNaN(this.r1angle)){
+		return "rotation angle values must be floats.";
 	} 
 
-	var sc = scale[0];
+	if (!isNaN(this.r1axis)){
+		return "rotation axis values must be chars.";
+	}
 
-	this.sx = this.reader.getItem(sc,'sx');
-	this.sy = this.reader.getItem(sc,'sy');
-	this.sz = this.reader.getItem(sc,'sz');
+	console.log("Read INITIALS/rotation item with value axis "+this.r1axis + " and value angle " + this.r1angle);
+
+	var rotation2 = elemsList[0].children[3];
+
+	if(rotation2 == null){
+		return "The 3 rotation elements are missing.";
+	}
+
+	this.r2axis = rotation2.attributes.getNamedItem("axis").value;
+	this.r2angle = rotation2.attributes.getNamedItem("angle").value;
+
+	if (isNaN(this.r2angle)){
+		return "rotation angle values must be floats.";
+	} 
+
+	if (!isNaN(this.r2axis)){
+		return "rotation axis values must be chars.";
+	}
+
+	console.log("Read INITIALS/rotation item with value axis "+this.r2axis + " and value angle " + this.r2angle);
+
+	var rotation3 = elemsList[0].children[4];
+
+	if(rotation3 == null){
+		return "The 3 rotation elements are missing.";
+	}
+
+	this.r3axis = rotation3.attributes.getNamedItem("axis").value;
+	this.r3angle = rotation3.attributes.getNamedItem("angle").value;
+
+
+	if (isNaN(this.r3angle)){
+		return "rotation angle values must be floats.";
+	} 
+
+	if (!isNaN(this.r3axis)){
+		return "rotation axis values must be chars.";
+	}
+
+	console.log("Read INITIALS/rotation item with value axis "+this.r3axis + " and value angle " + this.r3angle);
+	
+	// SCALE
+	var scale = elemsList[0].children[5];
+
+	if(scale == null){
+		return "scale element is missing.";
+	} 
+
+	this.sx = scale.attributes.getNamedItem("sx").value;
+	this.sy = scale.attributes.getNamedItem("sy").value;
+	this.sz = scale.attributes.getNamedItem("sz").value;
+
+	if (isNaN(this.sx) || isNaN(this.sy) || isNaN(this.sz)){
+		return "scale values must be floats.";
+	} 
 
 	console.log("Read INITIALS/scale item with value x "+this.sx + ", value y " + this.sy + " and value z " + this.sz);
 
 
 	// REFERENCE
-	var reference = elemsList.getElementsByTagName('reference');
+	var reference = elemsList[0].children[6];
 
-	if(reference.length != 1){
-		return "reference element is missing or there is more than one";
+	if(reference == null){
+		return "reference element is missing.";
 	} 
 
-	var ref = reference[0];
 
-	this.rlength = this.reader.getItem(ref,'length');
+	this.rlength = reference.attributes.getNamedItem("length").value;
 
-	console.log("Read INITIALS/reference item with value axis "+this.rlength);
-}
+	if (isNaN(this.rlength)){
+		return "reference length value must be a float.";
+	} 
+
+	console.log("Read INITIALS/reference item with value length "+this.rlength);
+};
 
 /*
  * Callback to be executed on any read error
