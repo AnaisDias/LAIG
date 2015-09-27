@@ -173,15 +173,29 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 		return "The 3 rotation elements are missing.";
 	}
 
-	this.r1axis = rotation1.attributes.getNamedItem("axis").value;
-	this.r1angle = rotation1.attributes.getNamedItem("angle").value;
+	this.rotations = [];
 
-	if (isNaN(this.r1angle)){
+	var r1axis = rotation1.attributes.getNamedItem("axis").value;
+
+	var r1angle = rotation1.attributes.getNamedItem("angle").value;
+
+
+	if (isNaN(r1angle)){
 		return "rotation angle values must be floats.";
 	} 
 
-	if (!isNaN(this.r1axis)){
+	if (!isNaN(r1axis)){
 		return "rotation axis values must be chars.";
+	}
+
+	if(r1axis == "x"){
+		this.rotations[0] = r1angle;
+	}
+	else if (r1axis == "y"){
+		this.rotations[1] = r1angle;
+	}
+	else if (r1axis == "z"){
+		this.rotations[2] = r1angle;
 	}
 
 	console.log("Read INITIALS/rotation item with value axis "+this.r1axis + " and value angle " + this.r1angle);
@@ -192,15 +206,25 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 		return "The 3 rotation elements are missing.";
 	}
 
-	this.r2axis = rotation2.attributes.getNamedItem("axis").value;
-	this.r2angle = rotation2.attributes.getNamedItem("angle").value;
+	var r2axis = rotation2.attributes.getNamedItem("axis").value;
+	var r2angle = rotation2.attributes.getNamedItem("angle").value;
 
-	if (isNaN(this.r2angle)){
+	if (isNaN(r2angle)){
 		return "rotation angle values must be floats.";
 	} 
 
-	if (!isNaN(this.r2axis)){
+	if (!isNaN(r2axis)){
 		return "rotation axis values must be chars.";
+	}
+
+	if(r2axis == "x"){
+		this.rotations[0] = r2angle;
+	}
+	else if (r2axis == "y"){
+		this.rotations[1] = r2angle;
+	}
+	else if (r2axis == "z"){
+		this.rotations[2] = r2angle;
 	}
 
 	console.log("Read INITIALS/rotation item with value axis "+this.r2axis + " and value angle " + this.r2angle);
@@ -211,16 +235,26 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 		return "The 3 rotation elements are missing.";
 	}
 
-	this.r3axis = rotation3.attributes.getNamedItem("axis").value;
-	this.r3angle = rotation3.attributes.getNamedItem("angle").value;
+	var r3axis = rotation3.attributes.getNamedItem("axis").value;
+	var r3angle = rotation3.attributes.getNamedItem("angle").value;
 
 
-	if (isNaN(this.r3angle)){
+	if (isNaN(r3angle)){
 		return "rotation angle values must be floats.";
 	} 
 
-	if (!isNaN(this.r3axis)){
+	if (!isNaN(r3axis)){
 		return "rotation axis values must be chars.";
+	}
+
+	if(r3axis == "x"){
+		this.rotations[0] = r3angle;
+	}
+	else if (r3axis == "y"){
+		this.rotations[1] = r3angle;
+	}
+	else if (r3axis == "z"){
+		this.rotations[2] = r3angle;
 	}
 
 	console.log("Read INITIALS/rotation item with value axis "+this.r3axis + " and value angle " + this.r3angle);

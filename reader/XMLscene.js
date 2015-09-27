@@ -60,8 +60,25 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {
-	//this.initGraphCameras();
-	this.camera.translate(vec3.fromValues(this.graph.tx, this.graph.ty, this.graph.tz));
+	/*this.camera.near = this.graph.fnear;
+	this.camera.far = this.graph.ffar;*/
+
+	//caso seja para mudar valores da camara
+	/*this.camera.translate(vec3.fromValues(this.graph.tx, this.graph.ty, this.graph.tz));
+	this.camera.orbit(this.X, this.graph.rotations[0]);
+	this.camera.orbit(this.Y, this.graph.rotations[1]);
+	this.camera.orbit(this.Z, this.graph.rotations[2]);*/
+
+	//caso seja para mudar valores da cena
+
+	this.axis=new CGFaxis(this, this.graph.rlength);
+	/*
+	this.translate(this.graph.tx, this.graph.ty, this.graph.tz);
+	this.rotate(this.graph.rotations[0], 1,0,0);
+	this.rotate(this.graph.rotations[1], 0,1,0);
+	this.rotate(this.graph.rotations[2], 0,0,1);*/
+
+
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	this.lights[0].setVisible(true);
     this.lights[0].enable();
@@ -96,6 +113,10 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk)
 	{
 		this.lights[0].update();
+		this.translate(this.graph.tx, this.graph.ty, this.graph.tz);
+	this.rotate(this.graph.rotations[0], 1,0,0);
+	this.rotate(this.graph.rotations[1], 0,1,0);
+	this.rotate(this.graph.rotations[2], 0,0,1);
 	};	
 
     this.shader.unbind();
