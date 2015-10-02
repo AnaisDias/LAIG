@@ -256,6 +256,7 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 	else if (r3axis == "z"){
 		this.rotations[2] = r3angle;
 	}
+	else return "rotation must be x, y or z";
 
 	console.log("Read INITIALS/rotation item with value axis "+this.r3axis + " and value angle " + this.r3angle);
 	
