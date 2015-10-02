@@ -366,7 +366,84 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 };
 
 MySceneGraph.prototype.parseLights = function(rootElement){
-	
+	var elemsList =  rootElement.getElementsByTagName('LIGHTS');
+	if (elemsList == null) {
+		return "LIGHTS element is missing.";
+	}
+
+	if(elemsList.length != 1){
+		return "LIGHTS element is missing or there is more than one.";
+	}
+
+	var lightElems =  elemsList[0].getElementsByTagName('LIGHT');
+
+	this.lights = [];
+	for(i = 0; i<lightElems.length; i++){
+		var id = lightElems[i].children[0];
+		var enable = lightElems[i].children[1];
+		var pos = lightElems[i].children[2];
+		var amb = lightElems[i].children[3];
+		var dif = lightElems[i].children[4];
+		var spec = lightElems[i].children[5];
+
+		this.lights[id]= []
+	}
+
+	var nnodes=elemsList[0].children.length;
+	if(nnodes != 3){
+		return "ILLUMINATION element must have exactly 3 children.";
+	}
+
+	var ambient = elemsList[0].children[0];
+
+
+	this.illumination.ambient.r = ambient.attributes.getNamedItem("r").value;
+	this.illumination.ambient.g = ambient.attributes.getNamedItem("g").value;
+	this.illumination.ambient.b = ambient.attributes.getNamedItem("b").value;
+	this.illumination.ambient.a = ambient.attributes.getNamedItem("a").value;
+
+
+	if (isNaN(this.illumination.ambient.r) || isNaN(this.illumination.ambient.g) || isNaN(this.illumination.ambient.b) || isNaN(this.illumination.ambient.a)){
+		return "ILLUMINATION/ambient values must be floats.";
+	} 
+
+	console.log("Read ILLUMINATION/ambient item with value r "+this.illumination.ambient.r + ", value g " + this.illumination.ambient.g + ", value b " 
+		+ this.illumination.ambient.b + " and value a " + this.illumination.ambient.a);
+
+	// TRANSLATE
+	var doubleside = elemsList[0].children[1];
+
+
+	if(translate == null){
+		return "ILLUMINATION/doubleside element is missing.";
+	}
+
+	this.illumination.doubleside = doubleside.attributes.getNamedItem("value").value;
+
+	if (this.illumination.doubleside != 1 || this.illumination.doubleside != 0){
+		return "ILLUMINATION/doubleside value must be either 0 or 1.";
+	} 
+
+	console.log("Read ILLUMINATION/doubleside item with value "+this.illumination.doubleside);
+
+	// ROTATION
+	var background = elemsList[0].children[2];
+
+	if(background == null){
+		return "ILLUMINATION/background element is missing.";
+	}
+
+	this.illumination.background.r = background.attributes.getNamedItem("r").value;
+	this.illumination.background.g = background.attributes.getNamedItem("g").value;
+	this.illumination.background.b = background.attributes.getNamedItem("b").value;
+	this.illumination.background.a = background.attributes.getNamedItem("a").value;
+
+	if (isNaN(this.illumination.background.r) || isNaN(this.illumination.background.g) || isNaN(this.illumination.background.b) || isNaN(this.illumination.background.a)){
+		return "ILLUMINATION/background values must be floats.";
+	} 
+
+	console.log("Read ILLUMINATION/background item with value r "+this.illumination.background.r + ", value g " + this.illumination.background.g + ", value b " 
+		+ this.illumination.background.b + " and value a " + this.illumination.background.a);
 	};
 
 
