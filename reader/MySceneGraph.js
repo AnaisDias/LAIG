@@ -41,6 +41,20 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}
 
+	var error = this.parseIllumination(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	var error = this.parseLights(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
 	this.loadedOk=true;
 	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
@@ -313,13 +327,14 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 		return "ILLUMINATION element must have exactly 3 children.";
 	}
 
-	var ambient = elemsList[0].children[0];
+	var amb = elemsList[0].children[0];
 
-
-	this.illumination.ambient.r = ambient.attributes.getNamedItem("r").value;
-	this.illumination.ambient.g = ambient.attributes.getNamedItem("g").value;
-	this.illumination.ambient.b = ambient.attributes.getNamedItem("b").value;
-	this.illumination.ambient.a = ambient.attributes.getNamedItem("a").value;
+	this.illumination.ambient = [];
+	console.debug(this.illumination.ambient);
+	this.illumination.ambient.r = amb.attributes.getNamedItem("r").value;
+	this.illumination.ambient.g = amb.attributes.getNamedItem("g").value;
+	this.illumination.ambient.b = amb.attributes.getNamedItem("b").value;
+	this.illumination.ambient.a = amb.attributes.getNamedItem("a").value;
 
 
 	if (isNaN(this.illumination.ambient.r) || isNaN(this.illumination.ambient.g) || isNaN(this.illumination.ambient.b) || isNaN(this.illumination.ambient.a)){
@@ -333,13 +348,13 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 	var doubleside = elemsList[0].children[1];
 
 
-	if(translate == null){
+	if(doubleside == null){
 		return "ILLUMINATION/doubleside element is missing.";
 	}
 
 	this.illumination.doubleside = doubleside.attributes.getNamedItem("value").value;
 
-	if (this.illumination.doubleside != 1 || this.illumination.doubleside != 0){
+	if (this.illumination.doubleside != 1 && this.illumination.doubleside != 0){
 		return "ILLUMINATION/doubleside value must be either 0 or 1.";
 	} 
 
@@ -351,6 +366,8 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 	if(background == null){
 		return "ILLUMINATION/background element is missing.";
 	}
+
+	this.illumination.background = [];
 
 	this.illumination.background.r = background.attributes.getNamedItem("r").value;
 	this.illumination.background.g = background.attributes.getNamedItem("g").value;
@@ -376,76 +393,73 @@ MySceneGraph.prototype.parseLights = function(rootElement){
 		return "LIGHTS element is missing or there is more than one.";
 	}
 
-	var lightElems =  elemsList[0].getElementsByTagName('LIGHT');
 
+	var lightElems =  rootElement.getElementsByTagName('LIGHT');
+
+	console.debug(lightElems[0].attributes.getNamedItem("id").value);
+	
+	console.log(lightElems.length + " lights to be processed");
+	
 	this.lights = [];
 	for(i = 0; i<lightElems.length; i++){
-		var id = lightElems[i].children[0];
-		var enable = lightElems[i].children[1];
-		var pos = lightElems[i].children[2];
-		var amb = lightElems[i].children[3];
-		var dif = lightElems[i].children[4];
-		var spec = lightElems[i].children[5];
+		var id = lightElems[i].attributes.getNamedItem("id").value;
+		var enable = lightElems[i].children[0];
+		var pos = lightElems[i].children[1];
+		var amb = lightElems[i].children[2];
+		var dif = lightElems[i].children[3];
+		var spec = lightElems[i].children[4];
 
-		this.lights[id]= []
+		if (this.lights[id] != undefined){
+			return "Light ids must not be repeated";
+		}
+		this.lights[id]=[];
+
+//try with globals-like parsing later
+//add verifications
+		this.lights[id].enable = enable.attributes.getNamedItem("value").value;
+
+
+		this.lights[id].position=[];
+		this.lights[id].position.x = pos.attributes.getNamedItem("x").value;
+		this.lights[id].position.y = pos.attributes.getNamedItem("y").value;
+		this.lights[id].position.z = pos.attributes.getNamedItem("z").value;
+		this.lights[id].position.w = pos.attributes.getNamedItem("w").value;
+
+		this.lights[id].ambient=[];
+		this.lights[id].ambient.r = amb.attributes.getNamedItem("r").value;
+		this.lights[id].ambient.g = amb.attributes.getNamedItem("g").value;
+		this.lights[id].ambient.b = amb.attributes.getNamedItem("b").value;
+		this.lights[id].ambient.a = amb.attributes.getNamedItem("a").value;
+
+		this.lights[id].diffuse=[];
+		this.lights[id].diffuse.r = dif.attributes.getNamedItem("r").value;
+		this.lights[id].diffuse.g = dif.attributes.getNamedItem("g").value;
+		this.lights[id].diffuse.b = dif.attributes.getNamedItem("b").value;
+		this.lights[id].diffuse.a = dif.attributes.getNamedItem("a").value;
+
+		this.lights[id].specular=[];
+		this.lights[id].specular.r = dif.attributes.getNamedItem("r").value;
+		this.lights[id].specular.g = dif.attributes.getNamedItem("g").value;
+		this.lights[id].specular.b = dif.attributes.getNamedItem("b").value;
+		this.lights[id].specular.a = dif.attributes.getNamedItem("a").value;
+
+		if (isNaN(this.lights[id].enable) || isNaN(this.lights[id].position.x) || isNaN(this.lights[id].position.y) || isNaN(this.lights[id].position.z) || isNaN(this.lights[id].ambient.r)
+		|| isNaN(this.lights[id].ambient.g) || isNaN(this.lights[id].ambient.b) || isNaN(this.lights[id].ambient.a) || isNaN(this.lights[id].diffuse.r) || isNaN(this.lights[id].diffuse.g) 
+		|| isNaN(this.lights[id].diffuse.b) || isNaN(this.lights[id].diffuse.a) || isNaN(this.lights[id].specular.r) || isNaN(this.lights[id].specular.g) || isNaN(this.lights[id].specular.b) 
+			|| isNaN(this.lights[id].specular.a)) {
+			return "Light values must be numbers";
+		}
+		
+
+		console.log("Read light with id " + id + " , value enable " + this.lights[id].enable + ", value position x " + this.lights[id].position.x 
+			+ ", y " + this.lights[id].position.y + ", z " + this.lights[id].position.z + ", value ambient r " + this.lights[id].ambient.r + ", g " + this.lights[id].ambient.g + ", b "
+			+ this.lights[id].ambient.b + ", a " + this.lights[id].ambient.a + ", value diffuse r " + this.lights[id].diffuse.r + ", g " + this.lights[id].diffuse.g + ", b " 
+			+ this.lights[id].diffuse.b + ", a " + this.lights[id].diffuse.a + "and value specular r " + this.lights[id].specular.r + ", g " + this.lights[id].specular.g + ", b "
+			+ this.lights[id].specular.b + ", a " + this.lights[id].specular.a);
+
 	}
 
-	var nnodes=elemsList[0].children.length;
-	if(nnodes != 3){
-		return "ILLUMINATION element must have exactly 3 children.";
-	}
-
-	var ambient = elemsList[0].children[0];
-
-
-	this.illumination.ambient.r = ambient.attributes.getNamedItem("r").value;
-	this.illumination.ambient.g = ambient.attributes.getNamedItem("g").value;
-	this.illumination.ambient.b = ambient.attributes.getNamedItem("b").value;
-	this.illumination.ambient.a = ambient.attributes.getNamedItem("a").value;
-
-
-	if (isNaN(this.illumination.ambient.r) || isNaN(this.illumination.ambient.g) || isNaN(this.illumination.ambient.b) || isNaN(this.illumination.ambient.a)){
-		return "ILLUMINATION/ambient values must be floats.";
-	} 
-
-	console.log("Read ILLUMINATION/ambient item with value r "+this.illumination.ambient.r + ", value g " + this.illumination.ambient.g + ", value b " 
-		+ this.illumination.ambient.b + " and value a " + this.illumination.ambient.a);
-
-	// TRANSLATE
-	var doubleside = elemsList[0].children[1];
-
-
-	if(translate == null){
-		return "ILLUMINATION/doubleside element is missing.";
-	}
-
-	this.illumination.doubleside = doubleside.attributes.getNamedItem("value").value;
-
-	if (this.illumination.doubleside != 1 || this.illumination.doubleside != 0){
-		return "ILLUMINATION/doubleside value must be either 0 or 1.";
-	} 
-
-	console.log("Read ILLUMINATION/doubleside item with value "+this.illumination.doubleside);
-
-	// ROTATION
-	var background = elemsList[0].children[2];
-
-	if(background == null){
-		return "ILLUMINATION/background element is missing.";
-	}
-
-	this.illumination.background.r = background.attributes.getNamedItem("r").value;
-	this.illumination.background.g = background.attributes.getNamedItem("g").value;
-	this.illumination.background.b = background.attributes.getNamedItem("b").value;
-	this.illumination.background.a = background.attributes.getNamedItem("a").value;
-
-	if (isNaN(this.illumination.background.r) || isNaN(this.illumination.background.g) || isNaN(this.illumination.background.b) || isNaN(this.illumination.background.a)){
-		return "ILLUMINATION/background values must be floats.";
-	} 
-
-	console.log("Read ILLUMINATION/background item with value r "+this.illumination.background.r + ", value g " + this.illumination.background.g + ", value b " 
-		+ this.illumination.background.b + " and value a " + this.illumination.background.a);
-	};
+};
 
 
 
