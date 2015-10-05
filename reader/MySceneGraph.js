@@ -462,6 +462,51 @@ MySceneGraph.prototype.parseLights = function(rootElement){
 };
 
 
+MySceneGraph.prototype.parseTextures = function(rootElement){
+	var elemsList =  rootElement.getElementsByTagName('TEXTURES');
+	if (elemsList == null) {
+		return "TEXTURES element is missing.";
+	}
+
+	if(elemsList.length != 1){
+		return "TEXTURES element is missing or there is more than one.";
+	}
+
+
+	var texElems =  rootElement.getElementsByTagName('TEXTURE');
+	
+	console.log(texElems.length + " textures to be processed");
+	
+	this.textures = [];
+	for(i = 0; i<texElems.length; i++){
+		var id = texElems[i].attributes.getNamedItem("id").value;
+		var file = texElems[i].children[0];
+		var amp = texElems[i].children[1];
+
+		if (this.textures[id] != undefined){
+			return "Texture ids must not be repeated";
+		}
+
+		this.textures[id]=[];
+
+		this.textures[id].filepath = file.attributes.getNamedItem("path").value;
+
+		this.textures[id].amplif=[];
+		this.textures[id].amplif.s = amp.attributes.getNamedItem("s").value;
+		this.textures[id].amplif.t = amp.attributes.getNamedItem("t").value;
+
+		if (isNaN(this.textures[id].amplif.s) || isNaN(this.textures[id].amplif.t)) {
+			return "Amplif_factor values must be numbers";
+		}
+		
+
+		console.log("Read texture with id " + id + " , value filepath " + this.textures[id].filepath + ", value amplif_factor s " + this.textures[id].amplif.s 
+			+ ", t " + this.textures[id].amplif.t);
+
+	}
+
+};
+
 
 /*
  * Callback to be executed on any read error
