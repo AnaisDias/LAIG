@@ -55,6 +55,13 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}
 
+	var error = this.parseTextures(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
 	this.loadedOk=true;
 	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
@@ -323,8 +330,8 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 	this.illumination=[];
 
 	var nnodes=elemsList[0].children.length;
-	if(nnodes != 3){
-		return "ILLUMINATION element must have exactly 3 children.";
+	if(nnodes != 2){
+		return "ILLUMINATION element must have exactly 2 children.";
 	}
 
 	var amb = elemsList[0].children[0];
@@ -344,24 +351,9 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 	console.log("Read ILLUMINATION/ambient item with value r "+this.illumination.ambient.r + ", value g " + this.illumination.ambient.g + ", value b " 
 		+ this.illumination.ambient.b + " and value a " + this.illumination.ambient.a);
 
-	// TRANSLATE
-	var doubleside = elemsList[0].children[1];
 
 
-	if(doubleside == null){
-		return "ILLUMINATION/doubleside element is missing.";
-	}
-
-	this.illumination.doubleside = doubleside.attributes.getNamedItem("value").value;
-
-	if (this.illumination.doubleside != 1 && this.illumination.doubleside != 0){
-		return "ILLUMINATION/doubleside value must be either 0 or 1.";
-	} 
-
-	console.log("Read ILLUMINATION/doubleside item with value "+this.illumination.doubleside);
-
-	// ROTATION
-	var background = elemsList[0].children[2];
+	var background = elemsList[0].children[1];
 
 	if(background == null){
 		return "ILLUMINATION/background element is missing.";
@@ -504,6 +496,10 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 			+ ", t " + this.textures[id].amplif.t);
 
 	}
+
+};
+
+MySceneGraph.prototype.parseMaterials = function(rootElement){
 
 };
 
