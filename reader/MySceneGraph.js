@@ -500,7 +500,78 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 };
 
 MySceneGraph.prototype.parseMaterials = function(rootElement){
+	var elemsList =  rootElement.getElementsByTagName('MATERIALS');
+	if (elemsList == null) {
+		return "MATERIALS element is missing.";
+	}
 
+	if(elemsList.length != 1){
+		return "MATERIALS element is missing or there is more than one.";
+	}
+
+
+	var matElems =  rootElement.getElementsByTagName('MATERIAL');
+	
+	console.log(lightElems.length + " lights to be processed");
+	
+	this.lights = [];
+	for(i = 0; i<lightElems.length; i++){
+		var id = lightElems[i].attributes.getNamedItem("id").value;
+		var enable = lightElems[i].children[0];
+		var pos = lightElems[i].children[1];
+		var amb = lightElems[i].children[2];
+		var dif = lightElems[i].children[3];
+		var spec = lightElems[i].children[4];
+
+		if (this.lights[id] != undefined){
+			return "Light ids must not be repeated";
+		}
+		this.lights[id]=[];
+
+//try with globals-like parsing later
+//add verifications
+		this.lights[id].enable = enable.attributes.getNamedItem("value").value;
+
+
+		this.lights[id].position=[];
+		this.lights[id].position.x = pos.attributes.getNamedItem("x").value;
+		this.lights[id].position.y = pos.attributes.getNamedItem("y").value;
+		this.lights[id].position.z = pos.attributes.getNamedItem("z").value;
+		this.lights[id].position.w = pos.attributes.getNamedItem("w").value;
+
+		this.lights[id].ambient=[];
+		this.lights[id].ambient.r = amb.attributes.getNamedItem("r").value;
+		this.lights[id].ambient.g = amb.attributes.getNamedItem("g").value;
+		this.lights[id].ambient.b = amb.attributes.getNamedItem("b").value;
+		this.lights[id].ambient.a = amb.attributes.getNamedItem("a").value;
+
+		this.lights[id].diffuse=[];
+		this.lights[id].diffuse.r = dif.attributes.getNamedItem("r").value;
+		this.lights[id].diffuse.g = dif.attributes.getNamedItem("g").value;
+		this.lights[id].diffuse.b = dif.attributes.getNamedItem("b").value;
+		this.lights[id].diffuse.a = dif.attributes.getNamedItem("a").value;
+
+		this.lights[id].specular=[];
+		this.lights[id].specular.r = dif.attributes.getNamedItem("r").value;
+		this.lights[id].specular.g = dif.attributes.getNamedItem("g").value;
+		this.lights[id].specular.b = dif.attributes.getNamedItem("b").value;
+		this.lights[id].specular.a = dif.attributes.getNamedItem("a").value;
+
+		if (isNaN(this.lights[id].enable) || isNaN(this.lights[id].position.x) || isNaN(this.lights[id].position.y) || isNaN(this.lights[id].position.z) || isNaN(this.lights[id].ambient.r)
+		|| isNaN(this.lights[id].ambient.g) || isNaN(this.lights[id].ambient.b) || isNaN(this.lights[id].ambient.a) || isNaN(this.lights[id].diffuse.r) || isNaN(this.lights[id].diffuse.g) 
+		|| isNaN(this.lights[id].diffuse.b) || isNaN(this.lights[id].diffuse.a) || isNaN(this.lights[id].specular.r) || isNaN(this.lights[id].specular.g) || isNaN(this.lights[id].specular.b) 
+			|| isNaN(this.lights[id].specular.a)) {
+			return "Light values must be numbers";
+		}
+		
+
+		console.log("Read light with id " + id + " , value enable " + this.lights[id].enable + ", value position x " + this.lights[id].position.x 
+			+ ", y " + this.lights[id].position.y + ", z " + this.lights[id].position.z + ", value ambient r " + this.lights[id].ambient.r + ", g " + this.lights[id].ambient.g + ", b "
+			+ this.lights[id].ambient.b + ", a " + this.lights[id].ambient.a + ", value diffuse r " + this.lights[id].diffuse.r + ", g " + this.lights[id].diffuse.g + ", b " 
+			+ this.lights[id].diffuse.b + ", a " + this.lights[id].diffuse.a + "and value specular r " + this.lights[id].specular.r + ", g " + this.lights[id].specular.g + ", b "
+			+ this.lights[id].specular.b + ", a " + this.lights[id].specular.a);
+
+	}
 };
 
 
