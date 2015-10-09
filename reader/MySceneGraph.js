@@ -34,28 +34,49 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}	
 
-	var error = this.parseInitials(rootElement);
+	error = this.parseInitials(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
 		return;
 	}
 
-	var error = this.parseIllumination(rootElement);
+	error = this.parseIllumination(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
 		return;
 	}
 
-	var error = this.parseLights(rootElement);
+	error = this.parseLights(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
 		return;
 	}
 
-	var error = this.parseTextures(rootElement);
+	error = this.parseTextures(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseMaterials(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseLeaves(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseNodes(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -386,7 +407,7 @@ MySceneGraph.prototype.parseLights = function(rootElement){
 	}
 
 
-	var lightElems =  rootElement.getElementsByTagName('LIGHT');
+	var lightElems =  elemsList[0].getElementsByTagName('LIGHT');
 
 	console.debug(lightElems[0].attributes.getNamedItem("id").value);
 	
@@ -465,7 +486,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 	}
 
 
-	var texElems =  rootElement.getElementsByTagName('TEXTURE');
+	var texElems =  elemsList[0].getElementsByTagName('TEXTURE');
 	
 	console.log(texElems.length + " textures to be processed");
 	
@@ -500,80 +521,261 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 };
 
 MySceneGraph.prototype.parseMaterials = function(rootElement){
+ 
 	var elemsList =  rootElement.getElementsByTagName('MATERIALS');
 	if (elemsList == null) {
 		return "MATERIALS element is missing.";
 	}
+
 
 	if(elemsList.length != 1){
 		return "MATERIALS element is missing or there is more than one.";
 	}
 
 
-	var matElems =  rootElement.getElementsByTagName('MATERIAL');
-	
-	console.log(lightElems.length + " lights to be processed");
-	
-	this.lights = [];
-	for(i = 0; i<lightElems.length; i++){
-		var id = lightElems[i].attributes.getNamedItem("id").value;
-		var enable = lightElems[i].children[0];
-		var pos = lightElems[i].children[1];
-		var amb = lightElems[i].children[2];
-		var dif = lightElems[i].children[3];
-		var spec = lightElems[i].children[4];
+	var matElems =  elemsList[0].getElementsByTagName('MATERIAL');
 
-		if (this.lights[id] != undefined){
-			return "Light ids must not be repeated";
+	console.debug(matElems[0].attributes.getNamedItem("id").value);
+	
+	console.log(matElems.length + " materials to be processed");
+	
+	this.materials = [];
+	for(i = 0; i<matElems.length; i++){
+		var id = matElems[i].attributes.getNamedItem("id").value;
+		var shin = matElems[i].children[0];
+		var spec = matElems[i].children[1];
+		var dif = matElems[i].children[2];
+		var amb = matElems[i].children[3];
+		var emi = matElems[i].children[4];
+
+		if (this.materials[id] != undefined){
+			return "Material ids must not be repeated";
 		}
-		this.lights[id]=[];
+		this.materials[id]=[];
 
-//try with globals-like parsing later
-//add verifications
-		this.lights[id].enable = enable.attributes.getNamedItem("value").value;
+		this.materials[id].shin = shin.attributes.getNamedItem("value").value;
 
 
-		this.lights[id].position=[];
-		this.lights[id].position.x = pos.attributes.getNamedItem("x").value;
-		this.lights[id].position.y = pos.attributes.getNamedItem("y").value;
-		this.lights[id].position.z = pos.attributes.getNamedItem("z").value;
-		this.lights[id].position.w = pos.attributes.getNamedItem("w").value;
+		this.materials[id].specular=[];
+		this.materials[id].specular.r = dif.attributes.getNamedItem("r").value;
+		this.materials[id].specular.g = dif.attributes.getNamedItem("g").value;
+		this.materials[id].specular.b = dif.attributes.getNamedItem("b").value;
+		this.materials[id].specular.a = dif.attributes.getNamedItem("a").value;
 
-		this.lights[id].ambient=[];
-		this.lights[id].ambient.r = amb.attributes.getNamedItem("r").value;
-		this.lights[id].ambient.g = amb.attributes.getNamedItem("g").value;
-		this.lights[id].ambient.b = amb.attributes.getNamedItem("b").value;
-		this.lights[id].ambient.a = amb.attributes.getNamedItem("a").value;
+		this.materials[id].diffuse=[];
+		this.materials[id].diffuse.r = dif.attributes.getNamedItem("r").value;
+		this.materials[id].diffuse.g = dif.attributes.getNamedItem("g").value;
+		this.materials[id].diffuse.b = dif.attributes.getNamedItem("b").value;
+		this.materials[id].diffuse.a = dif.attributes.getNamedItem("a").value;
 
-		this.lights[id].diffuse=[];
-		this.lights[id].diffuse.r = dif.attributes.getNamedItem("r").value;
-		this.lights[id].diffuse.g = dif.attributes.getNamedItem("g").value;
-		this.lights[id].diffuse.b = dif.attributes.getNamedItem("b").value;
-		this.lights[id].diffuse.a = dif.attributes.getNamedItem("a").value;
+		this.materials[id].ambient=[];
+		this.materials[id].ambient.r = amb.attributes.getNamedItem("r").value;
+		this.materials[id].ambient.g = amb.attributes.getNamedItem("g").value;
+		this.materials[id].ambient.b = amb.attributes.getNamedItem("b").value;
+		this.materials[id].ambient.a = amb.attributes.getNamedItem("a").value;
 
-		this.lights[id].specular=[];
-		this.lights[id].specular.r = dif.attributes.getNamedItem("r").value;
-		this.lights[id].specular.g = dif.attributes.getNamedItem("g").value;
-		this.lights[id].specular.b = dif.attributes.getNamedItem("b").value;
-		this.lights[id].specular.a = dif.attributes.getNamedItem("a").value;
+		this.materials[id].emission=[];
+		this.materials[id].emission.r = dif.attributes.getNamedItem("r").value;
+		this.materials[id].emission.g = dif.attributes.getNamedItem("g").value;
+		this.materials[id].emission.b = dif.attributes.getNamedItem("b").value;
+		this.materials[id].emission.a = dif.attributes.getNamedItem("a").value;
 
-		if (isNaN(this.lights[id].enable) || isNaN(this.lights[id].position.x) || isNaN(this.lights[id].position.y) || isNaN(this.lights[id].position.z) || isNaN(this.lights[id].ambient.r)
-		|| isNaN(this.lights[id].ambient.g) || isNaN(this.lights[id].ambient.b) || isNaN(this.lights[id].ambient.a) || isNaN(this.lights[id].diffuse.r) || isNaN(this.lights[id].diffuse.g) 
-		|| isNaN(this.lights[id].diffuse.b) || isNaN(this.lights[id].diffuse.a) || isNaN(this.lights[id].specular.r) || isNaN(this.lights[id].specular.g) || isNaN(this.lights[id].specular.b) 
-			|| isNaN(this.lights[id].specular.a)) {
-			return "Light values must be numbers";
+		if (isNaN(this.materials[id].shin) || isNaN(this.materials[id].emission.r) || isNaN(this.materials[id].emission.g) || isNaN(this.materials[id].emission.b) || isNaN(this.materials[id].emission.a) || isNaN(this.materials[id].ambient.r)
+		|| isNaN(this.materials[id].ambient.g) || isNaN(this.materials[id].ambient.b) || isNaN(this.materials[id].ambient.a) || isNaN(this.materials[id].diffuse.r) || isNaN(this.materials[id].diffuse.g) 
+		|| isNaN(this.materials[id].diffuse.b) || isNaN(this.materials[id].diffuse.a) || isNaN(this.materials[id].specular.r) || isNaN(this.materials[id].specular.g) || isNaN(this.materials[id].specular.b) 
+			|| isNaN(this.materials[id].specular.a)) {
+			return "Material values must be numbers";
 		}
 		
 
-		console.log("Read light with id " + id + " , value enable " + this.lights[id].enable + ", value position x " + this.lights[id].position.x 
-			+ ", y " + this.lights[id].position.y + ", z " + this.lights[id].position.z + ", value ambient r " + this.lights[id].ambient.r + ", g " + this.lights[id].ambient.g + ", b "
-			+ this.lights[id].ambient.b + ", a " + this.lights[id].ambient.a + ", value diffuse r " + this.lights[id].diffuse.r + ", g " + this.lights[id].diffuse.g + ", b " 
-			+ this.lights[id].diffuse.b + ", a " + this.lights[id].diffuse.a + "and value specular r " + this.lights[id].specular.r + ", g " + this.lights[id].specular.g + ", b "
-			+ this.lights[id].specular.b + ", a " + this.lights[id].specular.a);
+		console.log("Read material with id " + id + ", value shininess " + this.materials[id].shin
+			+ ", value ambient r " + this.materials[id].ambient.r + ", g " + this.materials[id].ambient.g + ", b " + this.materials[id].ambient.b + ", a " + this.materials[id].ambient.a 
+			+ ", value diffuse r " + this.materials[id].diffuse.r + ", g " + this.materials[id].diffuse.g + ", b " + this.materials[id].diffuse.b + ", a " + this.materials[id].diffuse.a 
+			+ ", value specular r " + this.materials[id].specular.r + ", g " + this.materials[id].specular.g + ", b " + this.materials[id].specular.b + ", a " + this.materials[id].specular.a 
+			+ " and value emission r " + this.materials[id].emission.r	+ ", g " + this.materials[id].emission.g + ", b " + this.materials[id].emission.b + ", a " + this.materials[id].emission.a);
 
 	}
 };
 
+MySceneGraph.prototype.parseLeaves = function(rootElement){
+
+	var leavesList =  rootElement.getElementsByTagName('LEAVES');
+	if (leavesList == null) {
+		return "LEAVES element is missing.";
+	}
+
+	if(leavesList.length != 1){
+		return "LEAVES element is missing or there is more than one.";
+	}
+
+
+	var leavesElems =  rootElement.getElementsByTagName('LEAF');
+
+	console.debug(leavesElems[0].attributes.getNamedItem("id").value);
+	
+	console.log(leavesElems.length + " leaves to be processed");
+
+	this.leaves = [];
+	for(i=0; i < leavesElems.length; i++){
+
+		var id = leavesElems[i].attributes.getNamedItem("id").value;
+		var type = leavesElems[i].attributes.getNamedItem("type").value;
+		var args = leavesElems[i].attributes.getNamedItem("args").value;
+
+		if (this.leaves[id] != undefined){
+			return "Leaves ids must not be repeated";
+		}
+		this.leaves[id]=[];
+
+		this.leaves[id]._type = [];
+		this.leaves[id]._type = type;
+
+		this.leaves[id].args = [];
+		this.leaves[id].args = args;
+
+		console.log("Read leaf with id " + id 
+			+ ", type " + this.leaves[id]._type
+			+ " and args " + this.leaves[id].args );
+
+	}
+
+};
+
+MySceneGraph.prototype.parseNodes = function(rootElement){
+
+	var nodesList =  rootElement.getElementsByTagName('NODES');
+	if (nodesList == null) {
+		return "NODES element is missing.";
+	}
+
+	if(nodesList.length != 1){
+		return "NODES element is missing or there is more than one.";
+	}
+
+	//ROOT ID
+	var root = nodesList[0].getElementsByTagName('ROOT');
+	this.scene_id = root[0].attributes.getNamedItem("id").value;
+
+	var nodesElems = nodesList[0].getElementsByTagName('NODE');
+
+	console.debug(nodesElems[0].attributes.getNamedItem("id").value);
+	
+	console.log(nodesElems.length + " nodes to be processed");
+
+	this.nodes = [];
+	for(i=0; i < nodesElems.length; i++){
+
+		//ID
+		var id = nodesElems[i].attributes.getNamedItem("id").value;
+		if (this.nodes[id] != undefined || this.leaves[id] != undefined){
+			return "Node ids must not be repeated and must not be the same as a leaf id";
+		}
+
+		//MATERIAL
+		var material = getUniqueElement(nodesElems[i],'MATERIAL');
+		if(material == -1){
+			return "MATERIAL element is missing.";
+		}
+		if(material == -2){
+			return "MATERIAL element is missing or there is more than one.";
+		}
+
+		//TEXTURE
+		var texture = getUniqueElement(nodesElems[i],'TEXTURE');
+		if(texture == -1){
+			return "TEXTURE element is missing.";
+		}
+		if(texture == -2){
+			return "TEXTURE element is missing or there is more than one.";
+		}
+
+		//DESCENDANTS		
+		var descendants = getUniqueElement(nodesElems[i],'DESCENDANTS');
+		if(descendants == -1){
+			return "DESCENDANTS element is missing.";
+		}
+		if(descendants == -2){
+			return "DESCENDANTS element is missing or there is more than one.";
+		}
+		this.nodes[id].descElems = [];
+		for(j = 0; j < descElems.length;j++){
+			
+			var id_desc = descElems[j].attributes.getNamedItem("id").value;
+			
+			if (id == id_desc){
+				return "Node cannot be descendant to himself!";
+			}
+
+			this.nodes[id].descElems[j] = id;
+		}
+
+		var allList = nodesElems[i].getElementsByTagName('*');
+		this.nodes[id].trans = [];
+		var count = 0;
+
+		for(j=0; j < allList.length; j++){
+
+			if(allList[j].tagName == "TRANSLATION"){
+				var tx = allList[j].attributes.getNamedItem("x").value;
+				var ty = allList[j].attributes.getNamedItem("y").value;
+				var tz = allList[j].attributes.getNamedItem("z").value;
+				
+				this.nodes[id].trans[count]._type = 0;
+				this.nodes[id].trans[count].tx = tx;
+				this.nodes[id].trans[count].ty = ty;
+				this.nodes[id].trans[count].tz = tz;
+
+				count += 1;
+
+			}
+
+			else if(allList[j].tagName == "ROTATION"){
+				var axis = allList[j].attributes.getNamedItem("axis").value;
+				var angle = allList[j].attributes.getNamedItem("angle").value;
+				
+				this.nodes[id].trans[count]._type = 1;
+				this.nodes[id].trans[count].ax = axis;
+				this.nodes[id].trans[count].ang = angle;
+
+				count += 1;
+			}
+
+			else if(allList[J].tagName == "SCALE"){
+				var sx = allList[j].attributes.getNamedItem("sx").value;
+				var sy = allList[j].attributes.getNamedItem("sy").value;
+				var sz = allList[j].attributes.getNamedItem("sz").value;
+				
+				this.nodes[id].trans[count]._type = 2;
+				this.nodes[id].trans[count].sx = sx;
+				this.nodes[id].trans[count].sy = sy;
+				this.nodes[id].trans[count].sz = sz;
+
+				count += 1;
+
+			}
+		}
+
+		console.log("Read leaf with id " + id 
+			+ ", type " + this.leaves[id]._type
+			+ " and args " + this.leaves[id].args );
+
+	}
+
+};
+
+function getUniqueElement(tag,tagName){
+
+	var material = tag.getElementsByTagName('tagName');
+	if(material == null){
+		return -1;
+	}
+
+	if(material != 1){
+		return -2;
+	}
+
+	return material;
+};
 
 /*
  * Callback to be executed on any read error
@@ -584,4 +786,6 @@ MySceneGraph.prototype.onXMLError=function (message) {
 	this.loadedOk=false;
 };
 
+function check (tagName){
 
+}
