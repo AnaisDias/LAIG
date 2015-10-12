@@ -671,6 +671,10 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			return "Node ids must not be repeated and must not be the same as a leaf id";
 		}
 
+		this.nodes[id]= [];
+
+		console.debug(nodesElems[i]);
+
 		//MATERIAL
 		var material = getUniqueElement(nodesElems[i],'MATERIAL');
 		if(material == -1){
@@ -679,6 +683,8 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 		if(material == -2){
 			return "MATERIAL element is missing or there is more than one.";
 		}
+
+		this.nodes[id].material = material[0].attributes.getNamedItem('id').value;
 
 		//TEXTURE
 		var texture = getUniqueElement(nodesElems[i],'TEXTURE');
@@ -689,24 +695,30 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			return "TEXTURE element is missing or there is more than one.";
 		}
 
+		this.nodes[id].texture = texture[0].attributes.getNamedItem('id').value;
 		//DESCENDANTS		
-		var descendants = getUniqueElement(nodesElems[i],'DESCENDANTS');
-		if(descendants == -1){
+		var descElem = getUniqueElement(nodesElems[i],'DESCENDANTS');
+		if(descElem == -1){
 			return "DESCENDANTS element is missing.";
 		}
-		if(descendants == -2){
+		if(descElem == -2){
 			return "DESCENDANTS element is missing or there is more than one.";
 		}
-		this.nodes[id].descElems = [];
-		for(j = 0; j < descElems.length;j++){
+
+
+		this.nodes[id].descendants = [];
+
+		console.debug(descElem[0]);
+		var desc = descElem[0].getElementsByTagName('DESCENDANT');
+		for(j = 0; j < desc.length; j++){
 			
-			var id_desc = descElems[j].attributes.getNamedItem("id").value;
+			var id_desc = desc[j].attributes.getNamedItem("id").value;
 			
 			if (id == id_desc){
 				return "Node cannot be descendant to himself!";
 			}
 
-			this.nodes[id].descElems[j] = id;
+			this.nodes[id].descendants[j] = id;
 		}
 
 		var allList = nodesElems[i].getElementsByTagName('*');
@@ -715,35 +727,56 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 
 		for(j=0; j < allList.length; j++){
 
+			this.nodes[id].trans[count] = [];
+
 			if(allList[j].tagName == "TRANSLATION"){
 				var tx = allList[j].attributes.getNamedItem("x").value;
 				var ty = allList[j].attributes.getNamedItem("y").value;
 				var tz = allList[j].attributes.getNamedItem("z").value;
 				
+				if(isNaN(tx) || isNaN(ty) || isNaN(tz)){
+					return "Translations have to be numbers!";
+				}
+
 				this.nodes[id].trans[count]._type = 0;
 				this.nodes[id].trans[count].tx = tx;
 				this.nodes[id].trans[count].ty = ty;
 				this.nodes[id].trans[count].tz = tz;
 
+
 				count += 1;
+				this.nodes[id].trans[count] = [];
 
 			}
+			
 
 			else if(allList[j].tagName == "ROTATION"){
 				var axis = allList[j].attributes.getNamedItem("axis").value;
 				var angle = allList[j].attributes.getNamedItem("angle").value;
 				
+				if(axis != "x" && axis != "y" && axis != "z"){
+					return "Axis must be x,y or z!";
+				}
+
+				if(angle < -360 || angle > 360){
+					return "Angle must be between -360 and 360!";
+				}
 				this.nodes[id].trans[count]._type = 1;
 				this.nodes[id].trans[count].ax = axis;
 				this.nodes[id].trans[count].ang = angle;
 
 				count += 1;
+				this.nodes[id].trans[count] = [];
 			}
 
-			else if(allList[J].tagName == "SCALE"){
+			else if(allList[j].tagName == "SCALE"){
 				var sx = allList[j].attributes.getNamedItem("sx").value;
 				var sy = allList[j].attributes.getNamedItem("sy").value;
 				var sz = allList[j].attributes.getNamedItem("sz").value;
+
+				if(isNaN(sx) || isNaN(sy) || isNaN(sz)){
+					return "Scaling have to be numbers!";
+				}
 				
 				this.nodes[id].trans[count]._type = 2;
 				this.nodes[id].trans[count].sx = sx;
@@ -751,30 +784,48 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 				this.nodes[id].trans[count].sz = sz;
 
 				count += 1;
+				this.nodes[id].trans[count] = [];
 
 			}
 		}
 
-		console.log("Read leaf with id " + id 
-			+ ", type " + this.leaves[id]._type
-			+ " and args " + this.leaves[id].args );
 
+		console.log("Read node with id " + id 
+			+ ", material " + this.nodes[id].material
+			+ ", texture " + this.nodes[id].texture);
+
+		for(j = 0; j < this.nodes[id].descendants.length; j++){
+			console.log(", descendant " + (j+1) + ": " + this.nodes[id].descendants[j]); 
+		}
+
+		for(j = 0; j < this.nodes[id].trans.length; j++){
+			if(this.nodes[id].trans[j]._type == 0){
+				console.log(", translation " + (j+1) + ": x->" + this.nodes[id].trans[j].tx + " y->" + this.nodes[id].trans[j].ty + " z->" + this.nodes[id].trans[j].tz); 
+			}
+			else if (this.nodes[id].trans[j]._type == 1){
+				console.log(", rotation " + (j+1) + ": axis->" + this.nodes[id].trans[j].ax + " angle->" + this.nodes[id].trans[j].ang); 
+			}
+			else if(this.nodes[id].trans[j]._type == 2){
+				console.log(", scaling " + (j+1) + ": x->" + this.nodes[id].trans[j].sx + " y->" + this.nodes[id].trans[j].sy + " z->" + this.nodes[id].trans[j].sz); 
+			}
+			
+		}
 	}
 
 };
 
 function getUniqueElement(tag,tagName){
 
-	var material = tag.getElementsByTagName('tagName');
-	if(material == null){
+	var elem = tag.getElementsByTagName(tagName);
+	if(elem == null){
 		return -1;
 	}
 
-	if(material != 1){
+	if(elem.length != 1){
 		return -2;
 	}
 
-	return material;
+	return elem;
 };
 
 /*
@@ -789,3 +840,5 @@ MySceneGraph.prototype.onXMLError=function (message) {
 function check (tagName){
 
 }
+
+
