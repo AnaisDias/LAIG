@@ -493,8 +493,8 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 	this.textures = [];
 	for(i = 0; i<texElems.length; i++){
 		var id = texElems[i].attributes.getNamedItem("id").value;
-		var file = texElems[i].children[0];
-		var amp = texElems[i].children[1];
+		var file = texElems[i].getElementsByTagName('file');
+		var amp = texElems[i].getElementsByTagName('amplif_factor');
 
 		if (this.textures[id] != undefined){
 			return "Texture ids must not be repeated";
@@ -502,11 +502,11 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 
 		this.textures[id]=[];
 
-		this.textures[id].filepath = file.attributes.getNamedItem("path").value;
+		this.textures[id].filepath = file[0].attributes.getNamedItem("path").value;
 
 		this.textures[id].amplif=[];
-		this.textures[id].amplif.s = amp.attributes.getNamedItem("s").value;
-		this.textures[id].amplif.t = amp.attributes.getNamedItem("t").value;
+		this.textures[id].amplif.s = amp[0].attributes.getNamedItem("s").value;
+		this.textures[id].amplif.t = amp[0].attributes.getNamedItem("t").value;
 
 		if (isNaN(this.textures[id].amplif.s) || isNaN(this.textures[id].amplif.t)) {
 			return "Amplif_factor values must be numbers";
@@ -542,45 +542,47 @@ MySceneGraph.prototype.parseMaterials = function(rootElement){
 	this.materials = [];
 	for(i = 0; i<matElems.length; i++){
 		var id = matElems[i].attributes.getNamedItem("id").value;
-		var shin = matElems[i].children[0];
-		var spec = matElems[i].children[1];
-		var dif = matElems[i].children[2];
-		var amb = matElems[i].children[3];
-		var emi = matElems[i].children[4];
+		//var shin = matElems[i].children[0];
+		console.debug(matElems[i]);
+		var shin = matElems[i].getElementsByTagName('shininess');
+		var spec = matElems[i].getElementsByTagName('specular');
+		var dif = matElems[i].getElementsByTagName('diffuse');
+		var amb = matElems[i].getElementsByTagName('ambient');
+		var emi = matElems[i].getElementsByTagName('emission');
 
 		if (this.materials[id] != undefined){
 			return "Material ids must not be repeated";
 		}
 		this.materials[id]=[];
 
-		this.materials[id].shin = shin.attributes.getNamedItem("value").value;
+		this.materials[id].shininess = shin[0].attributes.getNamedItem("value").value;
 
 
 		this.materials[id].specular=[];
-		this.materials[id].specular.r = dif.attributes.getNamedItem("r").value;
-		this.materials[id].specular.g = dif.attributes.getNamedItem("g").value;
-		this.materials[id].specular.b = dif.attributes.getNamedItem("b").value;
-		this.materials[id].specular.a = dif.attributes.getNamedItem("a").value;
+		this.materials[id].specular.r = spec[0].attributes.getNamedItem("r").value;
+		this.materials[id].specular.g = spec[0].attributes.getNamedItem("g").value;
+		this.materials[id].specular.b = spec[0].attributes.getNamedItem("b").value;
+		this.materials[id].specular.a = spec[0].attributes.getNamedItem("a").value;
 
 		this.materials[id].diffuse=[];
-		this.materials[id].diffuse.r = dif.attributes.getNamedItem("r").value;
-		this.materials[id].diffuse.g = dif.attributes.getNamedItem("g").value;
-		this.materials[id].diffuse.b = dif.attributes.getNamedItem("b").value;
-		this.materials[id].diffuse.a = dif.attributes.getNamedItem("a").value;
+		this.materials[id].diffuse.r = dif[0].attributes.getNamedItem("r").value;
+		this.materials[id].diffuse.g = dif[0].attributes.getNamedItem("g").value;
+		this.materials[id].diffuse.b = dif[0].attributes.getNamedItem("b").value;
+		this.materials[id].diffuse.a = dif[0].attributes.getNamedItem("a").value;
 
 		this.materials[id].ambient=[];
-		this.materials[id].ambient.r = amb.attributes.getNamedItem("r").value;
-		this.materials[id].ambient.g = amb.attributes.getNamedItem("g").value;
-		this.materials[id].ambient.b = amb.attributes.getNamedItem("b").value;
-		this.materials[id].ambient.a = amb.attributes.getNamedItem("a").value;
+		this.materials[id].ambient.r = amb[0].attributes.getNamedItem("r").value;
+		this.materials[id].ambient.g = amb[0].attributes.getNamedItem("g").value;
+		this.materials[id].ambient.b = amb[0].attributes.getNamedItem("b").value;
+		this.materials[id].ambient.a = amb[0].attributes.getNamedItem("a").value;
 
 		this.materials[id].emission=[];
-		this.materials[id].emission.r = dif.attributes.getNamedItem("r").value;
-		this.materials[id].emission.g = dif.attributes.getNamedItem("g").value;
-		this.materials[id].emission.b = dif.attributes.getNamedItem("b").value;
-		this.materials[id].emission.a = dif.attributes.getNamedItem("a").value;
+		this.materials[id].emission.r = emi[0].attributes.getNamedItem("r").value;
+		this.materials[id].emission.g = emi[0].attributes.getNamedItem("g").value;
+		this.materials[id].emission.b = emi[0].attributes.getNamedItem("b").value;
+		this.materials[id].emission.a = emi[0].attributes.getNamedItem("a").value;
 
-		if (isNaN(this.materials[id].shin) || isNaN(this.materials[id].emission.r) || isNaN(this.materials[id].emission.g) || isNaN(this.materials[id].emission.b) || isNaN(this.materials[id].emission.a) || isNaN(this.materials[id].ambient.r)
+		if (isNaN(this.materials[id].shininess) || isNaN(this.materials[id].emission.r) || isNaN(this.materials[id].emission.g) || isNaN(this.materials[id].emission.b) || isNaN(this.materials[id].emission.a) || isNaN(this.materials[id].ambient.r)
 		|| isNaN(this.materials[id].ambient.g) || isNaN(this.materials[id].ambient.b) || isNaN(this.materials[id].ambient.a) || isNaN(this.materials[id].diffuse.r) || isNaN(this.materials[id].diffuse.g) 
 		|| isNaN(this.materials[id].diffuse.b) || isNaN(this.materials[id].diffuse.a) || isNaN(this.materials[id].specular.r) || isNaN(this.materials[id].specular.g) || isNaN(this.materials[id].specular.b) 
 			|| isNaN(this.materials[id].specular.a)) {
@@ -588,7 +590,7 @@ MySceneGraph.prototype.parseMaterials = function(rootElement){
 		}
 		
 
-		console.log("Read material with id " + id + ", value shininess " + this.materials[id].shin
+		console.log("Read material with id " + id + ", value shininess " + this.materials[id].shininess
 			+ ", value ambient r " + this.materials[id].ambient.r + ", g " + this.materials[id].ambient.g + ", b " + this.materials[id].ambient.b + ", a " + this.materials[id].ambient.a 
 			+ ", value diffuse r " + this.materials[id].diffuse.r + ", g " + this.materials[id].diffuse.g + ", b " + this.materials[id].diffuse.b + ", a " + this.materials[id].diffuse.a 
 			+ ", value specular r " + this.materials[id].specular.r + ", g " + this.materials[id].specular.g + ", b " + this.materials[id].specular.b + ", a " + this.materials[id].specular.a 
@@ -626,6 +628,48 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			return "Leaves ids must not be repeated";
 		}
 		this.leaves[id]=[];
+
+		if (type == "rectangle"){
+			var a = args.split(" ");
+			if (a.length != 4){
+				return "Rectangle leaves must have 4 args!";
+			}
+			if (isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2]) || isNaN(a[3])){
+				return "Rectangle leaves must have number args!";
+			}
+		}
+
+		else if (type == "cylinder"){
+			var a = args.split(" ");
+			if (a.length != 5){
+				return "Cylinder leaves must have 5 args!";
+			}
+			if (isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2]) || isNaN(a[3]) || isNaN(a[4])){
+				return "Cylinder leaves must have number args!";
+			}
+		}
+
+		else if (type == "sphere"){
+			var a = args.split(" ");
+			if (a.length != 3){
+				return "Sphere leaves must have 3 args!";
+			}
+			if (isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2])){
+				return "Sphere leaves must have number args!";
+			}
+		}
+
+		else if(type == "triangle"){
+			var a = args.split(" ");
+			var b = args.split("  ");
+
+			if (!(a.length == 9 || (b.length==3 && b[0].split(" ").length ==3 && b[1].split(" ").length ==3 && b[2].split(" ").length == 3))){
+				return "Triangle leaves must have 9 args!";
+			}
+			if (isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2]) || isNaN(a[3]) || isNaN(a[4]) || isNaN(a[5]) || isNaN(a[6]) || isNaN(a[7]) || isNaN(a[8])){
+				return "Triangle leaves must have number args!";
+			}
+		}
 
 		this.leaves[id]._type = [];
 		this.leaves[id]._type = type;
@@ -673,8 +717,6 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 
 		this.nodes[id]= [];
 
-		console.debug(nodesElems[i]);
-
 		//MATERIAL
 		var material = getUniqueElement(nodesElems[i],'MATERIAL');
 		if(material == -1){
@@ -708,7 +750,6 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 
 		this.nodes[id].descendants = [];
 
-		console.debug(descElem[0]);
 		var desc = descElem[0].getElementsByTagName('DESCENDANT');
 		for(j = 0; j < desc.length; j++){
 			
@@ -722,12 +763,12 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 		}
 
 		var allList = nodesElems[i].getElementsByTagName('*');
-		this.nodes[id].trans = [];
+		this.nodes[id].transf = [];
 		var count = 0;
 
 		for(j=0; j < allList.length; j++){
 
-			this.nodes[id].trans[count] = [];
+			this.nodes[id].transf[count] = [];
 
 			if(allList[j].tagName == "TRANSLATION"){
 				var tx = allList[j].attributes.getNamedItem("x").value;
@@ -738,14 +779,14 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 					return "Translations have to be numbers!";
 				}
 
-				this.nodes[id].trans[count]._type = 0;
-				this.nodes[id].trans[count].tx = tx;
-				this.nodes[id].trans[count].ty = ty;
-				this.nodes[id].trans[count].tz = tz;
+				this.nodes[id].transf[count]._type = 0;
+				this.nodes[id].transf[count].tx = tx;
+				this.nodes[id].transf[count].ty = ty;
+				this.nodes[id].transf[count].tz = tz;
 
 
 				count += 1;
-				this.nodes[id].trans[count] = [];
+				this.nodes[id].transf[count] = [];
 
 			}
 			
@@ -761,12 +802,12 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 				if(angle < -360 || angle > 360){
 					return "Angle must be between -360 and 360!";
 				}
-				this.nodes[id].trans[count]._type = 1;
-				this.nodes[id].trans[count].ax = axis;
-				this.nodes[id].trans[count].ang = angle;
+				this.nodes[id].transf[count]._type = 1;
+				this.nodes[id].transf[count].ax = axis;
+				this.nodes[id].transf[count].ang = angle;
 
 				count += 1;
-				this.nodes[id].trans[count] = [];
+				this.nodes[id].transf[count] = [];
 			}
 
 			else if(allList[j].tagName == "SCALE"){
@@ -775,16 +816,16 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 				var sz = allList[j].attributes.getNamedItem("sz").value;
 
 				if(isNaN(sx) || isNaN(sy) || isNaN(sz)){
-					return "Scaling have to be numbers!";
+					return "Scaling has to be numbers!";
 				}
 				
-				this.nodes[id].trans[count]._type = 2;
-				this.nodes[id].trans[count].sx = sx;
-				this.nodes[id].trans[count].sy = sy;
-				this.nodes[id].trans[count].sz = sz;
+				this.nodes[id].transf[count]._type = 2;
+				this.nodes[id].transf[count].sx = sx;
+				this.nodes[id].transf[count].sy = sy;
+				this.nodes[id].transf[count].sz = sz;
 
 				count += 1;
-				this.nodes[id].trans[count] = [];
+				this.nodes[id].transf[count] = [];
 
 			}
 		}
@@ -798,15 +839,15 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			console.log(", descendant " + (j+1) + ": " + this.nodes[id].descendants[j]); 
 		}
 
-		for(j = 0; j < this.nodes[id].trans.length; j++){
-			if(this.nodes[id].trans[j]._type == 0){
-				console.log(", translation " + (j+1) + ": x->" + this.nodes[id].trans[j].tx + " y->" + this.nodes[id].trans[j].ty + " z->" + this.nodes[id].trans[j].tz); 
+		for(j = 0; j < this.nodes[id].transf.length; j++){
+			if(this.nodes[id].transf[j]._type == 0){
+				console.log(", translation " + (j+1) + ": x->" + this.nodes[id].transf[j].tx + " y->" + this.nodes[id].transf[j].ty + " z->" + this.nodes[id].transf[j].tz); 
 			}
-			else if (this.nodes[id].trans[j]._type == 1){
-				console.log(", rotation " + (j+1) + ": axis->" + this.nodes[id].trans[j].ax + " angle->" + this.nodes[id].trans[j].ang); 
+			else if (this.nodes[id].transf[j]._type == 1){
+				console.log(", rotation " + (j+1) + ": axis->" + this.nodes[id].transf[j].ax + " angle->" + this.nodes[id].transf[j].ang); 
 			}
-			else if(this.nodes[id].trans[j]._type == 2){
-				console.log(", scaling " + (j+1) + ": x->" + this.nodes[id].trans[j].sx + " y->" + this.nodes[id].trans[j].sy + " z->" + this.nodes[id].trans[j].sz); 
+			else if(this.nodes[id].transf[j]._type == 2){
+				console.log(", scaling " + (j+1) + ": x->" + this.nodes[id].transf[j].sx + " y->" + this.nodes[id].transf[j].sy + " z->" + this.nodes[id].transf[j].sz); 
 			}
 			
 		}
