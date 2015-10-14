@@ -412,8 +412,24 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 	this.textures = [];
 	for(i = 0; i<texElems.length; i++){
 		var id = texElems[i].attributes.getNamedItem("id").value;
-		var file = texElems[i].getElementsByTagName('file');
-		var amp = texElems[i].getElementsByTagName('amplif_factor');
+		
+		var file = getUniqueElement(textElems[i],"id");
+		if(file == -1){
+			return "One file description must exist for texture " + id; 
+		}
+
+		if(file == -2){
+			return "Only one file description can exist for texture " + id; 
+		}
+
+		var amp = getUniqueElement(textElems[i], "amplif_factor");
+		if(file == -1){
+			return "One amplif_factor must exist for texture " + id; 
+		}
+
+		if(file == -2){
+			return "Only one amplif_factor can exist for texture " + id; 
+		}
 
 		if (this.textures[id] != undefined){
 			return "Texture ids must not be repeated";
