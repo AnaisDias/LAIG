@@ -72,7 +72,7 @@ XMLscene.prototype.initLights = function () {
 };
 
 XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
 };
 
@@ -92,28 +92,15 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {
+	this.axis=new CGFaxis(this, this.graph.initials.rlength);
 	//this.camera.near = this.graph.initials.fnear;
 	//this.camera.far = this.graph.initials.ffar;
-	//caso seja para mudar valores da camara
-	/*this.camera.translate(vec3.fromValues(this.graph.tx, this.graph.ty, this.graph.tz));
-	this.camera.orbit(this.X, this.graph.rotations[0]);
-	this.camera.orbit(this.Y, this.graph.rotations[1]);
-	this.camera.orbit(this.Z, this.graph.rotations[2]);*/
 
-	//caso seja para mudar valores da cena
-
-	this.axis=new CGFaxis(this, this.graph.initials.rlength);
-	/*
-	this.translate(this.graph.tx, this.graph.ty, this.graph.tz);
-	this.rotate(this.graph.rotations[0], 1,0,0);
-	this.rotate(this.graph.rotations[1], 0,1,0);
-	this.rotate(this.graph.rotations[2], 0,0,1);*/
 
 
 	//this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	
-	//lights
-	var j = 0;
+
 	for(var i in this.graph.lights){
 
 		console.log("Reading positions of light " + i + " with value position x of " + this.graph.lights[i].position.x);
@@ -157,7 +144,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	}
 
 	//Textures
-
+	this.texture = [];
 	for(var i in this.graph.textures){
 
 		this.texture[i] = [];
@@ -170,11 +157,11 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	//Materials
 
-	
+	this.materials = [];
 	for(var i in this.graph.materials){
 
 		this.materials[i] = new CGFappearance(this);
-		this.materials[i].setShininess.(this.graph.materials[i].shininess);
+		this.materials[i].setShininess(this.graph.materials[i].shininess);
 
 		var r = this.graph.materials[i].specular.r;
 		var g = this.graph.materials[i].specular.g;
@@ -249,6 +236,7 @@ XMLscene.prototype.display = function () {
 		this.rotate(this.graph.initials.rotations[0], 1,0,0);
 		this.rotate(this.graph.initials.rotations[1], 0,1,0);
 		this.rotate(this.graph.initials.rotations[2], 0,0,1);
+		this.scale(this.graph.initials.sx, this.graph.initials.sy, this.graph.initials.sz);
 
 	};	
 
