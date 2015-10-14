@@ -32,9 +32,41 @@ XMLscene.prototype.initLights = function () {
 
     this.shader.bind();
 
-	this.lights[0].setPosition(2, 3, 3, 1);
+    this.lights[0].setPosition(2, 3, 3, 1);
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
     this.lights[0].update();
+
+
+    /*for(i=0; i < this.graph.lights.length; i++){
+
+		var px = this.graph.lights[i].position.x;
+		var py = this.graph.lights[i].position.y;
+		var pz = this.graph.lights[i].position.z;
+		var pw = this.graph.lights[i].position.w;
+
+		var ar = this.graph.lights[i].ambient.r;
+		var ag = this.graph.lights[i].ambient.g;
+		var ab = this.graph.lights[i].ambient.b;
+		var aa = this.graph.lights[i].ambient.a;
+
+		var dr = this.graph.lights[i].diffuse.r;
+		var dg = this.graph.lights[i].diffuse.g;
+		var db = this.graph.lights[i].diffuse.b;
+		var da = this.graph.lights[i].diffuse.a;
+
+		var sr = this.graph.lights[i].specular.r;
+		var sg = this.graph.lights[i].specular.g;
+		var sb = this.graph.lights[i].specular.b;
+		var sa = this.graph.lights[i].specular.a;
+
+		this.lights[i].setPosition(px, py, pz, pw);
+		this.lights[i].setAmbient(ar,ab,ag,aa);
+    	this.lights[i].setDiffuse(dr,dg,db,da);
+    	this.lights[i].setSpecular(sr,sg,sb,sa);
+    	this.lights[i].shouldEnable = this.graph.lights[i].enable; 
+   		this.lights[i].update();
+
+	}*/
  
     this.shader.unbind();
 };
@@ -79,8 +111,61 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 
 	//this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
+	
+	for(i=0; i < this.graph.lights.length; i++){
+
+		var px = this.graph.lights[i].position.x;
+		var py = this.graph.lights[i].position.y;
+		var pz = this.graph.lights[i].position.z;
+		var pw = this.graph.lights[i].position.w;
+
+		var ar = this.graph.lights[i].ambient.r;
+		var ag = this.graph.lights[i].ambient.g;
+		var ab = this.graph.lights[i].ambient.b;
+		var aa = this.graph.lights[i].ambient.a;
+
+		var dr = this.graph.lights[i].diffuse.r;
+		var dg = this.graph.lights[i].diffuse.g;
+		var db = this.graph.lights[i].diffuse.b;
+		var da = this.graph.lights[i].diffuse.a;
+
+		var sr = this.graph.lights[i].specular.r;
+		var sg = this.graph.lights[i].specular.g;
+		var sb = this.graph.lights[i].specular.b;
+		var sa = this.graph.lights[i].specular.a;
+
+		this.lights[i].setPosition(px, py, pz, pw);
+		this.lights[i].setAmbient(ar,ab,ag,aa);
+    	this.lights[i].setDiffuse(dr,dg,db,da);
+    	this.lights[i].setSpecular(sr,sg,sb,sa);
+    	
+    	if(this.graph.lights[i].enable == "1"){
+    		this.lights[i].setVisible(true);
+			this.lights[i].enable();
+    	}
+    	else{
+    		this.lights[i].setVisible(false);
+			this.lights[i].enable();
+    	}
+
+   		this.lights[i].update();
+
+	}
+
+	/*for(i = 0; i < this.lights.length; i++){
+
+		if(this.lights[i].shouldEnable){
+			this.lights[i].setVisible(true);
+			this.lights[i].enable();
+		}
+		else {
+			this.lights[i].setVisible(false);
+			this.lights[i].enable();
+		}
+	}
+	
 	this.lights[0].setVisible(true);
-    this.lights[0].enable();
+    this.lights[0].enable();*/
     
 };
 
@@ -111,13 +196,19 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk)
 	{
-		this.lights[0].update();
+		//this.lights[0].update();
+
+		for(i = 0 ; i < this.lights.length; i++){
+			this.lights[i].update();
+		}
 
 		//initial transformations
+
 		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
 		this.rotate(this.graph.initials.rotations[0], 1,0,0);
 		this.rotate(this.graph.initials.rotations[1], 0,1,0);
 		this.rotate(this.graph.initials.rotations[2], 0,0,1);
+
 	};	
 
     this.shader.unbind();
