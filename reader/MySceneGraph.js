@@ -617,8 +617,7 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 	}
 
 	//ROOT ID
-	var root = nodesList[0].getElementsByTagName('ROOT');
-	this.scene_id = root[0].attributes.getNamedItem("id").value;
+	
 
 	var nodesElems = nodesList[0].getElementsByTagName('NODE');
 
@@ -776,6 +775,24 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			
 		}
 	}
+
+	var found = false;
+
+	var root = nodesList[0].getElementsByTagName('ROOT');
+	for(i=0; i < nodesElems.length; i++){
+
+		if(root[0].attributes.getNamedItem("id").value == nodesElems[i].attributes.getNamedItem("id").value){
+			found = true;
+			break;
+		}
+	}
+
+	if(!found)
+		return "Root node of the scene must exist!";
+
+	this.scene_id = root[0].attributes.getNamedItem("id").value;
+
+	console.log("Root of the scene is node: " + this.scene_id);
 
 };
 
