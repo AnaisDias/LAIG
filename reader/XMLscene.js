@@ -161,25 +161,48 @@ XMLscene.prototype.onGraphLoaded = function ()
 	for(var i in this.graph.textures){
 
 		this.texture[i] = [];
-		this.texture[i].filepath = this.graph.textures[id].filepath;
+		this.texture[i].filepath = this.graph.textures[i].filepath;
 		this.texture[i].amplif = [];
-		this.texture[i].amplif.s = this.graph.textures[id].amplif.s;
-		this.texture[i].amplif.t = this.graph.textures[id].amplif.t;
+		this.texture[i].amplif.s = this.graph.textures[i].amplif.s;
+		this.texture[i].amplif.t = this.graph.textures[i].amplif.t;
 
 	}
-	/*for(i = 0; i < this.lights.length; i++){
 
-		if(this.lights[i].shouldEnable){
-			this.lights[i].setVisible(true);
-			this.lights[i].enable();
-		}
-		else {
-			this.lights[i].setVisible(false);
-			this.lights[i].enable();
-		}
+	//Materials
+
+	
+	for(var i in this.graph.materials){
+
+		this.materials[i] = [];
+		this.materials[i].shininess = this.graph.materials[i].shininess;
+
+		this.materials[i].specular = [];
+		this.materials[i].specular.r = this.graph.materials[i].specular.r;
+		this.materials[i].specular.g = this.graph.materials[i].specular.g;
+		this.materials[i].specular.b = this.graph.materials[i].specular.b;
+		this.materials[i].specular.a = this.graph.materials[i].specular.a;
+
+		this.materials[i].diffuse = [];
+		this.materials[i].diffuse.r = this.graph.materials[i].diffuse.r;
+		this.materials[i].diffuse.g = this.graph.materials[i].diffuse.g;
+		this.materials[i].diffuse.b = this.graph.materials[i].diffuse.b;
+		this.materials[i].diffuse.a = this.graph.materials[i].diffuse.a;
+
+		this.materials[i].ambient = [];
+		this.materials[i].ambient.r = this.graph.materials[i].ambient.r;
+		this.materials[i].ambient.g = this.graph.materials[i].ambient.g;
+		this.materials[i].ambient.b = this.graph.materials[i].ambient.b;
+		this.materials[i].ambient.a = this.graph.materials[i].ambient.a;
+
+		this.materials[i].emission = [];
+		this.materials[i].emission.r = this.graph.materials[i].emission.r;
+		this.materials[i].emission.g = this.graph.materials[i].emission.g;
+		this.materials[i].emission.b = this.graph.materials[i].emission.b;
+		this.materials[i].emission.a = this.graph.materials[i].emission.a;
+
 	}
 	
-	this.lights[0].setVisible(true);
+	/*this.lights[0].setVisible(true);
     this.lights[0].enable();*/
     
 };
