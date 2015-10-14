@@ -156,10 +156,16 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	}
 
-	//Materials
+	//Textures
 
-	/*for(var i in this.graph.lights){
-		this.texture[i]
+	for(var i in this.graph.textures){
+
+		this.texture[i] = [];
+		this.texture[i].filepath = this.graph.textures[id].filepath;
+		this.texture[i].amplif = [];
+		this.texture[i].amplif.s = this.graph.textures[id].amplif.s;
+		this.texture[i].amplif.t = this.graph.textures[id].amplif.t;
+
 	}
 	/*for(i = 0; i < this.lights.length; i++){
 
