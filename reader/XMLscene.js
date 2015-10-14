@@ -60,7 +60,8 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {
-	
+	//this.camera.near = this.graph.initials.fnear;
+	//this.camera.far = this.graph.initials.ffar;
 	//caso seja para mudar valores da camara
 	/*this.camera.translate(vec3.fromValues(this.graph.tx, this.graph.ty, this.graph.tz));
 	this.camera.orbit(this.X, this.graph.rotations[0]);
@@ -69,7 +70,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	//caso seja para mudar valores da cena
 
-	this.axis=new CGFaxis(this, this.graph.rlength);
+	this.axis=new CGFaxis(this, this.graph.initials.rlength);
 	/*
 	this.translate(this.graph.tx, this.graph.ty, this.graph.tz);
 	this.rotate(this.graph.rotations[0], 1,0,0);
@@ -113,10 +114,10 @@ XMLscene.prototype.display = function () {
 		this.lights[0].update();
 
 		//initial transformations
-		this.translate(this.graph.tx, this.graph.ty, this.graph.tz);
-		this.rotate(this.graph.rotations[0], 1,0,0);
-		this.rotate(this.graph.rotations[1], 0,1,0);
-		this.rotate(this.graph.rotations[2], 0,0,1);
+		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
+		this.rotate(this.graph.initials.rotations[0], 1,0,0);
+		this.rotate(this.graph.initials.rotations[1], 0,1,0);
+		this.rotate(this.graph.initials.rotations[2], 0,0,1);
 	};	
 
     this.shader.unbind();
