@@ -77,7 +77,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.rotate(this.graph.rotations[2], 0,0,1);*/
 
 
-	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
+	//this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	this.lights[0].setVisible(true);
     this.lights[0].enable();
     
