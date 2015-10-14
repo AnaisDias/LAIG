@@ -124,7 +124,7 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 	// TRANSLATE
 	var translation = elemsList[0].getElementsByTagName('translation');
 
-console.debug(translation);
+
 	if(translation == null || translation.length != 1){
 		return "translate element is missing or there is more than one.";
 	}
@@ -329,7 +329,6 @@ MySceneGraph.prototype.parseLights = function(rootElement){
 
 	var lightElems =  elemsList[0].getElementsByTagName('LIGHT');
 
-	console.debug(lightElems[0].attributes.getNamedItem("id").value);
 	
 	console.log(lightElems.length + " lights to be processed");
 	
@@ -455,15 +454,12 @@ MySceneGraph.prototype.parseMaterials = function(rootElement){
 
 	var matElems =  elemsList[0].getElementsByTagName('MATERIAL');
 
-	console.debug(matElems[0].attributes.getNamedItem("id").value);
 	
 	console.log(matElems.length + " materials to be processed");
 	
 	this.materials = [];
 	for(i = 0; i<matElems.length; i++){
 		var id = matElems[i].attributes.getNamedItem("id").value;
-		//var shin = matElems[i].children[0];
-		console.debug(matElems[i]);
 		var shin = matElems[i].getElementsByTagName('shininess');
 		var spec = matElems[i].getElementsByTagName('specular');
 		var dif = matElems[i].getElementsByTagName('diffuse');
@@ -532,8 +528,6 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 
 	var leavesElems =  rootElement.getElementsByTagName('LEAF');
-
-	console.debug(leavesElems[0].attributes.getNamedItem("id").value);
 	
 	console.log(leavesElems.length + " leaves to be processed");
 
@@ -621,7 +615,6 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 
 	var nodesElems = nodesList[0].getElementsByTagName('NODE');
 
-	console.debug(nodesElems[0].attributes.getNamedItem("id").value);
 	
 	console.log(nodesElems.length + " nodes to be processed");
 
