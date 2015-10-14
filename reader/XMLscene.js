@@ -37,7 +37,7 @@ XMLscene.prototype.initLights = function () {
     this.lights[0].update();
 
 
-    /*for(i=0; i < this.graph.lights.length; i++){
+    /*for(var i in this.graph.lights){
 
 		var px = this.graph.lights[i].position.x;
 		var py = this.graph.lights[i].position.y;
@@ -112,8 +112,11 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	//this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	
-	for(i=0; i < this.graph.lights.length; i++){
+	//lights
+	var j = 0;
+	for(var i in this.graph.lights){
 
+		console.log("Reading positions of light " + i + " with value position x of " + this.graph.lights[i].position.x);
 		var px = this.graph.lights[i].position.x;
 		var py = this.graph.lights[i].position.y;
 		var pz = this.graph.lights[i].position.z;
@@ -134,24 +137,30 @@ XMLscene.prototype.onGraphLoaded = function ()
 		var sb = this.graph.lights[i].specular.b;
 		var sa = this.graph.lights[i].specular.a;
 
-		this.lights[i].setPosition(px, py, pz, pw);
-		this.lights[i].setAmbient(ar,ab,ag,aa);
-    	this.lights[i].setDiffuse(dr,dg,db,da);
-    	this.lights[i].setSpecular(sr,sg,sb,sa);
+		this.lights[j].setPosition(px, py, pz, pw);
+		this.lights[j].setAmbient(ar,ab,ag,aa);
+    	this.lights[j].setDiffuse(dr,dg,db,da);
+    	this.lights[j].setSpecular(sr,sg,sb,sa);
     	
     	if(this.graph.lights[i].enable == "1"){
-    		this.lights[i].setVisible(true);
-			this.lights[i].enable();
+    		this.lights[j].setVisible(true);
+			this.lights[j].enable();
     	}
     	else{
-    		this.lights[i].setVisible(false);
-			this.lights[i].enable();
+    		this.lights[j].setVisible(false);
+			this.lights[j].enable();
     	}
 
-   		this.lights[i].update();
+   		this.lights[j].update();
+   		j++;
 
 	}
 
+	//Materials
+
+	/*for(var i in this.graph.lights){
+		this.texture[i]
+	}
 	/*for(i = 0; i < this.lights.length; i++){
 
 		if(this.lights[i].shouldEnable){
