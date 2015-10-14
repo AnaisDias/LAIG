@@ -173,32 +173,35 @@ XMLscene.prototype.onGraphLoaded = function ()
 	
 	for(var i in this.graph.materials){
 
-		this.materials[i] = [];
-		this.materials[i].shininess = this.graph.materials[i].shininess;
+		this.materials[i] = new CGFappearance(this);
+		this.materials[i].setShininess.(this.graph.materials[i].shininess);
 
-		this.materials[i].specular = [];
-		this.materials[i].specular.r = this.graph.materials[i].specular.r;
-		this.materials[i].specular.g = this.graph.materials[i].specular.g;
-		this.materials[i].specular.b = this.graph.materials[i].specular.b;
-		this.materials[i].specular.a = this.graph.materials[i].specular.a;
+		var r = this.graph.materials[i].specular.r;
+		var g = this.graph.materials[i].specular.g;
+		var b = this.graph.materials[i].specular.b;
+		var a = this.graph.materials[i].specular.a;
+		this.materials[i].setSpecular(r,g,b,a);
 
-		this.materials[i].diffuse = [];
-		this.materials[i].diffuse.r = this.graph.materials[i].diffuse.r;
-		this.materials[i].diffuse.g = this.graph.materials[i].diffuse.g;
-		this.materials[i].diffuse.b = this.graph.materials[i].diffuse.b;
-		this.materials[i].diffuse.a = this.graph.materials[i].diffuse.a;
 
-		this.materials[i].ambient = [];
-		this.materials[i].ambient.r = this.graph.materials[i].ambient.r;
-		this.materials[i].ambient.g = this.graph.materials[i].ambient.g;
-		this.materials[i].ambient.b = this.graph.materials[i].ambient.b;
-		this.materials[i].ambient.a = this.graph.materials[i].ambient.a;
+		r = this.graph.materials[i].diffuse.r;
+		g = this.graph.materials[i].diffuse.g;
+		b = this.graph.materials[i].diffuse.b;
+		a = this.graph.materials[i].diffuse.a;
+		this.materials[i].setDiffuse(r,g,b,a);
 
-		this.materials[i].emission = [];
-		this.materials[i].emission.r = this.graph.materials[i].emission.r;
-		this.materials[i].emission.g = this.graph.materials[i].emission.g;
-		this.materials[i].emission.b = this.graph.materials[i].emission.b;
-		this.materials[i].emission.a = this.graph.materials[i].emission.a;
+
+		r = this.graph.materials[i].ambient.r;
+		g = this.graph.materials[i].ambient.g;
+		b = this.graph.materials[i].ambient.b;
+		a = this.graph.materials[i].ambient.a;
+		this.materials[i].setAmbient(r,g,b,a);
+
+
+		r = this.graph.materials[i].emission.r;
+		g = this.graph.materials[i].emission.g;
+		b = this.graph.materials[i].emission.b;
+		a = this.graph.materials[i].emission.a;
+		this.materials[i].setEmission(r,g,b,a);
 
 	}
 	
