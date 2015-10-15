@@ -559,6 +559,8 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 		}
 		this.leaves[id]=[];
 
+		this.leaves[id].id = id;
+
 		if (type == "rectangle"){
 			var a = args.split(" ");
 			if (a.length != 4){
@@ -644,6 +646,8 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 		}
 
 		this.nodes[id]= [];
+
+		this.nodes[id].id = id;
 
 		//MATERIAL
 		var material = getUniqueElement(nodesElems[i],'MATERIAL');

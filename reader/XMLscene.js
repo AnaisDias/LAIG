@@ -95,8 +95,10 @@ XMLscene.prototype.onGraphLoaded = function ()
 	//initials
 
 	this.axis=new CGFaxis(this, this.graph.initials.rlength);
-	this.camera.near = this.graph.initials.fnear;
-	this.camera.far = this.graph.initials.ffar;
+	console.debug(this.graph.initials.fnear);
+	//WHY NOT WORKING????
+	//this.camera.near = this.graph.initials.fnear;
+	//this.camera.far = this.graph.initials.ffar;
 
 
 	//illumination done
@@ -152,11 +154,13 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.texture = [];
 	for(var i in this.graph.textures){
 
-		this.texture[i] = [];
+		this.texture[i] = new CGFtexture(this, this.graph.textures[i].filepath);
 		this.texture[i].filepath = this.graph.textures[i].filepath;
 		this.texture[i].amplif = [];
 		this.texture[i].amplif.s = this.graph.textures[i].amplif.s;
 		this.texture[i].amplif.t = this.graph.textures[i].amplif.t;
+
+
 
 	}
 
@@ -196,11 +200,58 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.materials[i].setEmission(r,g,b,a);
 
 	}
+
+	this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
-	/*this.lights[0].setVisible(true);
-    this.lights[0].enable();*/
     
 };
+
+XMLscene.prototype.createTransfMatrixes = function(){
+	for(var i in this.graph.nodes){
+		var tmatrix = mat4.create();
+		for(var j in this.graph.nodes[i].transf){
+			if(this.graph.nodes[i].transf[j]._type == 0){
+				var tx = this.graph.nodes[i].transf[j].tx;
+				var ty = this.graph.nodes[i].transf[j].ty;
+				var tz = this.graph.nodes[i].transf[j].tz;
+				mat4.translate(tmatrix, tmatrix, tx, ty, tz);
+			}
+			else if(this.graph.nodes[i].transf[j]._type == 1){
+
+			}
+			else if(this.graph.nodes[i].transf[j]._type == 2){
+
+			}
+		}
+		this.graph.nodes[i].matrix = tmatrix;
+	}
+};
+
+XMLscene.prototype.drawNode = function (node){
+	console.log(node.id);
+	this.pushMatrix();
+
+	for(var i in node.descendants){
+		if(this.isLeaf(node.descendants[i])){
+			console.log(node.descendants[i]);
+			return;
+		}
+		else this.drawNode(this.graph.nodes[node.descendants[i]]);
+	}
+};
+
+XMLscene.prototype.drawLeaf = function (leaf, s, t){
+
+};
+
+XMLscene.prototype.isLeaf = function (id){
+	for(var i in this.graph.leaves){
+		if (id==i) return true;
+	}
+	return false;
+};
+
+
 
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
@@ -242,6 +293,11 @@ XMLscene.prototype.display = function () {
 		this.rotate(this.graph.initials.rotations[1], 0,1,0);
 		this.rotate(this.graph.initials.rotations[2], 0,0,1);
 		this.scale(this.graph.initials.sx, this.graph.initials.sy, this.graph.initials.sz);
+
+
+		//nodes
+		//this.drawNode(this.graph.nodes[this.graph.scene_id]);
+		
 
 	};	
 
