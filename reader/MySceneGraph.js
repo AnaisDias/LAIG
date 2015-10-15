@@ -413,7 +413,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 	for(i = 0; i<texElems.length; i++){
 		var id = texElems[i].attributes.getNamedItem("id").value;
 		
-		var file = getUniqueElement(textElems[i],"id");
+		var file = getUniqueElement(texElems[i],'file');
 		if(file == -1){
 			return "One file description must exist for texture " + id; 
 		}
@@ -422,7 +422,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 			return "Only one file description can exist for texture " + id; 
 		}
 
-		var amp = getUniqueElement(textElems[i], "amplif_factor");
+		var amp = getUniqueElement(texElems[i], 'amplif_factor');
 		if(file == -1){
 			return "One amplif_factor must exist for texture " + id; 
 		}

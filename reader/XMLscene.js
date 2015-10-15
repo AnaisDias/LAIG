@@ -21,8 +21,8 @@ XMLscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
 
 	//added code for application defaults
-    this.gl.frontFace(this.gl.CCW);
-    this.gl.cullFace(this.gl.BACK);
+   this.gl.frontFace(this.gl.CCW);
+   this.gl.cullFace(this.gl.BACK);
 
 
 	this.axis=new CGFaxis(this);
@@ -92,14 +92,19 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {
+	//initials
+
 	this.axis=new CGFaxis(this, this.graph.initials.rlength);
-	//this.camera.near = this.graph.initials.fnear;
-	//this.camera.far = this.graph.initials.ffar;
+	this.camera.near = this.graph.initials.fnear;
+	this.camera.far = this.graph.initials.ffar;
 
 
-
-	//this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
-	
+	//illumination done
+	this.gl.clearColor(this.graph.illumination.background.r,
+		this.graph.illumination.background.g,this.graph.illumination.background.b,this.graph.illumination.background.a);
+	this.setGlobalAmbientLight(this.graph.illumination.ambient.r, this.graph.illumination.ambient.g, this.graph.illumination.ambient.b,
+		this.graph.illumination.ambient.a);
+	j=0;
 
 	for(var i in this.graph.lights){
 
@@ -155,8 +160,8 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	}
 
-	//Materials
 
+	//Materials
 	this.materials = [];
 	for(var i in this.graph.materials){
 
