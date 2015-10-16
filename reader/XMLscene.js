@@ -30,7 +30,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,0,1,0,1);
 	this.tri = new Triangle(this, -0.5,-0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0);
-	//this.cyl = new Cylinder(this, )
+	this.cyl = new Cylinder(this, 1,8,16,0.5,0.5);
 	this.sp = new Sphere(this, 16,16);
 };
 
@@ -187,6 +187,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var rbx = this.graph.leaves[i].args.rbx;
 				var rby = this.graph.leaves[i].args.rby;
 				this.leaves[i] = new Rectangle(this, ltx, lty, rbx, rby, 1,1);
+				this.leaves[i]._type = "rectangle";
 				break;
 			case "triangle":
 				var x1 = this.graph.leaves[i].args.x1;
@@ -200,6 +201,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var z3 = this.graph.leaves[i].args.z3;
 
 				this.leaves[i] = new Triangle(this, x1, y1, z1, x2, y2, z2, x3, y3, z3);
+				this.leaves[i]._type = "triangle";
 				break;
 			case "cylinder":
 				var height = this.graph.leaves[i].args.height;
@@ -209,6 +211,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var slices = this.graph.leaves[i].args.slices;
 
 				this.leaves[i] = new Cylinder(this, stacks, slices, brad, trad);
+				this.leaves[i]._type = "cylinder";
 				break;
 			case "sphere":
 				var height = this.graph.leaves[i].args.height;
@@ -216,6 +219,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var slices = this.graph.leaves[i].args.slices;
 
 				this.leaves[i] = new Sphere(this, stacks, slices);
+				this.leaves[i]._type = "sphere";
 				break;
 		}
 
@@ -273,7 +277,7 @@ XMLscene.prototype.drawNode = function (node){
 	console.log(node.id);
 	this.pushMatrix();
 	//CRIAR VARIAVEL GLOBAL TEXTURA E MATERIAL A APLICAR ATUALMENTE???
-	//this.multMatrix(node.matrix);
+	this.multMatrix(node.matrix);
 	//var matID = node.material;
 	//var texID = node.texture;
 	//if(texID != null && matID != null) //e se mat for null e tex nao??
@@ -283,7 +287,7 @@ XMLscene.prototype.drawNode = function (node){
 	for(var i in node.descendants){
 		if(this.isLeaf(node.descendants[i])){
 			//if (texID != null)
-			//this.drawLeaf(this.graph.leaves[node.descendants[i]], textures[texID].amplif.s, textures[texID].amplif.t);
+			this.drawLeaf(this.leaves[node.descendants[i]]/*, textures[texID].amplif.s, textures[texID].amplif.t*/);
 			console.log(node.descendants[i]);
 			return;
 		}
@@ -292,8 +296,18 @@ XMLscene.prototype.drawNode = function (node){
 	this.popMatrix();
 };
 
-XMLscene.prototype.drawLeaf = function (leaf, s, t){
-
+XMLscene.prototype.drawLeaf = function (leaf){
+	if(leaf._type == "rectangle" || leaf._type == "triangle"){
+		leaf.display();
+	}
+	else if (leaf._type== "cylinder"){
+		this.scale(1,leaf.height,1);
+		leaf.display();
+	}
+	else if(leaf._type == "sphere"){
+		this.scale(leaf.radius*2, leaf.radius*2, leaf.radius*2);
+		leaf.display();
+	}
 };
 
 XMLscene.prototype.isLeaf = function (id){
@@ -327,7 +341,7 @@ XMLscene.prototype.display = function () {
 
 	this.pushMatrix();
 		//this.scale(2,2,2);
-		this.sp.display();
+		this.cyl.display();
 	this.popMatrix();
 	
 	// ---- END Background, camera and axis setup
