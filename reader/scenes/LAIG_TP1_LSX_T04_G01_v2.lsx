@@ -725,7 +725,7 @@
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
                        
-	        <TRANSLATION x="0" y="-0.5" z="0" /> 
+	        <TRANSLATION x="0" y="-0.8" z="0" /> 
 	        <ROTATION axis="z" angle="180" />
 	        <ROTATION axis="x" angle="-90" />
 	        
@@ -843,6 +843,7 @@
 	            <DESCENDANT id="wall4" /> 
 	            <DESCENDANT id="floor" /> 
 	            <DESCENDANT id="table" /> 
+	            <DESCENDANT id="ornament" /> 
 	            <DESCENDANT id="chair1" /> 
 	            <DESCENDANT id="chair2" /> 
 	            <DESCENDANT id="chair3" /> 
@@ -851,7 +852,7 @@
 	            <DESCENDANT id="lamp2" /> 
 	            <DESCENDANT id="doors" /> 
 	            <DESCENDANT id="painting" /> 
-	            <DESCENDANT id="ornament" />     
+	                
 	        </DESCENDANTS>
 
 	    </NODE>

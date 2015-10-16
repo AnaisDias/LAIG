@@ -641,6 +641,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 				return "Args for triangle leaves must be numbers!";
 			}
 
+			if(a.length==9){
 			this.leaves[id].args.x1 = a[0];
 			this.leaves[id].args.y1 = a[1];
 			this.leaves[id].args.z1 = a[2];
@@ -652,6 +653,23 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			this.leaves[id].args.x3 = a[6];
 			this.leaves[id].args.y3 = a[7];
 			this.leaves[id].args.z3 = a[8];
+		}
+			else if(b.length==3){
+				var b1= b[0].split(" ");
+				var b2 = b[1].split(" ");
+				var b3 = b[2].split(" ");
+				this.leaves[id].args.x1 = b1[0];
+			this.leaves[id].args.y1 = b1[1];
+			this.leaves[id].args.z1 = b1[2];
+
+			this.leaves[id].args.x2 = b2[0];
+			this.leaves[id].args.y2 = b2[1];
+			this.leaves[id].args.z2 = b2[2];
+
+			this.leaves[id].args.x3 = b3[0];
+			this.leaves[id].args.y3 = b3[1];
+			this.leaves[id].args.z3 = b3[2];
+			}
 
 			console.log("Read leaf with id " + id 
 			+ ", type " + this.leaves[id]._type

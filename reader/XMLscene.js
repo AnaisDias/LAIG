@@ -5,6 +5,8 @@ function XMLscene() {
     CGFscene.call(this);
 }
 
+var currMat;
+
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
@@ -121,7 +123,7 @@ XMLscene.prototype.onGraphLoaded = function ()
     	}
     	else{
     		this.lights[j].setVisible(false);
-			this.lights[j].enable();
+			this.lights[j].disable();
     	}
 
    		this.lights[j].update();
@@ -131,6 +133,9 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	//Textures
 	this.texture = [];
+	if(this.graph.textures.length>0){
+		this.enableTextures(true);
+	}
 	for(var i in this.graph.textures){
 
 		this.texture[i] = new CGFtexture(this, "scenes/"+this.graph.textures[i].filepath);
@@ -280,14 +285,19 @@ XMLscene.prototype.drawNode = function (node){
 	//console.log(node.id);
 	this.pushMatrix();
 
-	this.multMatrix(node.matrix);
+	
 	var matID = node.material;
 	var texID = node.texture;
-	if(texID != "null" && matID != "null") {//e se mat for null e tex nao??
-	this.materials[matID].setTexture(this.textures[texID]);
-	this.materials[matID].apply();
-}
-
+	//if(node.id=="wall1"){
+	if(texID != "null" ) {
+		if(matID != "null"){
+		this.materials[matID].setTexture(this.texture[texID]);
+		this.materials[matID].apply();
+		//console.log(matID);
+		//console.debug(this.materials[matID]);
+		}
+	}//}
+this.multMatrix(node.matrix);
 	for(var i in node.descendants){
 		if(this.isLeaf(node.descendants[i])){
 			//if (texID != null)
