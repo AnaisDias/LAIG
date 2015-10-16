@@ -204,7 +204,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	}
 
 	this.createTransfMatrixes();
-	this.drawNode(this.graph.nodes[this.graph.scene_id]);
+	//this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
     
 };
