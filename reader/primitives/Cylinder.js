@@ -7,7 +7,7 @@
 
 	this.slices=slices;
 	this.stacks=stacks;
-	this.height=height
+	this.height=height;
 	this.b_radius=b_radius;
 	this.t_radius=t_radius;
  	this.initBuffers();
