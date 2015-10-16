@@ -558,27 +558,51 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			return "Leaves ids must not be repeated";
 		}
 		this.leaves[id]=[];
-
-		this.leaves[id].id = id;
+		this.leaves[id].args = [];
 
 		if (type == "rectangle"){
 			var a = args.split(" ");
 			if (a.length != 4){
-				return "Rectangle leaves must have 4 args!";
+				return "Rectangle leaves must have 4 args: left top x, left top y, rbx, rby!";
 			}
 			if (isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2]) || isNaN(a[3])){
-				return "Rectangle leaves must have number args!";
+				return "Args for rectangle leaf must be numbers!";
 			}
+
+			this.leaves[id].args.ltx = a[0];
+			this.leaves[id].args.lty = a[1];
+			this.leaves[id].args.rbx = a[2];
+			this.leaves[id].args.rby = a[3];
+
+			console.log("Read leaf with id " + id 
+			+ ", type " + this.leaves[id]._type
+			+ " and args: ltx -> " + this.leaves[id].args.ltx
+			+ ", lty -> " + this.leaves[id].args.lty 
+			+ ", rbx -> " + this.leaves[id].args.rbx 
+			+ ", rby -> " + this.leaves[id].args.rby );
 		}
 
 		else if (type == "cylinder"){
 			var a = args.split(" ");
 			if (a.length != 5){
-				return "Cylinder leaves must have 5 args!";
+				return "Cylinder leaves must have 5 args: height, bottom radius, rbx, rby!";
 			}
 			if (isNaN(a[0]) || isNaN(a[1]) || isNaN(a[2]) || isNaN(a[3]) || isNaN(a[4])){
 				return "Cylinder leaves must have number args!";
 			}
+
+			this.leaves[id].args.height = a[0];
+			this.leaves[id].args.b_radius = a[1];
+			this.leaves[id].args.t_radius = a[2];
+			this.leaves[id].args.stacks = a[3];
+			this.leaves[id].args.slices = a[4];
+
+			console.log("Read leaf with id " + id 
+			+ ", type " + this.leaves[id]._type
+			+ " and args: ltx -> " + this.leaves[id].args.ltx
+			+ ", lty -> " + this.leaves[id].args.lty 
+			+ ", rbx -> " + this.leaves[id].args.rbx 
+			+ ", rby -> " + this.leaves[id].args.rby );
 		}
 
 		else if (type == "sphere"){
@@ -605,9 +629,6 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 		this.leaves[id]._type = [];
 		this.leaves[id]._type = type;
-
-		this.leaves[id].args = [];
-		this.leaves[id].args = args;
 
 		console.log("Read leaf with id " + id 
 			+ ", type " + this.leaves[id]._type

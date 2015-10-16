@@ -16,6 +16,8 @@
 
  Sphere.prototype.initBuffers = function() {
 
+ 	var degToRad = Math.PI / 180;
+
 	var ang_slices = 360 * degToRad / this.slices;
 	var ang_stacks = 180 * degToRad / this.stacks;
 
@@ -36,23 +38,23 @@
 
 		for (i = 0; i < this.slices; i++) {
 
-			var x0 = Math.sin(ang_stacks_now) * Math.cos(ang_slices_now);
-			var y0 = Math.cos(ang_stacks_now);
-			var z0 = Math.sin(ang_stacks_now) * Math.sin(ang_slices_now);
+			var x0 = (Math.sin(ang_stacks_now) * Math.cos(ang_slices_now))/2;
+			var y0 = Math.cos(ang_stacks_now)/2;
+			var z0 = (Math.sin(ang_stacks_now) * Math.sin(ang_slices_now))/2;
 
-			var x2 = Math.sin(ang_stacks_then) * Math.cos(ang_slices_now);
-			var y2 = Math.cos(ang_stacks_then);
-			var z2 = Math.sin(ang_stacks_then) * Math.sin(ang_slices_now);
+			var x2 = (Math.sin(ang_stacks_then) * Math.cos(ang_slices_now))/2;
+			var y2 = Math.cos(ang_stacks_then)/2;
+			var z2 = (Math.sin(ang_stacks_then) * Math.sin(ang_slices_now))/2;
 
 			ang_slices_now += ang_slices;
 
-			var x1 = Math.sin(ang_stacks_now) * Math.cos(ang_slices_now);
-			var y1 = Math.cos(ang_stacks_now);
-			var z1 = Math.sin(ang_stacks_now) * Math.sin(ang_slices_now);
+			var x1= (Math.sin(ang_stacks_now) * Math.cos(ang_slices_now))/2;
+			var y1 = Math.cos(ang_stacks_now)/2;
+			var z1 = (Math.sin(ang_stacks_now) * Math.sin(ang_slices_now))/2;
 
-			var x3 = Math.sin(ang_stacks_then) * Math.cos(ang_slices_now);
-			var y3 = Math.cos(ang_stacks_then);
-			var z3 = Math.sin(ang_stacks_then) * Math.sin(ang_slices_now);
+			var x3 = (Math.sin(ang_stacks_then) * Math.cos(ang_slices_now))/2;
+			var y3 = Math.cos(ang_stacks_then)/2;
+			var z3 = (Math.sin(ang_stacks_then) * Math.sin(ang_slices_now))/2;
 
 			this.vertices.push(x0);
 			this.vertices.push(y0);
