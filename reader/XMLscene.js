@@ -39,36 +39,7 @@ XMLscene.prototype.initLights = function () {
     this.lights[0].update();
 
 
-    /*for(var i in this.graph.lights){
-
-		var px = this.graph.lights[i].position.x;
-		var py = this.graph.lights[i].position.y;
-		var pz = this.graph.lights[i].position.z;
-		var pw = this.graph.lights[i].position.w;
-
-		var ar = this.graph.lights[i].ambient.r;
-		var ag = this.graph.lights[i].ambient.g;
-		var ab = this.graph.lights[i].ambient.b;
-		var aa = this.graph.lights[i].ambient.a;
-
-		var dr = this.graph.lights[i].diffuse.r;
-		var dg = this.graph.lights[i].diffuse.g;
-		var db = this.graph.lights[i].diffuse.b;
-		var da = this.graph.lights[i].diffuse.a;
-
-		var sr = this.graph.lights[i].specular.r;
-		var sg = this.graph.lights[i].specular.g;
-		var sb = this.graph.lights[i].specular.b;
-		var sa = this.graph.lights[i].specular.a;
-
-		this.lights[i].setPosition(px, py, pz, pw);
-		this.lights[i].setAmbient(ar,ab,ag,aa);
-    	this.lights[i].setDiffuse(dr,dg,db,da);
-    	this.lights[i].setSpecular(sr,sg,sb,sa);
-    	this.lights[i].shouldEnable = this.graph.lights[i].enable; 
-   		this.lights[i].update();
-
-	}*/
+    
  
     this.shader.unbind();
 };
@@ -205,7 +176,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.createTransfMatrixes();
 	//this.drawNode(this.graph.nodes[this.graph.scene_id]);
-	
     
 };
 
