@@ -182,12 +182,40 @@ XMLscene.prototype.onGraphLoaded = function ()
 	for(var i in this.graph.leaves){
 		switch(this.graph.leaves[i]._type){
 			case "rectangle":
+				var ltx = this.graph.leaves[i].args.ltx;
+				var lty = this.graph.leaves[i].args.lty;
+				var rbx = this.graph.leaves[i].args.rbx;
+				var rby = this.graph.leaves[i].args.rby;
+				this.leaves[i] = new Rectangle(this, ltx, lty, rbx, rby, 0,1,0,1);
 				break;
 			case "triangle":
+				var x1 = this.graph.leaves[i].args.x1;
+				var y1 = this.graph.leaves[i].args.y1;
+				var z1 = this.graph.leaves[i].args.z1;
+				var x2 = this.graph.leaves[i].args.x2;
+				var y2 = this.graph.leaves[i].args.y2;
+				var z2 = this.graph.leaves[i].args.z2;
+				var x3 = this.graph.leaves[i].args.x3;
+				var y3 = this.graph.leaves[i].args.y3;
+				var z3 = this.graph.leaves[i].args.z3;
+
+				this.leaves[i] = new Triangle(this, x1, y1, z1, x2, y2, z2, 0,1,0,1);
 				break;
 			case "cylinder":
+				var height = this.graph.leaves[i].args.height;
+				var brad = this.graph.leaves[i].args.brad;
+				var trad = this.graph.leaves[i].args.trad;
+				var stacks = this.graph.leaves[i].args.stacks;
+				var slices = this.graph.leaves[i].args.slices;
+
+				this.leaves[i] = new Cylinder(this, stacks, slices, brad, trad);
 				break;
 			case "sphere":
+				var height = this.graph.leaves[i].args.height;
+				var stacks = this.graph.leaves[i].args.stacks;
+				var slices = this.graph.leaves[i].args.slices;
+
+				this.leaves[i] = new Sphere(this, height, brad, stacks, slices);
 				break;
 		}
 
