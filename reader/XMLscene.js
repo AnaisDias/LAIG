@@ -28,9 +28,9 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis=new CGFaxis(this);
 
-	this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,0,1,0,1);
+	this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,1,1);
 	this.tri = new Triangle(this, -0.5,-0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0);
-	this.cyl = new Cylinder(this, 1,8,16,0.5,0.5);
+	this.cyl = new Cylinder(this,1,8,16,0.5,0.5);
 	this.sp = new Sphere(this, 16,16);
 };
 

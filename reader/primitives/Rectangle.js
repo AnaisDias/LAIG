@@ -14,10 +14,10 @@ function Rectangle(scene, ltx, lty, rbx, rby, ampFactS, ampFactT) {
 	this.rbx = rbx;
 	this.rby = rby;
 
-	if(this.rbx < 0) {	this.lengthB = -rbx - ltx}
-	else{ this.lengthB = rbx - ltx}
-	if(this.lty < 0) {  this.lengthT = -lty - ltx}
-	else{ this.lengthT = lty - ltx}
+	if(this.rbx < 0) {	this.lengthB = -rbx - ltx;}
+	else{ this.lengthB = rbx - ltx;}
+	if(this.lty < 0) {  this.lengthT = -lty - ltx;}
+	else{ this.lengthT = lty - ltx;}
 
 	this.ampFactS = ampFactS;
 	this.ampFactT = ampFactT;

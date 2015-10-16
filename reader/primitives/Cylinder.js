@@ -10,9 +10,15 @@
 	this.height=height;
 	this.b_radius=b_radius;
 	this.t_radius=t_radius;
- 	this.initBuffers();
- 	this.initBuffersCircle("top");
- 	this.initBuffersCircle("bot");
+	console.log("b_radius: " + this.b_radius);
+	console.log("t_radius: " + this.t_radius);
+	this.initBuffers();
+ 	this.top_circle = new Circle(scene,slices,b_radius,t_radius,"top");
+ 	this.top_circle.initBuffers();
+ 	this.bot_circle = new Circle(scene,slices,b_radius,t_radius,"bot");
+ 	this.bot_circle.initBuffers();
+
+ 	console.log(this);
 
 };
 
