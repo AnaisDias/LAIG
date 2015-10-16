@@ -726,7 +726,7 @@
 	        <TEXTURE id="null" />      
                        
 	        <TRANSLATION x="0" y="-0.5" z="0" /> 
-	        
+	        <ROTATION axis="z" angle="180" />
 	        <ROTATION axis="x" angle="-90" />
 	        
 

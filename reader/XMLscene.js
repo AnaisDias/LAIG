@@ -133,7 +133,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.texture = [];
 	for(var i in this.graph.textures){
 
-		this.texture[i] = new CGFtexture(this, this.graph.textures[i].filepath);
+		this.texture[i] = new CGFtexture(this, "scenes/"+this.graph.textures[i].filepath);
 		this.texture[i].filepath = this.graph.textures[i].filepath;
 		this.texture[i].amplif = [];
 		this.texture[i].amplif.s = this.graph.textures[i].amplif.s;
@@ -281,11 +281,12 @@ XMLscene.prototype.drawNode = function (node){
 	this.pushMatrix();
 
 	this.multMatrix(node.matrix);
-	//var matID = node.material;
-	//var texID = node.texture;
-	//if(texID != null && matID != null) //e se mat for null e tex nao??
-	//this.materials[matID].setTexture(this.textures[texID]);
-	//this.materials[matID].apply();
+	var matID = node.material;
+	var texID = node.texture;
+	if(texID != "null" && matID != "null") {//e se mat for null e tex nao??
+	this.materials[matID].setTexture(this.textures[texID]);
+	this.materials[matID].apply();
+}
 
 	for(var i in node.descendants){
 		if(this.isLeaf(node.descendants[i])){
