@@ -14,9 +14,11 @@
  Sphere.prototype = Object.create(CGFobject.prototype);
  Sphere.prototype.constructor = Sphere;
 
+
  Sphere.prototype.initBuffers = function() {
 
- 	var degToRad = Math.PI / 180;
+
+ 	var degToRad = Math.PI /180.0;
 
 	var ang_slices = 360 * degToRad / this.slices;
 	var ang_stacks = 180 * degToRad / this.stacks;

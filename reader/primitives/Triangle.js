@@ -21,9 +21,9 @@ Triangle.prototype.constructor=Triangle;
 
 Triangle.prototype.initBuffers = function () {
 	this.vertices = [
-            tx1, ty1, tz1,
-            tx2, ty2, tz2,
-            tx3, ty3, tz3 ];
+            this.tx1, this.ty1, this.tz1,
+            this.tx2, this.ty2, this.tz2,
+            this.tx3, this.ty3, this.tz3 ];
 
 	this.indices = [
             0, 1, 2 ];
