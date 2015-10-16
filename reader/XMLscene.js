@@ -186,7 +186,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var lty = this.graph.leaves[i].args.lty;
 				var rbx = this.graph.leaves[i].args.rbx;
 				var rby = this.graph.leaves[i].args.rby;
-				this.leaves[i] = new Rectangle(this, ltx, lty, rbx, rby, 0,1,0,1);
+				this.leaves[i] = new Rectangle(this, ltx, lty, rbx, rby, 1,1);
 				break;
 			case "triangle":
 				var x1 = this.graph.leaves[i].args.x1;
@@ -199,7 +199,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var y3 = this.graph.leaves[i].args.y3;
 				var z3 = this.graph.leaves[i].args.z3;
 
-				this.leaves[i] = new Triangle(this, x1, y1, z1, x2, y2, z2, 0,1,0,1);
+				this.leaves[i] = new Triangle(this, x1, y1, z1, x2, y2, z2, x3, y3, z3);
 				break;
 			case "cylinder":
 				var height = this.graph.leaves[i].args.height;
@@ -215,7 +215,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var stacks = this.graph.leaves[i].args.stacks;
 				var slices = this.graph.leaves[i].args.slices;
 
-				this.leaves[i] = new Sphere(this, height, brad, stacks, slices);
+				this.leaves[i] = new Sphere(this, stacks, slices);
 				break;
 		}
 

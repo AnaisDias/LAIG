@@ -43,14 +43,14 @@
 
 		for (i = 0; i < this.slices; i++) {
 
-			var x1 = Math.cos(ang_now) * (aux_br * b_radius + aux_tr * t_radius);
-			var y1 = Math.sin(ang_now) * (aux_br * b_radius + aux_tr * t_radius);
+			var x1 = Math.cos(ang_now) * (aux_br * this.b_radius + aux_tr * this.t_radius);
+			var y1 = Math.sin(ang_now) * (aux_br * this.b_radius + aux_tr * this.t_radius);
 			var z1 = j / this.stacks - 0.5;
 
 			ang_now += ang;
 
-			var x2 = Math.cos(ang_now) * (aux_br * b_radius + aux_tr * t_radius);
-			var y2 = Math.sin(ang_now) * (aux_br * b_radius + aux_tr * t_radius);
+			var x2 = Math.cos(ang_now) * (aux_br * this.b_radius + aux_tr * this.t_radius);
+			var y2 = Math.sin(ang_now) * (aux_br * this.b_radius + aux_tr * this.t_radius);
 			var z2 = (j + 1) / this.stacks - 0.5;
 
 			this.vertices.push(x1);
@@ -137,13 +137,13 @@ Cylinder.prototype.initBuffersCircle = function (side) {
 	if(side == "top"){
 		for (i=0; i < this.slices; i++){
 
-			var x1 = Math.cos(ang_now) * t_radius;
-			var y1 = Math.sin(ang_now) * t_radius;
+			var x1 = Math.cos(ang_now) * this.t_radius;
+			var y1 = Math.sin(ang_now) * this.t_radius;
 
 			ang_now += ang;
 
-			var x2 = Math.cos(ang_now) * t_radius;
-			var y2 = Math.cos(ang_now) * t_radius;
+			var x2 = Math.cos(ang_now) * this.t_radius;
+			var y2 = Math.cos(ang_now) * this.t_radius;
 
 
 			this.vertices.push(x1);
@@ -191,13 +191,13 @@ Cylinder.prototype.initBuffersCircle = function (side) {
 
 		for (i=0; i < this.slices; i++){
 
-			var x1 = - Math.cos(ang_now) * b_radius;
-			var y1 = Math.sin(ang_now) * t_radius;
+			var x1 = - Math.cos(ang_now) * this.b_radius;
+			var y1 = Math.sin(ang_now) * this.t_radius;
 
 			ang_now += ang;
 
-			var x2 = - Math.cos(ang_now) * b_radius;
-			var y2 = Math.cos(ang_now) * b_radius;
+			var x2 = - Math.cos(ang_now) * this.b_radius;
+			var y2 = Math.cos(ang_now) * this.b_radius;
 
 
 			this.vertices.push(x1);
