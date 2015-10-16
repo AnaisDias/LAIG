@@ -154,7 +154,7 @@ Cylinder.prototype.initBuffersCircle = function (side) {
 			this.vertices.push(y2);
 			this.vertices.push(0); // vertice 1
 
-			this.vertices.push(0)
+			this.vertices.push(0);
 			this.vertices.push(0);
 			this.vertices.push(0); // vertice 2
 
@@ -208,7 +208,7 @@ Cylinder.prototype.initBuffersCircle = function (side) {
 			this.vertices.push(y2);
 			this.vertices.push(-0.5); // vertice 1
 
-			this.vertices.push(0)
+			this.vertices.push(0);
 			this.vertices.push(0);
 			this.vertices.push(-0.5); // vertice 2
 
