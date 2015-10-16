@@ -1,4 +1,6 @@
-
+function degToRad(deg){
+	return (deg*Math.PI/180);
+}
 function XMLscene() {
     CGFscene.call(this);
 }
@@ -206,6 +208,8 @@ XMLscene.prototype.onGraphLoaded = function ()
     
 };
 
+
+
 XMLscene.prototype.createTransfMatrixes = function(){
 	for(var i in this.graph.nodes){
 		var tmatrix = mat4.create();
@@ -214,13 +218,29 @@ XMLscene.prototype.createTransfMatrixes = function(){
 				var tx = this.graph.nodes[i].transf[j].tx;
 				var ty = this.graph.nodes[i].transf[j].ty;
 				var tz = this.graph.nodes[i].transf[j].tz;
-				mat4.translate(tmatrix, tmatrix, tx, ty, tz);
+				mat4.translate(tmatrix, tmatrix, [tx, ty, tz]);
 			}
 			else if(this.graph.nodes[i].transf[j]._type == 1){
+				var angle = this.graph.nodes[i].transf[j].ang;
+				switch(this.graph.nodes[i].transf[j].ax){
+					case "x": 
+							mat4.rotate(tmatrix, tmatrix, degToRad(angle), [1,0,0]);
+							break;
 
+					case "y": 
+							mat4.rotate(tmatrix, tmatrix, degToRad(angle), [0,1,0]);
+							break;
+
+					case "x": 
+							mat4.rotate(tmatrix, tmatrix, degToRad(angle), [0,0,1]);
+							break;
+				}
 			}
 			else if(this.graph.nodes[i].transf[j]._type == 2){
-
+				var sx = this.graph.nodes[i].transf[j].sx;
+				var sy = this.graph.nodes[i].transf[j].sy;
+				var sz = this.graph.nodes[i].transf[j].sz;
+				mat4.scale(tmatrix,tmatrix,[sx,sy,sz]);
 			}
 		}
 		this.graph.nodes[i].matrix = tmatrix;
