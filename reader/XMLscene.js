@@ -203,6 +203,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	}
 
+	this.createTransfMatrixes();
 	this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
     
@@ -244,20 +245,31 @@ XMLscene.prototype.createTransfMatrixes = function(){
 			}
 		}
 		this.graph.nodes[i].matrix = tmatrix;
+
 	}
 };
 
 XMLscene.prototype.drawNode = function (node){
 	console.log(node.id);
 	this.pushMatrix();
+	//CRIAR VARIAVEL GLOBAL TEXTURA E MATERIAL A APLICAR ATUALMENTE???
+	//this.multMatrix(node.matrix);
+	//var matID = node.material;
+	//var texID = node.texture;
+	//if(texID != null && matID != null) //e se mat for null e tex nao??
+	//this.materials[matID].setTexture(this.textures[texID]);
+	//this.materials[matID].apply();
 
 	for(var i in node.descendants){
 		if(this.isLeaf(node.descendants[i])){
+			//if (texID != null)
+			//this.drawLeaf(this.graph.leaves[node.descendants[i]], textures[texID].amplif.s, textures[texID].amplif.t);
 			console.log(node.descendants[i]);
 			return;
 		}
 		else this.drawNode(this.graph.nodes[node.descendants[i]]);
 	}
+	this.popMatrix();
 };
 
 XMLscene.prototype.drawLeaf = function (leaf, s, t){
