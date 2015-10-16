@@ -22,6 +22,8 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+    this.camera.zoom(-10);
+
 	//added code for application defaults
    this.gl.frontFace(this.gl.CCW);
    this.gl.cullFace(this.gl.BACK);
@@ -228,7 +230,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 
 	this.createTransfMatrixes();
-	//this.drawNode(this.graph.nodes[this.graph.scene_id]);
+	this.drawNode(this.graph.nodes[this.graph.scene_id]);
 
     
 };
@@ -269,14 +271,15 @@ XMLscene.prototype.createTransfMatrixes = function(){
 			}
 		}
 		this.graph.nodes[i].matrix = tmatrix;
+		
 
 	}
 };
 
 XMLscene.prototype.drawNode = function (node){
-	console.log(node.id);
+	//console.log(node.id);
 	this.pushMatrix();
-	//CRIAR VARIAVEL GLOBAL TEXTURA E MATERIAL A APLICAR ATUALMENTE???
+
 	this.multMatrix(node.matrix);
 	//var matID = node.material;
 	//var texID = node.texture;
@@ -287,9 +290,9 @@ XMLscene.prototype.drawNode = function (node){
 	for(var i in node.descendants){
 		if(this.isLeaf(node.descendants[i])){
 			//if (texID != null)
+			console.debug(this.leaves[node.descendants[i]]);
 			this.drawLeaf(this.leaves[node.descendants[i]]/*, textures[texID].amplif.s, textures[texID].amplif.t*/);
-			console.log(node.descendants[i]);
-			return;
+			//console.log(node.descendants[i]);
 		}
 		else this.drawNode(this.graph.nodes[node.descendants[i]]);
 	}
@@ -341,7 +344,7 @@ XMLscene.prototype.display = function () {
 
 	this.pushMatrix();
 		//this.scale(2,2,2);
-		this.cyl.display();
+		this.tri.display();
 	this.popMatrix();
 	
 	// ---- END Background, camera and axis setup
@@ -367,8 +370,9 @@ XMLscene.prototype.display = function () {
 
 
 		//nodes
-		//this.drawNode(this.graph.nodes[this.graph.scene_id]);
 		
+		this.drawNode(this.graph.nodes[this.graph.scene_id]);
+	
 
 	};	
 
