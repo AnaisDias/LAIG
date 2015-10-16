@@ -2,11 +2,12 @@
  * Cylinder
  * @constructor
  */
- function Cylinder(scene, slices, stacks, b_radius, t_radius) {
+ function Cylinder(scene, height, slices, stacks, b_radius, t_radius) {
  	CGFobject.call(this,scene);
 
 	this.slices=slices;
 	this.stacks=stacks;
+	this.height=height
 	this.b_radius=b_radius;
 	this.t_radius=t_radius;
  	this.initBuffers();
