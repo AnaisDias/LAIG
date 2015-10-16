@@ -171,7 +171,7 @@
     	<!-- may be repeated -->
     	<LEAF id="rekt" type="rectangle" args="-0.5 0.5 0.5 -0.5" />
     	<LEAF id="cyl" type="cylinder" args="1 0.5 0.5 8 16" /> 
-    	<LEAF id="sph" type="sphere" args="0.5 16 16" />
+    	<LEAF id="sph" type="sphere" args="1 16 16" />
     	<LEAF id="tri" type="triangle" args="-0.5 -0.5 0  0.5 -0.5 0  0 0.5 0"/>
     	
 

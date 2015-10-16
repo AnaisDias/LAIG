@@ -26,8 +26,12 @@ XMLscene.prototype.init = function (application) {
    this.gl.frontFace(this.gl.CCW);
    this.gl.cullFace(this.gl.BACK);
 
-
 	this.axis=new CGFaxis(this);
+
+	this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,0,1,0,1);
+	this.tri = new Triangle(this, -0.5,-0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0);
+	//this.cyl = new Cylinder(this, )
+	this.sp = new Sphere(this, 16,16);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -174,8 +178,26 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	}
 
+	this.leaves = [];
+	for(var i in this.graph.leaves){
+		switch(this.graph.leaves[i]._type){
+			case "rectangle":
+				break;
+			case "triangle":
+				break;
+			case "cylinder":
+				break;
+			case "sphere":
+				break;
+		}
+
+
+	}
+
+
 	this.createTransfMatrixes();
 	//this.drawNode(this.graph.nodes[this.graph.scene_id]);
+
     
 };
 
@@ -274,6 +296,11 @@ XMLscene.prototype.display = function () {
 	this.axis.display();
 
 	this.setDefaultAppearance();
+
+	this.pushMatrix();
+		//this.scale(2,2,2);
+		this.sp.display();
+	this.popMatrix();
 	
 	// ---- END Background, camera and axis setup
 
