@@ -125,11 +125,15 @@ XMLscene.prototype.onGraphLoaded = function ()
     	if(this.graph.lights[i].enable == "1"){
     		this.lights[j].setVisible(true);
 			this.lights[j].enable();
+			this.lightsBool[j] = true;
     	}
     	else{
     		this.lights[j].setVisible(false);
 			this.lights[j].disable();
+			this.lightsBool[j] = false;
     	}
+
+
 
    		this.lights[j].update();
    		j++;
@@ -354,6 +358,19 @@ XMLscene.prototype.isLeaf = function (id){
 	return false;
 };
 
+XMLscene.prototype.updateLights = function(){
+	for(var i in this.lights){
+		if(this.lightsBool[i] == true){
+			this.lights[i].enable();
+			this.lights[i].update();
+		}
+		else if(this.lightsBool[i] == false){
+			this.lights[i].disable();
+			this.lights[i].update();
+		}
+	}
+}
+
 
 
 XMLscene.prototype.display = function () {
@@ -390,11 +407,7 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk)
 	{
-		//this.lights[0].update();
-
-		for(i = 0 ; i < this.lights.length; i++){
-			this.lights[i].update();
-		}
+		this.updateLights();
 
 		//initial transformations
 
