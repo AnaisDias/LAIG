@@ -97,10 +97,10 @@ XMLscene.prototype.onGraphLoaded = function ()
 	j=0;
 
 	this.lightids=[];
-	this.lights=[];
+	
 
 	for(var i in this.graph.lights){
-		this.lights[j]= new CGFlight(this, i);
+		//this.lights[j]= new CGFlight(this, i);
 
 		console.log("Reading positions of light " + i + " with value position x of " + this.graph.lights[i].position.x);
 		var px = this.graph.lights[i].position.x;
@@ -134,18 +134,20 @@ XMLscene.prototype.onGraphLoaded = function ()
     		this.lights[j].setVisible(true);
 			this.lights[j].enable();
 			this[i] = true;
+			eval("this.lightsBool" + j + " = " + true);
 			this.lightsBool[j] = true;
     	}
     	else{
     		this.lights[j].setVisible(false);
 			this.lights[j].disable();
 			this[i] = true;
+			eval("this.lightsBool" + j + " = " + false);
 			this.lightsBool[j] = false;
     	}
 
 
 
-   		//this.lights[j].update();
+   		this.lights[j].update();
    		j++;
 
 	}
@@ -375,13 +377,15 @@ XMLscene.prototype.isLeaf = function (id){
 XMLscene.prototype.updateLights = function(){
 	for(var i in this.lights){
 		var id= this.lightids[i];
-		if(this[id] == true){
+		//this.enabledlight = true;
+		eval("this.enabledlight = this.lightsBool"+i);
+		if(this.enabledlight){
 			this.lights[i].enable();
-			this.lights[i].update();
+			//this.lights[i].update();
 		}
-		else if(this[id] == false){
+		else if(!this.enabledlight){
 			this.lights[i].disable();
-			this.lights[i].update();
+			//this.lights[i].update();
 		}
 	}
 }

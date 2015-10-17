@@ -36,10 +36,14 @@ Interface.prototype.update = function(){
 		var lights = this.gui.addFolder("Lights");
 		lights.open();
 		console.debug(this.scene.lightsloaded);
+		var j=0;
+
 		for(var i in this.scene.lights){
-			var id = this.scene.lightids[i].id;
+			if(j>this.scene.graph.lights.length) break;
+			var nome = "lightsBool" + i;
 			console.debug(this.scene.lights);
-			lights.add(this.scene, id).name("light" + i);
+			lights.add(this.scene, nome).name("light" + i);
+			j++;
 		}
 
 	}
