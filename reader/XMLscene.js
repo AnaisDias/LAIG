@@ -334,7 +334,6 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t){
 	else if (leaf._type== "cylinder"){
 		if(s!=1 || t!=1){
 		leaf = new Cylinder(this, leaf.height, leaf.stacks, leaf.slices, leaf.brad, leaf.trad); // s e t
-		//circ1 = new Circle(this, )
 	}
 		this.scale(1,leaf.height,1);
 		leaf.display();
