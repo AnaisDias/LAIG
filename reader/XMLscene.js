@@ -14,6 +14,7 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
+    
     this.initCameras();
 
     this.initLights();
@@ -33,7 +34,8 @@ XMLscene.prototype.init = function (application) {
    this.gl.cullFace(this.gl.BACK);
 
 	this.axis=new CGFaxis(this);
-
+	this.lightsBool = [];
+	this.sceneBool = true;
 	//this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,1,1);
 	//this.tri = new Triangle(this, -0.5,-0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0);
 	this.cylind = new Cylinder(this,1,16,16,1,1);
@@ -82,7 +84,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 	//initials
 
 	this.axis=new CGFaxis(this, this.graph.initials.rlength);
-	console.debug(this.graph.initials.fnear);
 	//WHY NOT WORKING????
 	//this.camera.near = this.graph.initials.fnear;
 	//this.camera.far = this.graph.initials.ffar;
@@ -95,9 +96,11 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.graph.illumination.ambient.a);
 	j=0;
 
-	this.lightsBool = [];
+	this.lightids=[];
+	this.lights=[];
 
 	for(var i in this.graph.lights){
+		this.lights[j]= new CGFlight(this, i);
 
 		console.log("Reading positions of light " + i + " with value position x of " + this.graph.lights[i].position.x);
 		var px = this.graph.lights[i].position.x;
@@ -124,24 +127,32 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.lights[j].setAmbient(ar,ab,ag,aa);
     	this.lights[j].setDiffuse(dr,dg,db,da);
     	this.lights[j].setSpecular(sr,sg,sb,sa);
-    	
+    	this.lightids[j]=[];
+    	this.lightids[j].id = i;
+    	this.lights[j].enable();
     	if(this.graph.lights[i].enable == "1"){
     		this.lights[j].setVisible(true);
 			this.lights[j].enable();
+			this[i] = true;
 			this.lightsBool[j] = true;
     	}
     	else{
     		this.lights[j].setVisible(false);
 			this.lights[j].disable();
+			this[i] = true;
 			this.lightsBool[j] = false;
     	}
 
 
 
-   		this.lights[j].update();
+   		//this.lights[j].update();
    		j++;
 
 	}
+
+	console.debug(this.lights);
+
+	this.lightsloaded = true;
 
 	//Textures
 	this.texture = [];
@@ -363,11 +374,12 @@ XMLscene.prototype.isLeaf = function (id){
 
 XMLscene.prototype.updateLights = function(){
 	for(var i in this.lights){
-		if(this.lightsBool[i] == true){
+		var id= this.lightids[i];
+		if(this[id] == true){
 			this.lights[i].enable();
 			this.lights[i].update();
 		}
-		else if(this.lightsBool[i] == false){
+		else if(this[id] == false){
 			this.lights[i].disable();
 			this.lights[i].update();
 		}
@@ -396,12 +408,7 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
-	this.pushMatrix();
-		//this.scale(2,2,2);
-		//this.circle1.display();
-		//this.cylind.display();
-		//this.circle2.display();
-	this.popMatrix();
+
 	
 	// ---- END Background, camera and axis setup
 
@@ -411,6 +418,10 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk)
 	{
 		this.updateLights();
+		/*for(var i in this.lights){
+			this.lights[i].update();
+		}*/
+
 
 		//initial transformations
 

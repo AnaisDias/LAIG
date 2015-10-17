@@ -34,7 +34,7 @@
     	</LIGHT>
 
     	<LIGHT id="light2">                   <!-- identifier for third light -->
-       		<enable value="1" />                         <!-- enable/disable -->
+       		<enable value="0" />                         <!-- enable/disable -->
         	<position x="7.5" y="5.0" z="10.0" w="1.0" />       <!-- light position -->
         	<ambient r="0.1" g="0.1" b="0.1" a="1.0" />     <!-- ambient component -->
        		<diffuse r="1.0" g="1.0" b="1.0" a="0.5" />    <!-- diffuse component -->
