@@ -52,10 +52,10 @@ Rectangle.prototype.initBuffers = function () {
         ];
 
     this.texCoords = [    
-		0, this.lengthT/this.ampFactT,
-		this.lengthB/this.ampFactS, this.lengthT/this.ampFactT,
+		0, this.ampFactT/this.lengthT,
+		this.ampFactS/this.lengthB, this.ampFactT/this.lengthT,
 		0, 0,
-		this.lengthB/this.ampFactS, 0
+		this.ampFactS/this.lengthB, 0
 		];
 
 	this.initGLBuffers();

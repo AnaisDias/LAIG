@@ -1,4 +1,4 @@
-function Triangle(scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3) {
+function Triangle(scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3, ampFactS, ampFactT) {
 	CGFobject.call(this,scene);
 
     this.tx1 = tx1;
@@ -12,6 +12,9 @@ function Triangle(scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3) {
     this.tx3 = tx3;
     this.ty3 = ty3;
     this.tz3 = tz3;
+
+    this.ampFactS=ampFactS;
+    this.ampFactT=ampFactT;
 
 	this.initBuffers();
 };
@@ -35,12 +38,16 @@ Triangle.prototype.initBuffers = function () {
 
 
 	this.texCoords = [
-     		 0, 1,
-		 	 1, 1,
+     		 0, this.ampFactT,
+		 	 this.ampFactS, this.ampFactT,
 			 0, 0,
-			 1, 0 ];
+			 this.ampFactS, 0 ];
 
 
 	this.primitiveType=this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
+};
+
+Triangle.prototype.changeTexture = function(s, t){
+    
 };

@@ -625,7 +625,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 			console.log("Read leaf with id " + id 
 			+ ", type " + this.leaves[id]._type
-			+ " and args: radius -> " + this.leaves[id].args.height
+			+ " and args: radius -> " + this.leaves[id].args.radius
 			+ ", stacks -> " + this.leaves[id].args.stacks
 			+ "and slices -> " + this.leaves[id].args.slices);
 		}

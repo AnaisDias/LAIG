@@ -6,6 +6,7 @@ function XMLscene() {
 }
 
 var currMat;
+var currTex;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -23,6 +24,7 @@ XMLscene.prototype.init = function (application) {
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
+    this.enableTextures(true);
 
     this.camera.zoom(-10);
 
@@ -134,7 +136,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	//Textures
 	this.texture = [];
 	if(this.graph.textures.length>0){
-		this.enableTextures(true);
+		this.texturesEnabled = true;
 	}
 	for(var i in this.graph.textures){
 
@@ -207,7 +209,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var y3 = this.graph.leaves[i].args.y3;
 				var z3 = this.graph.leaves[i].args.z3;
 
-				this.leaves[i] = new Triangle(this, x1, y1, z1, x2, y2, z2, x3, y3, z3);
+				this.leaves[i] = new Triangle(this, x1, y1, z1, x2, y2, z2, x3, y3, z3, 1, 1);
 				this.leaves[i]._type = "triangle";
 				break;
 			case "cylinder":
@@ -217,15 +219,15 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var stacks = this.graph.leaves[i].args.stacks;
 				var slices = this.graph.leaves[i].args.slices;
 
-				this.leaves[i] = new Cylinder(this, stacks, slices, brad, trad);
+				this.leaves[i] = new Cylinder(this, height, stacks, slices, brad, trad, 1, 1);
 				this.leaves[i]._type = "cylinder";
 				break;
 			case "sphere":
-				var height = this.graph.leaves[i].args.height;
+				var radius = this.graph.leaves[i].args.radius;
 				var stacks = this.graph.leaves[i].args.stacks;
 				var slices = this.graph.leaves[i].args.slices;
 
-				this.leaves[i] = new Sphere(this, stacks, slices);
+				this.leaves[i] = new Sphere(this, radius, stacks, slices, 1, 1);
 				this.leaves[i]._type = "sphere";
 				break;
 		}
@@ -290,7 +292,9 @@ XMLscene.prototype.drawNode = function (node){
 	var texID = node.texture;
 	//if(node.id=="wall1"){
 	if(texID != "null" ) {
+		currTex=texID;
 		if(matID != "null"){
+			currMat=matID;
 		this.materials[matID].setTexture(this.texture[texID]);
 		this.materials[matID].apply();
 		//console.log(matID);
@@ -301,8 +305,8 @@ this.multMatrix(node.matrix);
 	for(var i in node.descendants){
 		if(this.isLeaf(node.descendants[i])){
 			//if (texID != null)
-			console.debug(this.leaves[node.descendants[i]]);
-			this.drawLeaf(this.leaves[node.descendants[i]]/*, textures[texID].amplif.s, textures[texID].amplif.t*/);
+			//console.debug(this.leaves[node.descendants[i]]);
+			this.drawLeaf(this.leaves[node.descendants[i]], this.texture[currTex].amplif.s, this.texture[currTex].amplif.t);
 			//console.log(node.descendants[i]);
 		}
 		else this.drawNode(this.graph.nodes[node.descendants[i]]);
@@ -310,15 +314,31 @@ this.multMatrix(node.matrix);
 	this.popMatrix();
 };
 
-XMLscene.prototype.drawLeaf = function (leaf){
-	if(leaf._type == "rectangle" || leaf._type == "triangle"){
+XMLscene.prototype.drawLeaf = function (leaf, s, t){
+	if(leaf._type == "rectangle"){
+		if(s!=1 || t!=1){
+		leaf = new Rectangle(this, leaf.ltx, leaf.lty, leaf.rbx, leaf.rby, s, t);
+	}
+		leaf.display();
+	}
+	else if(leaf._type == "triangle"){
+		if(s!=1 || t!=1){
+		leaf = new Triangle(this, leaf.x1, leaf.y1, leaf.z1, leaf.x2, leaf.y2, 
+			leaf.z2, leaf.x3, leaf.y3, leaf.z3, s, t);
+	}
 		leaf.display();
 	}
 	else if (leaf._type== "cylinder"){
+		if(s!=1 || t!=1){
+		leaf = new Cylinder(this, leaf.height, leaf.stacks, leaf.slices, leaf.brad, leaf.trad, s, t);
+	}
 		this.scale(1,leaf.height,1);
 		leaf.display();
 	}
 	else if(leaf._type == "sphere"){
+		if(s!=1 || t!=1){
+		leaf = new Sphere(this, leaf.radius, leaf.stacks, leaf.slices, s, t);
+	}
 		this.scale(leaf.radius*2, leaf.radius*2, leaf.radius*2);
 		leaf.display();
 	}
