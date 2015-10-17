@@ -619,7 +619,7 @@
 	        <TEXTURE id="darkwood-tex" />      
                        
 	        <TRANSLATION x="0" y="2.5" z="0" /> 
-	        <SCALE sx="0.2" sy="5.5" sz="1.1" />  
+	        <SCALE sx="0.2" sy="5.5" sz="0.2" />  
 	        <ROTATION axis="x" angle="-90" />
 
 	        <DESCENDANTS>

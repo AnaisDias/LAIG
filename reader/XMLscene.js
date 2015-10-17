@@ -34,10 +34,13 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis=new CGFaxis(this);
 
-	this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,1,1);
-	this.tri = new Triangle(this, -0.5,-0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0);
-	this.cyl = new Cylinder(this,1,8,16,0.5,0.5);
-	this.sp = new Sphere(this, 16,16);
+	//this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,1,1);
+	//this.tri = new Triangle(this, -0.5,-0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0);
+	this.cylind = new Cylinder(this,1,16,16,1,1);
+	//this.circle1 = new Circle(this,8,1,1,"top");
+	//this.circle2 = new Circle(this,8,1,1,"bot");
+	//console.debug(this.circle1);
+	//this.sp = new Sphere(this, 16,16);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -219,7 +222,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 				var stacks = this.graph.leaves[i].args.stacks;
 				var slices = this.graph.leaves[i].args.slices;
 
-				this.leaves[i] = new Cylinder(this, height, stacks, slices, brad, trad, 1, 1);
+				this.leaves[i] = new Cylinder(this, height, stacks, slices, brad, trad);//, 1, 1);
 				this.leaves[i]._type = "cylinder";
 				break;
 			case "sphere":
@@ -330,7 +333,8 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t){
 	}
 	else if (leaf._type== "cylinder"){
 		if(s!=1 || t!=1){
-		leaf = new Cylinder(this, leaf.height, leaf.stacks, leaf.slices, leaf.brad, leaf.trad, s, t);
+		leaf = new Cylinder(this, leaf.height, leaf.stacks, leaf.slices, leaf.brad, leaf.trad); // s e t
+		//circ1 = new Circle(this, )
 	}
 		this.scale(1,leaf.height,1);
 		leaf.display();
@@ -375,7 +379,9 @@ XMLscene.prototype.display = function () {
 
 	this.pushMatrix();
 		//this.scale(2,2,2);
-		this.tri.display();
+		//this.circle1.display();
+		//this.cylind.display();
+		//this.circle2.display();
 	this.popMatrix();
 	
 	// ---- END Background, camera and axis setup
@@ -405,7 +411,7 @@ XMLscene.prototype.display = function () {
 		this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
 
-	};	
+	}	
 
     this.shader.unbind();
 };

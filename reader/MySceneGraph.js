@@ -596,16 +596,16 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			}
 
 			this.leaves[id].args.height = a[0];
-			this.leaves[id].args.b_radius = a[1];
-			this.leaves[id].args.t_radius = a[2];
+			this.leaves[id].args.brad = a[1];
+			this.leaves[id].args.trad = a[2];
 			this.leaves[id].args.stacks = a[3];
 			this.leaves[id].args.slices = a[4];
 
 			console.log("Read leaf with id " + id 
 			+ ", type " + this.leaves[id]._type
 			+ " and args: height -> " + this.leaves[id].args.height
-			+ ", br -> " + this.leaves[id].args.b_radius 
-			+ ", tr -> " + this.leaves[id].args.t_radius
+			+ ", br -> " + this.leaves[id].args.brad 
+			+ ", tr -> " + this.leaves[id].args.trad
 			+ ", stacks -> " + this.leaves[id].args.stacks
 			+ "and slices -> " + this.leaves[id].args.slices);
 		}

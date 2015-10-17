@@ -2,15 +2,20 @@
 * Circle
 * @constructor
 */
-function Circle(scene, slices, b_radius, t_radius, side) {
+function Circle(scene, slices, bradius, tradius, side) {
  	CGFobject.call(this,scene);
 
-	this.b_radius=b_radius;
-	this.t_radius=t_radius;
+	this.bradius=bradius;
+	this.tradius=tradius;
 	this.slices=slices;
 	this.side=side;
  	this.initBuffers();
 
+	/*console.debug(slices);
+	console.debug(side);
+	console.debug(tradius);
+	console.debug(bradius);
+*/
 };
 
 Circle.prototype = Object.create(CGFobject.prototype);
@@ -21,6 +26,7 @@ Circle.prototype.initBuffers = function () {
 	var degToRad = Math.PI / 180.0;
 
 	var ang = 360 * degToRad / this.slices;
+
 
 	this.vertices = [];
 	this.indices = [];
@@ -33,31 +39,32 @@ Circle.prototype.initBuffers = function () {
 	//top circle
 	if(this.side == "top"){
 		for (i=0; i < this.slices; i++){
+			console.log("drawing circle top: " + i);
 
-			var x1 = Math.cos(ang_now) * this.t_radius;
-			var y1 = Math.sin(ang_now) * this.t_radius;
+			var x1 = Math.cos(ang_now) * this.tradius;
+			var y1 = Math.sin(ang_now) * this.tradius;
 
 			ang_now += ang;
 
-			var x2 = Math.cos(ang_now) * this.t_radius;
-			var y2 = Math.cos(ang_now) * this.t_radius;
+			var x2 = Math.cos(ang_now) * this.tradius;
+			var y2 = Math.sin(ang_now) * this.tradius;
 
 
 			this.vertices.push(x1);
 			this.vertices.push(y1);
-			this.vertices.push(0); // vertice 0
+			this.vertices.push(0.5); // vertice 0
 
 			this.vertices.push(x2);
 			this.vertices.push(y2);
-			this.vertices.push(0); // vertice 1
+			this.vertices.push(0.5); // vertice 1
 
 			this.vertices.push(0);
 			this.vertices.push(0);
-			this.vertices.push(0); // vertice 2
+			this.vertices.push(0.5); // vertice 2
 
-			this.indices.push(ind_i); 	  // 0
+			this.indices.push(ind_i + 2); 	  // 2
+			this.indices.push(ind_i); // 0
 			this.indices.push(ind_i + 1); // 1
-			this.indices.push(ind_i + 2); // 2
 
 			ind_i += 3;
 
@@ -87,14 +94,15 @@ Circle.prototype.initBuffers = function () {
 	else{
 
 		for (i=0; i < this.slices; i++){
+			console.log("drawing circle bot: " + i);
 
-			var x1 = Math.cos(ang_now) * this.b_radius;
-			var y1 = Math.sin(ang_now) * this.b_radius;
+			var x1 = Math.cos(ang_now) * this.bradius;
+			var y1 = Math.sin(ang_now) * this.bradius;
 
 			ang_now += ang;
 
-			var x2 = Math.cos(ang_now) * this.b_radius;
-			var y2 = Math.cos(ang_now) * this.b_radius;
+			var x2 = Math.cos(ang_now) * this.bradius;
+			var y2 = Math.sin(ang_now) * this.bradius;
 
 
 			this.vertices.push(x1);
@@ -109,9 +117,9 @@ Circle.prototype.initBuffers = function () {
 			this.vertices.push(0);
 			this.vertices.push(-0.5); // vertice 2
 
-			this.indices.push(ind_i); 	  // 0
+			this.indices.push(ind_i + 2); 	  // 0
 			this.indices.push(ind_i + 1); // 1
-			this.indices.push(ind_i + 2); // 2
+			this.indices.push(ind_i); // 2
 
 			ind_i += 3;
 
@@ -139,6 +147,9 @@ Circle.prototype.initBuffers = function () {
 
 
 	}
+	console.debug(this.vertices);
+	console.debug(this.indices);
+
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
 
