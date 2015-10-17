@@ -50,6 +50,7 @@ XMLscene.prototype.initLights = function () {
     this.lights[0].setPosition(2, 3, 3, 1);
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
     this.lights[0].update();
+    this.light0 = false;
 
 
     
@@ -93,6 +94,8 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.setGlobalAmbientLight(this.graph.illumination.ambient.r, this.graph.illumination.ambient.g, this.graph.illumination.ambient.b,
 		this.graph.illumination.ambient.a);
 	j=0;
+
+	this.lightsBool = [];
 
 	for(var i in this.graph.lights){
 
