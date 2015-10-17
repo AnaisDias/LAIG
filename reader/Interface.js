@@ -30,11 +30,20 @@ Interface.prototype.init = function(application) {
 
 	// lights on/off
 	// add a group of controls (and open/expand by defult)
-	var lights = this.gui.addFolder("Lights");
-	lights.open();
+	
 
 	// add two check boxes to the group. The identifiers must be members variables of the scene initialized in scene.init as boolean
 	// e.g. this.option1=true; this.option2=false;
+	
+	
+	return true;
+};
+
+Interface.prototype.update = function(){
+
+	var lights = this.gui.addFolder("Lights");
+	lights.open();
+
 	if(this.scene.graph.loadedOk) {
 		for(var i in this.scene.lights){
 			bool = 'lightsBool['+i+']';
@@ -42,6 +51,5 @@ Interface.prototype.init = function(application) {
 			lights.add(this.scene, 'lightsBool['+i+']').name(name);
 		}
 	}
-	
-	return true;
-};
+
+}

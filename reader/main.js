@@ -19,7 +19,6 @@ main=function()
     var app = new CGFapplication(document.body);
     var myScene = new XMLscene();
     
-
     app.init();
     app.setScene(myScene);
 
