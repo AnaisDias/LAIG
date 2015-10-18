@@ -17,8 +17,6 @@ XMLscene.prototype.init = function (application) {
     
     this.initCameras();
 
-    //this.initLights();
-
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     this.gl.clearDepth(100.0);
@@ -31,39 +29,21 @@ XMLscene.prototype.init = function (application) {
 
 	//added code for application defaults
 	
-   this.gl.frontFace(this.gl.CCW);
-   this.gl.cullFace(this.gl.BACK);
+   	this.gl.frontFace(this.gl.CCW);
+   	this.gl.cullFace(this.gl.BACK);
 
 	this.axis=new CGFaxis(this);
 	this.lightsBool = [];
-	this.sceneBool = true;
-	//this.rekt = new Rectangle(this,-0.5,0.5,0.5,-0.5,1,1);
-	//this.tri = new Triangle(this, -0.5,-0.5, 0, 0.5, -0.5, 0, 0, 0.5, 0);
-	this.cylind = new Cylinder(this,1,16,16,1,1);
-	//this.circle1 = new Circle(this,8,1,1,"top");
-	//this.circle2 = new Circle(this,8,1,1,"bot");
-	//console.debug(this.circle1);
-	//this.sp = new Sphere(this, 16,16);
 };
 
 XMLscene.prototype.initLights = function () {
-	console.debug(this.lights);
-	console.debug(this.shader);
-this.lightids=[];
+	
+	this.lightids=[];
 	this.lights = [];
 
     this.shader.bind();
-/*
-    this.lights[0].setPosition(2, 3, 3, 1);
-    this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
-    this.lights[0].update();
-    this.light0 = false;
 
-    console.debug(this.lights);
-*/
     j=0;
-
-	
 
 	for(var i in this.graph.lights){
 		this.lights[j]= new CGFlight(this, j);
@@ -89,29 +69,25 @@ this.lightids=[];
 		var sb = this.graph.lights[i].specular.b;
 		var sa = this.graph.lights[i].specular.a;
 
-		this.lights[j].setPosition(this.graph.lights[i].position.x,this.graph.lights[i].position.y,
-			this.graph.lights[i].position.z, this.graph.lights[i].position.w);
+		this.lights[j].setPosition(px,py, pz, pw);
 		this.lights[j].setAmbient(ar,ab,ag,aa);
     	this.lights[j].setDiffuse(dr,dg,db,da);
     	this.lights[j].setSpecular(sr,sg,sb,sa);
+
     	this.lightids[j]=[];
     	this.lightids[j].id = i;
-    	this.lights[j].enable();
+    	this.lights[j].setVisible(true);
+
     	if(this.graph.lights[i].enable == "1"){
-    		this.lights[j].setVisible(true);
 			this.lights[j].enable();
-			this[i] = true;
 			eval("this.lightsBool" + j + " = " + true);
 			this.lightsBool[j] = true;
     	}
     	else{
-    		this.lights[j].setVisible(false);
 			this.lights[j].disable();
-			this[i] = true;
 			eval("this.lightsBool" + j + " = " + false);
 			this.lightsBool[j] = false;
     	}
-
 
 
    		this.lights[j].update();
@@ -119,11 +95,7 @@ this.lightids=[];
 
 	}
 
-
-	console.debug(this.lights);
-
 	this.lightsloaded = true;
-    
  
     this.shader.unbind();
 };
@@ -150,14 +122,17 @@ XMLscene.prototype.setDefaultAppearance = function () {
 XMLscene.prototype.onGraphLoaded = function () 
 {
 	//initials
+
 	this.initLights();
 	this.axis=new CGFaxis(this, this.graph.initials.rlength);
+
 	//WHY NOT WORKING????
 	//this.camera.near = this.graph.initials.fnear;
 	//this.camera.far = this.graph.initials.ffar;
 
 
-	//illumination done
+	//illumination
+
 	this.gl.clearColor(this.graph.illumination.background.r,
 		this.graph.illumination.background.g,this.graph.illumination.background.b,this.graph.illumination.background.a);
 	this.setGlobalAmbientLight(this.graph.illumination.ambient.r, this.graph.illumination.ambient.g, this.graph.illumination.ambient.b,
@@ -276,6 +251,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 
 XMLscene.prototype.createTransfMatrixes = function(){
+
 	for(var i in this.graph.nodes){
 		var tmatrix = mat4.create();
 		for(var j in this.graph.nodes[i].transf){
@@ -315,37 +291,39 @@ XMLscene.prototype.createTransfMatrixes = function(){
 };
 
 XMLscene.prototype.drawNode = function (node){
-	//console.log(node.id);
+	
 	this.pushMatrix();
 
-	
 	var matID = node.material;
 	var texID = node.texture;
-	//if(node.id=="wall1"){
+
 	if(texID != "null" ) {
+
 		currTex=texID;
 		if(matID != "null"){
 			currMat=matID;
-		this.materials[matID].setTexture(this.texture[texID]);
-		this.materials[matID].apply();
-		//console.log(matID);
-		//console.debug(this.materials[matID]);
-		}
-	}//}
-this.multMatrix(node.matrix);
+			this.materials[matID].setTexture(this.texture[texID]);
+			this.materials[matID].apply();
+			}
+	}
+
+	this.multMatrix(node.matrix);
+
 	for(var i in node.descendants){
+
 		if(this.isLeaf(node.descendants[i])){
-			//if (texID != null)
-			//console.debug(this.leaves[node.descendants[i]]);
+
 			this.drawLeaf(this.leaves[node.descendants[i]], this.texture[currTex].amplif.s, this.texture[currTex].amplif.t);
-			//console.log(node.descendants[i]);
+
 		}
 		else this.drawNode(this.graph.nodes[node.descendants[i]]);
 	}
+
 	this.popMatrix();
 };
 
 XMLscene.prototype.drawLeaf = function (leaf, s, t){
+
 	if(leaf._type == "rectangle"){
 		if(s!=1 || t!=1){
 		leaf = new Rectangle(this, leaf.ltx, leaf.lty, leaf.rbx, leaf.rby, s, t);
@@ -383,10 +361,12 @@ XMLscene.prototype.isLeaf = function (id){
 };
 
 XMLscene.prototype.updateLights = function(){
+
 	for(var i in this.lights){
+
 		var id= this.lightids[i];
-		//this.enabledlight = true;
 		eval("this.enabledlight = this.lightsBool"+i);
+		
 		if(this.enabledlight){
 			this.lights[i].enable();
 			this.lights[i].update();
@@ -396,7 +376,7 @@ XMLscene.prototype.updateLights = function(){
 			this.lights[i].update();
 		}
 	}
-}
+};
 
 
 
@@ -430,10 +410,6 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk)
 	{
 		this.updateLights();
-		/*for(var i in this.lights){
-			this.lights[i].update();
-		}*/
-
 
 		//initial transformations
 
