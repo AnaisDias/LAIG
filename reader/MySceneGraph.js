@@ -112,8 +112,8 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 
 	var frustum = elemsList[0].getElementsByTagName('frustum');
 
-	this.initials.fnear = frustum[0].attributes.getNamedItem("near").value;
-	this.initials.ffar = frustum[0].attributes.getNamedItem("far").value;
+	this.initials.fnear = this.reader.getFloat(frustum[0], 'near');
+	this.initials.ffar = this.reader.getFloat(frustum[0], 'far');
 	
 	if (isNaN(this.initials.fnear) || isNaN(this.initials.ffar)){
 		return "frustum values must be floats.";

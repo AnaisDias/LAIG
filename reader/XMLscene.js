@@ -123,13 +123,12 @@ XMLscene.prototype.onGraphLoaded = function ()
 {
 	//initials
 
+	this.camera.near = this.graph.initials.fnear;
+	this.camera.far = this.graph.initials.ffar;
+
 	this.initLights();
+
 	this.axis=new CGFaxis(this, this.graph.initials.rlength);
-
-	//WHY NOT WORKING????
-	//this.camera.near = this.graph.initials.fnear;
-	//this.camera.far = this.graph.initials.ffar;
-
 
 	//illumination
 
@@ -414,9 +413,9 @@ XMLscene.prototype.display = function () {
 		//initial transformations
 
 		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
-		this.rotate(this.graph.initials.rotations[0], 1,0,0);
-		this.rotate(this.graph.initials.rotations[1], 0,1,0);
-		this.rotate(this.graph.initials.rotations[2], 0,0,1);
+		this.rotate(degToRad(this.graph.initials.rotations[0]), 1,0,0);
+		this.rotate(degToRad(this.graph.initials.rotations[1]), 0,1,0);
+		this.rotate(degToRad(this.graph.initials.rotations[2]), 0,0,1);
 		this.scale(this.graph.initials.sx, this.graph.initials.sy, this.graph.initials.sz);
 
 
