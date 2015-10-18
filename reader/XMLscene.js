@@ -17,7 +17,7 @@ XMLscene.prototype.init = function (application) {
     
     this.initCameras();
 
-    this.initLights();
+    //this.initLights();
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -30,6 +30,7 @@ XMLscene.prototype.init = function (application) {
     this.camera.zoom(-10);
 
 	//added code for application defaults
+	
    this.gl.frontFace(this.gl.CCW);
    this.gl.cullFace(this.gl.BACK);
 
@@ -46,61 +47,26 @@ XMLscene.prototype.init = function (application) {
 };
 
 XMLscene.prototype.initLights = function () {
+	console.debug(this.lights);
+	console.debug(this.shader);
+this.lightids=[];
+	this.lights = [];
 
     this.shader.bind();
-
+/*
     this.lights[0].setPosition(2, 3, 3, 1);
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
     this.lights[0].update();
     this.light0 = false;
 
+    console.debug(this.lights);
+*/
+    j=0;
 
-    
- 
-    this.shader.unbind();
-};
-
-XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-
-};
-
-XMLscene.prototype.initGraphCameras = function () {
-    this.camera = new CGFcamera(0.4, this.graph.fnear, this.graph.ffar, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-
-};
-
-XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(0.2, 0.4, 0.8, 1.0);
-    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-    this.setSpecular(0.2, 0.4, 0.8, 1.0);
-    this.setShininess(10.0);	
-};
-
-// Handler called when the graph is finally loaded. 
-// As loading is asynchronous, this may be called already after the application has started the run loop
-XMLscene.prototype.onGraphLoaded = function () 
-{
-	//initials
-
-	this.axis=new CGFaxis(this, this.graph.initials.rlength);
-	//WHY NOT WORKING????
-	//this.camera.near = this.graph.initials.fnear;
-	//this.camera.far = this.graph.initials.ffar;
-
-
-	//illumination done
-	this.gl.clearColor(this.graph.illumination.background.r,
-		this.graph.illumination.background.g,this.graph.illumination.background.b,this.graph.illumination.background.a);
-	this.setGlobalAmbientLight(this.graph.illumination.ambient.r, this.graph.illumination.ambient.g, this.graph.illumination.ambient.b,
-		this.graph.illumination.ambient.a);
-	j=0;
-
-	this.lightids=[];
 	
 
 	for(var i in this.graph.lights){
-		//this.lights[j]= new CGFlight(this, i);
+		this.lights[j]= new CGFlight(this, j);
 
 		console.log("Reading positions of light " + i + " with value position x of " + this.graph.lights[i].position.x);
 		var px = this.graph.lights[i].position.x;
@@ -123,7 +89,8 @@ XMLscene.prototype.onGraphLoaded = function ()
 		var sb = this.graph.lights[i].specular.b;
 		var sa = this.graph.lights[i].specular.a;
 
-		this.lights[j].setPosition(px, py, pz, pw);
+		this.lights[j].setPosition(this.graph.lights[i].position.x,this.graph.lights[i].position.y,
+			this.graph.lights[i].position.z, this.graph.lights[i].position.w);
 		this.lights[j].setAmbient(ar,ab,ag,aa);
     	this.lights[j].setDiffuse(dr,dg,db,da);
     	this.lights[j].setSpecular(sr,sg,sb,sa);
@@ -152,10 +119,51 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	}
 
+
 	console.debug(this.lights);
 
 	this.lightsloaded = true;
+    
+ 
+    this.shader.unbind();
+};
 
+XMLscene.prototype.initCameras = function () {
+    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+
+};
+
+XMLscene.prototype.initGraphCameras = function () {
+    this.camera = new CGFcamera(0.4, this.graph.fnear, this.graph.ffar, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+
+};
+
+XMLscene.prototype.setDefaultAppearance = function () {
+    this.setAmbient(0.2, 0.4, 0.8, 1.0);
+    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
+    this.setSpecular(0.2, 0.4, 0.8, 1.0);
+    this.setShininess(10.0);	
+};
+
+// Handler called when the graph is finally loaded. 
+// As loading is asynchronous, this may be called already after the application has started the run loop
+XMLscene.prototype.onGraphLoaded = function () 
+{
+	//initials
+	this.initLights();
+	this.axis=new CGFaxis(this, this.graph.initials.rlength);
+	//WHY NOT WORKING????
+	//this.camera.near = this.graph.initials.fnear;
+	//this.camera.far = this.graph.initials.ffar;
+
+
+	//illumination done
+	this.gl.clearColor(this.graph.illumination.background.r,
+		this.graph.illumination.background.g,this.graph.illumination.background.b,this.graph.illumination.background.a);
+	this.setGlobalAmbientLight(this.graph.illumination.ambient.r, this.graph.illumination.ambient.g, this.graph.illumination.ambient.b,
+		this.graph.illumination.ambient.a);
+	
+	
 	//Textures
 	this.texture = [];
 	if(this.graph.textures.length>0){
@@ -381,11 +389,11 @@ XMLscene.prototype.updateLights = function(){
 		eval("this.enabledlight = this.lightsBool"+i);
 		if(this.enabledlight){
 			this.lights[i].enable();
-			//this.lights[i].update();
+			this.lights[i].update();
 		}
 		else if(!this.enabledlight){
 			this.lights[i].disable();
-			//this.lights[i].update();
+			this.lights[i].update();
 		}
 	}
 }

@@ -22,7 +22,9 @@ main=function()
     
     app.init();
     app.setScene(myScene);
+    app.setInterface(myInterface);
 
+    myInterface.setActiveCamera(myScene.camera);
     
 
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
@@ -36,9 +38,7 @@ main=function()
 	var myGraph = new MySceneGraph(filename, myScene);
 
     
-    app.setInterface(myInterface);
-
-    myInterface.setActiveCamera(myScene.camera);
+    
 	
 	// start
     app.run();
