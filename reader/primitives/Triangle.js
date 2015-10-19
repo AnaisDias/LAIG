@@ -61,6 +61,7 @@ Triangle.prototype.initBuffers = function () {
 Triangle.prototype.changeTextureAmplif = function(s, t){
     this.texCoords = [
              0, 0,
-             this.lenAB/s, 0,
-             (this.lenAB - this.lenBC * this.cos)/s, (this.lenAC * this.sin)/t ];
+             (this.lenAB - this.lenBC * this.cos)/s, (this.lenAC * this.sin)/t,
+             this.lenAB/s, 0
+              ];
 };
