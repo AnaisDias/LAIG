@@ -35,11 +35,9 @@ Interface.prototype.update = function(){
 		done = 1;
 		var lights = this.gui.addFolder("Lights");
 		lights.open();
-		console.debug(this.scene.lightsloaded);
 
 		for(var i in this.scene.lights){
 			var nome = "lightsBool" + i;
-			console.debug(this.scene.lights);
 			lights.add(this.scene, nome).name("Light " + i);
 			
 		}

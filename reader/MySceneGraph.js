@@ -752,7 +752,7 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 		}
 
 		var ntexture = texture[0].attributes.getNamedItem('id').value;
-		if(this.textures[ntexture]==undefined && ntexture!="null"){
+		if(this.textures[ntexture]==undefined && ntexture!="null" && ntexture!="clear"){
 			return "TEXTURE element must be declared in the TEXTURES tag first.";
 		}
 

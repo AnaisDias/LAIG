@@ -149,46 +149,45 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.texture[i] = new CGFtexture(this, "scenes/"+this.graph.textures[i].filepath);
 		this.texture[i].filepath = this.graph.textures[i].filepath;
 		this.texture[i].amplif = [];
-		this.texture[i].amplif.s = this.graph.textures[i].amplif.s;
-		this.texture[i].amplif.t = this.graph.textures[i].amplif.t;
+		this.texture[i].amplif.s = parseFloat(this.graph.textures[i].amplif.s);
+		this.texture[i].amplif.t = parseFloat(this.graph.textures[i].amplif.t);
 
 
 
 	}
-
 
 	//Materials
 	this.materials = [];
 	for(var i in this.graph.materials){
 
 		this.materials[i] = new CGFappearance(this);
-		this.materials[i].setShininess(this.graph.materials[i].shininess);
+		this.materials[i].setShininess(parseFloat(this.graph.materials[i].shininess));
 
-		var r = this.graph.materials[i].specular.r;
-		var g = this.graph.materials[i].specular.g;
-		var b = this.graph.materials[i].specular.b;
-		var a = this.graph.materials[i].specular.a;
+		var r = parseFloat(this.graph.materials[i].specular.r);
+		var g = parseFloat(this.graph.materials[i].specular.g);
+		var b = parseFloat(this.graph.materials[i].specular.b);
+		var a = parseFloat(this.graph.materials[i].specular.a);
 		this.materials[i].setSpecular(r,g,b,a);
 
 
-		r = this.graph.materials[i].diffuse.r;
-		g = this.graph.materials[i].diffuse.g;
-		b = this.graph.materials[i].diffuse.b;
-		a = this.graph.materials[i].diffuse.a;
+		r = parseFloat(this.graph.materials[i].diffuse.r);
+		g = parseFloat(this.graph.materials[i].diffuse.g);
+		b = parseFloat(this.graph.materials[i].diffuse.b);
+		a = parseFloat(this.graph.materials[i].diffuse.a);
 		this.materials[i].setDiffuse(r,g,b,a);
 
 
-		r = this.graph.materials[i].ambient.r;
-		g = this.graph.materials[i].ambient.g;
-		b = this.graph.materials[i].ambient.b;
-		a = this.graph.materials[i].ambient.a;
+		r = parseFloat(this.graph.materials[i].ambient.r);
+		g = parseFloat(this.graph.materials[i].ambient.g);
+		b = parseFloat(this.graph.materials[i].ambient.b);
+		a = parseFloat(this.graph.materials[i].ambient.a);
 		this.materials[i].setAmbient(r,g,b,a);
 
 
-		r = this.graph.materials[i].emission.r;
-		g = this.graph.materials[i].emission.g;
-		b = this.graph.materials[i].emission.b;
-		a = this.graph.materials[i].emission.a;
+		r = parseFloat(this.graph.materials[i].emission.r);
+		g = parseFloat(this.graph.materials[i].emission.g);
+		b = parseFloat(this.graph.materials[i].emission.b);
+		a = parseFloat(this.graph.materials[i].emission.a);
 		this.materials[i].setEmission(r,g,b,a);
 
 	}
@@ -197,10 +196,10 @@ XMLscene.prototype.onGraphLoaded = function ()
 	for(var i in this.graph.leaves){
 		switch(this.graph.leaves[i]._type){
 			case "rectangle":
-				var ltx = this.graph.leaves[i].args.ltx;
-				var lty = this.graph.leaves[i].args.lty;
-				var rbx = this.graph.leaves[i].args.rbx;
-				var rby = this.graph.leaves[i].args.rby;
+				var ltx = parseFloat(this.graph.leaves[i].args.ltx);
+				var lty = parseFloat(this.graph.leaves[i].args.lty);
+				var rbx = parseFloat(this.graph.leaves[i].args.rbx);
+				var rby = parseFloat(this.graph.leaves[i].args.rby);
 				this.leaves[i] = new Rectangle(this, ltx, lty, rbx, rby, 1,1);
 				this.leaves[i]._type = "rectangle";
 				break;
@@ -256,9 +255,9 @@ XMLscene.prototype.createTransfMatrixes = function(){
 		var tmatrix = mat4.create();
 		for(var j in this.graph.nodes[i].transf){
 			if(this.graph.nodes[i].transf[j]._type == 0){
-				var tx = this.graph.nodes[i].transf[j].tx;
-				var ty = this.graph.nodes[i].transf[j].ty;
-				var tz = this.graph.nodes[i].transf[j].tz;
+				var tx = parseFloat(this.graph.nodes[i].transf[j].tx);
+				var ty = parseFloat(this.graph.nodes[i].transf[j].ty);
+				var tz = parseFloat(this.graph.nodes[i].transf[j].tz);
 				mat4.translate(tmatrix, tmatrix, [tx, ty, tz]);
 			}
 			else if(this.graph.nodes[i].transf[j]._type == 1){
@@ -278,9 +277,9 @@ XMLscene.prototype.createTransfMatrixes = function(){
 				}
 			}
 			else if(this.graph.nodes[i].transf[j]._type == 2){
-				var sx = this.graph.nodes[i].transf[j].sx;
-				var sy = this.graph.nodes[i].transf[j].sy;
-				var sz = this.graph.nodes[i].transf[j].sz;
+				var sx = parseFloat(this.graph.nodes[i].transf[j].sx);
+				var sy = parseFloat(this.graph.nodes[i].transf[j].sy);
+				var sz = parseFloat(this.graph.nodes[i].transf[j].sz);
 				mat4.scale(tmatrix,tmatrix,[sx,sy,sz]);
 			}
 		}
@@ -303,7 +302,7 @@ XMLscene.prototype.drawNode = function (node){
 			currMat=matID;
 
 			if(texID=="clear"){
-				this.materials[matID].setTexture(undefined);
+				this.materials[matID].setTexture(null);
 				this.materials[matID].apply();
 			}
 			else{
@@ -314,7 +313,7 @@ XMLscene.prototype.drawNode = function (node){
 			}
 		else{
 			if(texID=="clear"){
-				this.materials[currMat].setTexture(undefined);
+				this.materials[currMat].setTexture(null);
 				this.materials[currMat].apply();
 			}
 			else{
@@ -364,7 +363,7 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t){
 		leaf.display();
 	}
 	else if (leaf._type== "cylinder"){
-		this.scale(1,leaf.height,1);
+		//this.scale(1,leaf.height,1);
 		leaf.display();
 	}
 	else if(leaf._type == "sphere"){

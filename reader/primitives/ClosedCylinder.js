@@ -18,6 +18,7 @@ ClosedCylinder.prototype.constructor = ClosedCylinder;
 ClosedCylinder.prototype.display = function(){
 	this.scene.pushMatrix();
 		this.top.display();
+		this.scene.scale(1,this.height,1);
 		this.cyl.display();
 		this.bottom.display();
 	this.scene.popMatrix();
