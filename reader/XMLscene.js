@@ -271,7 +271,7 @@ XMLscene.prototype.createTransfMatrixes = function(){
 							mat4.rotate(tmatrix, tmatrix, degToRad(angle), [0,1,0]);
 							break;
 
-					case "x": 
+					case "z": 
 							mat4.rotate(tmatrix, tmatrix, degToRad(angle), [0,0,1]);
 							break;
 				}
@@ -298,12 +298,35 @@ XMLscene.prototype.drawNode = function (node){
 
 	if(texID != "null" ) {
 
-		currTex=texID;
 		if(matID != "null"){
 			currMat=matID;
-			this.materials[matID].setTexture(this.texture[texID]);
-			this.materials[matID].apply();
+
+			if(texID=="clear"){
+				this.materials[matID].setTexture(undefined);
+				this.materials[matID].apply();
 			}
+			else{
+				currTex=texID;
+				this.materials[matID].setTexture(this.texture[texID]);
+				this.materials[matID].apply();
+			}
+			}
+		else{
+			if(texID=="clear"){
+				this.materials[currMat].setTexture(undefined);
+				this.materials[currMat].apply();
+			}
+			else{
+				currTex=texID;
+				this.materials[currMat].setTexture(this.texture[texID]);
+				this.materials[currMat].apply();
+			}
+		}
+	}
+	else if(matID != "null"){
+		currMat=matID;
+		this.materials[matID].setTexture(this.texture[currTex]);
+		this.materials[matID].apply();
 	}
 
 	this.multMatrix(node.matrix);
@@ -311,8 +334,12 @@ XMLscene.prototype.drawNode = function (node){
 	for(var i in node.descendants){
 
 		if(this.isLeaf(node.descendants[i])){
-
+			if(currTex==undefined){
+				this.drawLeaf(this.leaves[node.descendants[i]], 1, 1);
+			}
+			else{
 			this.drawLeaf(this.leaves[node.descendants[i]], this.texture[currTex].amplif.s, this.texture[currTex].amplif.t);
+		}
 
 		}
 		else this.drawNode(this.graph.nodes[node.descendants[i]]);
@@ -324,29 +351,20 @@ XMLscene.prototype.drawNode = function (node){
 XMLscene.prototype.drawLeaf = function (leaf, s, t){
 
 	if(leaf._type == "rectangle"){
-		if(s!=1 || t!=1){
-		leaf = new Rectangle(this, leaf.ltx, leaf.lty, leaf.rbx, leaf.rby, s, t);
-	}
+		leaf.changeTextureAmplif(s,t);
+		leaf.updateTexCoordsGLBuffers();
 		leaf.display();
 	}
 	else if(leaf._type == "triangle"){
-		if(s!=1 || t!=1){
-		leaf = new Triangle(this, leaf.x1, leaf.y1, leaf.z1, leaf.x2, leaf.y2, 
-			leaf.z2, leaf.x3, leaf.y3, leaf.z3, s, t);
-	}
+		leaf.changeTextureAmplif(s,t);
+		leaf.updateTexCoordsGLBuffers();
 		leaf.display();
 	}
 	else if (leaf._type== "cylinder"){
-		if(s!=1 || t!=1){
-		leaf = new Cylinder(this, leaf.height, leaf.stacks, leaf.slices, leaf.brad, leaf.trad); // s e t
-	}
 		this.scale(1,leaf.height,1);
 		leaf.display();
 	}
 	else if(leaf._type == "sphere"){
-		if(s!=1 || t!=1){
-		leaf = new Sphere(this, leaf.radius, leaf.stacks, leaf.slices, s, t);
-	}
 		this.scale(leaf.radius*2, leaf.radius*2, leaf.radius*2);
 		leaf.display();
 	}

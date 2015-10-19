@@ -6,12 +6,6 @@
  	CGFobject.call(this,scene);
 
 
-	/*console.debug(height);
-	console.debug(slices);
-	console.debug(stacks);
-	console.debug(topradius);
-	console.debug(botradius);*/
-
 
 	this.slices=slices;
 	this.stacks=stacks;

@@ -52,11 +52,20 @@ Rectangle.prototype.initBuffers = function () {
         ];
 
     this.texCoords = [    
-		0, this.ampFactT/this.lengthT,
-		this.ampFactS/this.lengthB, this.ampFactT/this.lengthT,
-		0, 0,
-		this.ampFactS/this.lengthB, 0
+    	0, this.lengthT/this.ampFactT,
+    	this.lengthB/this.ampFactS,this.lengthT/this.ampFactT,
+    	0, 0,
+    	this.lengthB/this.ampFactS, 0
 		];
 
 	this.initGLBuffers();
+};
+
+Rectangle.prototype.changeTextureAmplif = function(s,t){
+	this.texCoords = [    
+		0, this.lengthT/t,
+		this.lengthB/s,this.lengthT/t,
+		0, 0,
+		this.lengthB/s, 0
+		];
 };
