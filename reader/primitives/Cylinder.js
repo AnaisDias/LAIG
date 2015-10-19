@@ -53,11 +53,17 @@
 			var y1 = Math.sin(ang_now) * (aux_br * this.botradius + aux_tr * this.topradius);
 			var z1 = j / this.stacks - 0.5;
 
+			var x3 = Math.cos(ang_now) * ((aux_br-1/this.stacks) * this.botradius + (aux_tr+1/this.stacks) * this.topradius);
+			var y3 = Math.sin(ang_now) * ((aux_br-1/this.stacks) * this.botradius + (aux_tr+1/this.stacks) * this.topradius);
+
 			ang_now += ang;
 
 			var x2 = Math.cos(ang_now) * (aux_br * this.botradius + aux_tr * this.topradius);
 			var y2 = Math.sin(ang_now) * (aux_br * this.botradius + aux_tr * this.topradius);
 			var z2 = (j + 1) / this.stacks - 0.5;
+
+			var x4 = Math.cos(ang_now) * ((aux_br-1/this.stacks) * this.botradius + (aux_tr+1/this.stacks) * this.topradius);
+			var y4 = Math.sin(ang_now) * ((aux_br-1/this.stacks) * this.botradius + (aux_tr+1/this.stacks) * this.topradius);
 
 			this.vertices.push(x1);
 			this.vertices.push(y1);
@@ -67,12 +73,12 @@
 			this.vertices.push(y2);
 			this.vertices.push(z1); // vertex 1
 
-			this.vertices.push(x1)
-			this.vertices.push(y1);
+			this.vertices.push(x3)
+			this.vertices.push(y3);
 			this.vertices.push(z2); // vertex 2
 
-			this.vertices.push(x2);
-			this.vertices.push(y2);
+			this.vertices.push(x4);
+			this.vertices.push(y4);
  			this.vertices.push(z2); // vertex 3
 
  			var ind_i_j = ind_i + ind_j;
