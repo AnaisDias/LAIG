@@ -325,7 +325,9 @@ XMLscene.prototype.drawNode = function (node){
 	}
 	else if(matID != "null"){
 		currMat=matID;
+		if(currTex!=undefined){
 		this.materials[matID].setTexture(this.texture[currTex]);
+	}
 		this.materials[matID].apply();
 	}
 
