@@ -732,7 +732,15 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			return "MATERIAL element is missing or there is more than one.";
 		}
 
-		this.nodes[id].material = material[0].attributes.getNamedItem('id').value;
+		
+
+		var nmaterial = material[0].attributes.getNamedItem('id').value;
+
+		if(this.materials[nmaterial]==undefined && nmaterial!="null"){
+			return "MATERIAL element must be declared in the materials tag first.";
+		}
+
+		this.nodes[id].material = nmaterial;
 
 		//TEXTURE
 		var texture = getUniqueElement(nodesElems[i],'TEXTURE');
@@ -743,7 +751,13 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			return "TEXTURE element is missing or there is more than one.";
 		}
 
-		this.nodes[id].texture = texture[0].attributes.getNamedItem('id').value;
+		var ntexture = texture[0].attributes.getNamedItem('id').value;
+		if(this.textures[ntexture]==undefined && ntexture!="null"){
+			return "TEXTURE element must be declared in the TEXTURES tag first.";
+		}
+
+
+		this.nodes[id].texture = ntexture;
 		//DESCENDANTS		
 		var descElem = getUniqueElement(nodesElems[i],'DESCENDANTS');
 		if(descElem == -1){

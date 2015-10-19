@@ -32,6 +32,7 @@ XMLscene.prototype.init = function (application) {
    	this.gl.frontFace(this.gl.CCW);
    	this.gl.cullFace(this.gl.BACK);
 
+
 	this.axis=new CGFaxis(this);
 	this.lightsBool = [];
 };
@@ -218,13 +219,13 @@ XMLscene.prototype.onGraphLoaded = function ()
 				this.leaves[i]._type = "triangle";
 				break;
 			case "cylinder":
-				var height = this.graph.leaves[i].args.height;
-				var brad = this.graph.leaves[i].args.brad;
-				var trad = this.graph.leaves[i].args.trad;
-				var stacks = this.graph.leaves[i].args.stacks;
-				var slices = this.graph.leaves[i].args.slices;
+				var height = parseFloat(this.graph.leaves[i].args.height);
+				var brad = parseFloat(this.graph.leaves[i].args.brad);
+				var trad = parseFloat(this.graph.leaves[i].args.trad);
+				var stacks = parseFloat(this.graph.leaves[i].args.stacks);
+				var slices = parseFloat(this.graph.leaves[i].args.slices);
 
-				this.leaves[i] = new Cylinder(this, height, stacks, slices, brad, trad);//, 1, 1);
+				this.leaves[i] = new ClosedCylinder(this, height, slices, stacks, trad,brad);//, 1, 1);
 				this.leaves[i]._type = "cylinder";
 				break;
 			case "sphere":
@@ -238,8 +239,8 @@ XMLscene.prototype.onGraphLoaded = function ()
 		}
 
 
-	}
 
+	}
 
 	this.createTransfMatrixes();
 	this.drawNode(this.graph.nodes[this.graph.scene_id]);
