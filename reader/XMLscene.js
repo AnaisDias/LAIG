@@ -295,10 +295,21 @@ XMLscene.prototype.setDescMaterialsTextures = function (node){
 
 		if(!this.isLeaf(node.descendants[i])){
 		if(this.graph.nodes[node.descendants[i]].material=="null"){
-			this.graph.nodes[node.descendants[i]].material=node.material;
+			if(node.material=="null" && node.inheritedMat!=undefined){
+				this.graph.nodes[node.descendants[i]].inheritedMat=node.inheritedMat;
+			}
+			else{
+			this.graph.nodes[node.descendants[i]].inheritedMat=node.material;
 		}
-		if(this.graph.nodes[node.descendants[i]].texture=="null"){
-			this.graph.nodes[node.descendants[i]].texture=node.texture;
+		
+		}
+		if(this.graph.nodes[node.descendants[i]].texture=="null" && node.texture!="clear"){
+			if(node.texture=="null" && node.inheritedTex!=undefined){
+				this.graph.nodes[node.descendants[i]].inheritedTex=node.inheritedTex;	
+			}
+			else{
+			this.graph.nodes[node.descendants[i]].inheritedTex=node.texture;
+		}
 		}
 	}
 	}
@@ -308,43 +319,55 @@ XMLscene.prototype.drawNode = function (node){
 	
 	this.pushMatrix();
 
+
 	var matID = node.material;
 	var texID = node.texture;
 
-	/*if(texID != "null" ) {
+
+	if(texID != "null" ) {
 
 		if(matID != "null"){
-			currMat=matID;
 
 			if(texID=="clear"){
 				this.materials[matID].setTexture(null);
 				this.materials[matID].apply();
 			}
 			else{
-				currTex=texID;
 				this.materials[matID].setTexture(this.texture[texID]);
 				this.materials[matID].apply();
 			}
 			}
 		else{
 			if(texID=="clear"){
-				this.materials[currMat].setTexture(null);
-				this.materials[currMat].apply();
+				if(node.inheritedMat!=undefined && node.inheritedMat!="null"){
+				this.materials[node.inheritedMat].setTexture(null);
+				this.materials[node.inheritedMat].apply();
+			}
 			}
 			else{
-				currTex=texID;
-				this.materials[currMat].setTexture(this.texture[texID]);
-				this.materials[currMat].apply();
+				if(node.inheritedMat!=undefined && node.inheritedMat!="null"){
+				this.materials[node.inheritedMat].setTexture(this.texture[texID]);
+				this.materials[node.inheritedMat].apply();
+			}
 			}
 		}
 	}
 	else if(matID != "null"){
-		currMat=matID;
-		if(currTex!=undefined){
-		this.materials[matID].setTexture(this.texture[currTex]);
-	}
+		if(node.inheritedTex!="null" || node.inheritedTex!=undefined){
+		this.materials[matID].setTexture(this.texture[node.inheritedTex]);
+		}
+		this.materials[matID].apply();
 		
-	}*/
+	}
+
+	else{
+		if(node.inheritedMat!="null" && node.inheritedMat!=undefined){
+			if(node.inheritedTex!="null" && node.inheritedTex!=undefined){
+				this.materials[node.inheritedMat].setTexture(this.texture[node.inheritedTex]);
+			}
+			this.materials[node.inheritedMat].apply();
+		}
+	}/*
 	if(matID!="null"){
 
 		if(texID=="clear"){
@@ -357,7 +380,7 @@ XMLscene.prototype.drawNode = function (node){
 		this.materials[matID].apply();
 
 
-	}
+	}*/
 	this.multMatrix(node.matrix);
 
 	for(var i in node.descendants){
