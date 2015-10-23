@@ -2,13 +2,13 @@
 <SCENE>
 
 	<INITIALS>
-	    <frustum near="0.1" far="500"/>
-	    <translate x="0" y="0" z="0" />
+	    <frustum near="0.1" far="1000"/>
+	    <translation x="0" y="0" z="0" />
 	    <rotation axis="x" angle="0" />
-	    <rotation axis="y" angle="20" />
+	    <rotation axis="y" angle="0" />
 	    <rotation axis="z" angle="0" />
 	    <scale sx="0.8" sy="0.8" sz="0.8" />
-	    <reference length="5" />
+	    <reference length="3" />
 	</INITIALS>
 
 	<ILLUMINATION>
@@ -35,7 +35,7 @@
 
     	<LIGHT id="light2">                   <!-- identifier for third light -->
        		<enable value="1" />                         <!-- enable/disable -->
-        	<position x="7.5" y="5.0" z="10.0" w="1.0" />       <!-- light position -->
+        	<position x="6" y="7.0" z="8.0" w="1.0" />       <!-- light position -->
         	<ambient r="0.1" g="0.1" b="0.1" a="1.0" />     <!-- ambient component -->
        		<diffuse r="1.0" g="1.0" b="1.0" a="0.5" />    <!-- diffuse component -->
         	<specular r="1.0" g="1.0" b="1.0" a="0.5" />   <!-- specular component -->
@@ -43,9 +43,9 @@
 
     	<LIGHT id="light3">
     		<enable value="0" />                         <!-- enable/disable -->
-        	<position x="3.0" y="6.0" z="6.0" w="1.0" />       <!-- light position -->
-        	<ambient r="0" g="0" b="0" a="1.0" />       <!-- ambient component -->
-       		<diffuse r="0.1" g="0.1" b="0" a="0.5" />        <!-- diffuse component -->
+        	<position x="6.0" y="6.0" z="0.1" w="1.0" />       <!-- light position -->
+        	<ambient r="0.5" g="0.5" b="0.5" a="0.1" />       <!-- ambient component -->
+       		<diffuse r="0.1" g="0.1" b="0.1" a="0.8" />        <!-- diffuse component -->
         	<specular r="1.0" g="1.0" b="0" a="1.0" />     <!-- specular component -->
     	</LIGHT>
 	</LIGHTS>
@@ -53,11 +53,11 @@
 	<TEXTURES>
     	<TEXTURE id="wall-tex">
         	<file path="textures/wall.png" />            <!-- path to file -->
-        	<amplif_factor s="3" t="1" />                <!-- x/s, y/t -->
+        	<amplif_factor s="0.3" t="1" />                <!-- x/s, y/t -->
     	</TEXTURE>
     	<TEXTURE id="floor-tex">
         	<file path="textures/floor.png" />           <!-- path to file -->
-        	<amplif_factor s="5" t="6" />                <!-- x/s, y/t -->
+        	<amplif_factor s="0.2" t="0.15" />                <!-- x/s, y/t -->
     	</TEXTURE>
     	<TEXTURE id="darkwood-tex">
         	<file path="textures/darkwood.png" />        <!-- path to file -->
@@ -68,7 +68,7 @@
         	<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     	</TEXTURE>
     	<TEXTURE id="lamp-tex">
-        	<file path="textures/lamp.png" />            <!-- path to file -->
+        	<file path="textures/painting.png" />            <!-- path to file -->
         	<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     	</TEXTURE>
     	<TEXTURE id="doors-tex">
@@ -77,7 +77,7 @@
     	</TEXTURE>
     	<TEXTURE id="painting-tex">
         	<file path="textures/painting.png" />        <!-- path to file -->
-        	<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+        	<amplif_factor s="0.5" t="0.5" />                <!-- x/s, y/t -->
     	</TEXTURE>
     
 	</TEXTURES>
@@ -94,7 +94,7 @@
     	<MATERIAL id="wall-mat">                                  
         	<shininess value="10.0" />
         	<specular r="0.0" g="0.0" b="0.0" a="0.1" />        <!-- specular reflection -->
-        	<diffuse r="0.0" g="0.0" b="0.0" a="0.2" />         <!-- diffuse reflection -->
+        	<diffuse r="0.6" g="0.6" b="0.6" a="0.6" />         <!-- diffuse reflection -->
         	<ambient r="0.0" g="0.0" b="0.0" a="0.2" />         <!-- ambient reflection -->
         	<emission r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- emission component -->
     	</MATERIAL>
@@ -171,53 +171,22 @@
     	<!-- may be repeated -->
     	<LEAF id="rekt" type="rectangle" args="-0.5 0.5 0.5 -0.5" />
     	<LEAF id="cyl" type="cylinder" args="1 0.5 0.5 8 16" /> 
-    	<LEAF id="sph" type="sphere" args="0.5 16 16" />
+    	<LEAF id="sph" type="sphere" args="1 16 16" />
     	<LEAF id="tri" type="triangle" args="-0.5 -0.5 0  0.5 -0.5 0  0 0.5 0"/>
     	
-    	<!-- Parameters of the above primitives:                                                         -->
-        	<!--rectangle: 2D coordinates for left-top and right-bottom vertices.                        -->
-        	<!-- cylinder:  height, bottom radius, top radius, sections along height, parts per section  -->
-        	<!-- sphere:    radius, parts along radius, parts per section                                -->
-        	<!-- triangle:   coordinates of each vertex                                                  -->
 
 	</LEAVES>
 
 
 	<NODES>
 
-	    <ROOT id="scene" />     <!-- identifier of root node of the scene graph;    -->
-
- 		<!--<NODE id="TL0">       <!-- Leg for table 0
-
-	        <!-- next two lines are mandatory
-	        <MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
-	                                  <!-- id="null" maintains material from parent node   
-	        <TEXTURE id="null" />       <!-- declared texture superimposes the texture received from parent node -->
-	                                  <!-- id="null" maintains texture from parent node       -->
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
-
-
-	        <!-- geometrical transformations
-	        <TRANSLATION x="ff" y="ff" z="ff" />
-	        <ROTATION axis="cc" angle="ff" />
-	        <SCALE sx="ff" sy="ff" sz="ff" />
-
-
-	        <!-- declaring descendents, ate least one node or one leaf must be present
-	        <DESCENDANTS>
-	            <DESCENDANT id="cyl0" />       <!-- "ss" is the identifier of a node or of leaf;
-	                                         <!-- may be repeatad as necessary. It can refer an 
-	                                         <!-- identifier of another node or leaf, later defined in the lsx file. 
-	        </DESCENDANTS>
-
-	    </NODE> -->
+	    <ROOT id="scene" />     
 
 	    <NODE id="wall1">      
 
 	        
 	        <MATERIAL id="wall-mat" />     
 	        <TEXTURE id="wall-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <TRANSLATION x="0" y="4" z="10" />
 	        <ROTATION axis="y" angle="90" />
@@ -234,7 +203,6 @@
 	    
 	        <MATERIAL id="wall-mat" />     
 	        <TEXTURE id="wall-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <TRANSLATION x="7.5" y="4" z="0" />
 	        <SCALE sx="15" sy="8" sz="0.2" />
@@ -249,7 +217,6 @@
 	    
 	        <MATERIAL id="wall-mat" />     
 	        <TEXTURE id="wall-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <TRANSLATION x="15" y="4" z="10" />
 	        <ROTATION axis="y" angle="-90" />
@@ -265,7 +232,6 @@
 	    
 	        <MATERIAL id="wall-mat" />     
 	        <TEXTURE id="wall-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <TRANSLATION x="7.5" y="4" z="20" />
 	        <ROTATION axis="y" angle="180" />
@@ -281,7 +247,6 @@
 	    
 	        <MATERIAL id="floor-mat" />     
 	        <TEXTURE id="floor-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <TRANSLATION x="7.5" y="0" z="10" />
 	        <ROTATION axis="x" angle="-90" />
@@ -297,7 +262,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <ROTATION axis="x" angle="90" />                          
 	        <TRANSLATION x="0" y="0" z="0.5" />
@@ -312,7 +276,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <ROTATION axis="x" angle="-90" />                          
 	        <TRANSLATION x="0" y="0" z="0.5" />
@@ -327,7 +290,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                           
 	        <TRANSLATION x="0" y="0" z="0.5" />
 
@@ -341,7 +303,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <ROTATION axis="x" angle="180" />                          
 	        <TRANSLATION x="0" y="0" z="0.5" />
@@ -356,7 +317,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <ROTATION axis="y" angle="90" />                          
 	        <TRANSLATION x="0" y="0" z="0.5" />
@@ -371,7 +331,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <ROTATION axis="y" angle="-90" />                          
 	        <TRANSLATION x="0" y="0" z="0.5" />
@@ -386,7 +345,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
 
 	        <DESCENDANTS>
 	            <DESCENDANT id="cubeBottom" />
@@ -403,8 +361,7 @@
 	    <NODE id="tableLegFrontLeft">      
 	    
 	        <MATERIAL id="legs-mat" />     
-	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
+	        <TEXTURE id="floor-tex" />      
                        
 	        <TRANSLATION x="-4.5" y="1.7" z="2.0" />
 	        <SCALE sx="0.3" sy="3.4" sz="0.3" />
@@ -418,8 +375,7 @@
 	    <NODE id="tableLegFrontRight">      
 	    
 	        <MATERIAL id="legs-mat" />     
-	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
+	        <TEXTURE id="null" />      
                        
 	        <TRANSLATION x="4.5" y="1.7" z="2.0" />
 	        <SCALE sx="0.3" sy="3.4" sz="0.3" />
@@ -433,8 +389,7 @@
 	    <NODE id="tableLegBackLeft">      
 	    
 	        <MATERIAL id="legs-mat" />     
-	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
+	        <TEXTURE id="null" />      
                        
 	        <TRANSLATION x="-4.5" y="1.7" z="-2.0" />
 	        <SCALE sx="0.3" sy="3.4" sz="0.3" />
@@ -448,8 +403,7 @@
 	    <NODE id="tableLegBackRight">      
 	    
 	        <MATERIAL id="legs-mat" />     
-	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
+	        <TEXTURE id="null" />      
                        
 	        <TRANSLATION x="4.5" y="1.7" z="-2.0" />
 	        <SCALE sx="0.3" sy="3.4" sz="0.3" />
@@ -464,7 +418,6 @@
 	    
 	        <MATERIAL id="tablechairtop-mat" />     
 	        <TEXTURE id="darkwood-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0.0" y="3.55" z="0.0" />
 	        <SCALE sx="10.0" sy="0.3" sz="5.0" />
@@ -479,9 +432,9 @@
 	    <NODE id="table">      
 	    
 	        <MATERIAL id="null" />     
-	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
-                       
+	        <TEXTURE id="floor-tex" />      
+               
+              <TRANSLATION x="0" y="2" z="0" />        
 	        <TRANSLATION x="7.5" y="0" z="10" />
 	        <ROTATION axis="y" angle="90" />  
 
@@ -499,8 +452,7 @@
 	    
 	        <MATERIAL id="legs-mat" />     
 	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
-                       
+
 	        <TRANSLATION x="0.6" y="1" z="-0.6" />
 	        <SCALE sx="0.2" sy="2" sz="0.2" />  
 
@@ -514,7 +466,6 @@
 	    
 	        <MATERIAL id="legs-mat" />     
 	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="-0.6" y="1" z="-0.6" />
 	        <SCALE sx="0.2" sy="2" sz="0.2" />  
@@ -529,7 +480,6 @@
 	    
 	        <MATERIAL id="legs-mat" />     
 	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0.6" y="1" z="0.6" />
 	        <SCALE sx="0.2" sy="2" sz="0.2" />  
@@ -544,7 +494,6 @@
 	    
 	        <MATERIAL id="legs-mat" />     
 	        <TEXTURE id="metal-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="-0.6" y="1" z="0.6" />
 	        <SCALE sx="0.2" sy="2" sz="0.2" />  
@@ -559,7 +508,6 @@
 	    
 	        <MATERIAL id="tablechairtop-mat" />     
 	        <TEXTURE id="darkwood-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0" y="2.1" z="0" />
 	        <SCALE sx="1.5" sy="0.2" sz="1.5" />  
@@ -575,7 +523,6 @@
 	    
 	        <MATERIAL id="tablechairtop-mat" />     
 	        <TEXTURE id="darkwood-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0" y="3" z="0.7" />
 	        <SCALE sx="1.5" sy="2" sz="0.2" />  
@@ -591,7 +538,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="10" y="0" z="7.5" />
 	        <ROTATION axis="y" angle="90" /> 
@@ -612,7 +558,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="10" y="0" z="12.5" />
 	        <ROTATION axis="y" angle="90" /> 
@@ -633,7 +578,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="5" y="0" z="7.5" />
 	        <ROTATION axis="y" angle="-90" /> 
@@ -654,7 +598,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="5" y="0" z="12.5" />
 	        <ROTATION axis="y" angle="-90" /> 
@@ -675,10 +618,9 @@
 	    
 	        <MATERIAL id="lamppost-mat" />     
 	        <TEXTURE id="darkwood-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0" y="2.5" z="0" /> 
-	        <SCALE sx="0.2" sy="5.5" sz="1.1" />  
+	        <SCALE sx="0.2" sy="5.5" sz="0.2" />  
 	        <ROTATION axis="x" angle="-90" />
 
 	        <DESCENDANTS>
@@ -691,7 +633,6 @@
 	    
 	        <MATERIAL id="lamppost-mat" />     
 	        <TEXTURE id="darkwood-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0" y="0.1" z="0" /> 
 	        <ROTATION axis="x" angle="-90" />
@@ -708,7 +649,6 @@
 	    
 	        <MATERIAL id="lamp-mat" />     
 	        <TEXTURE id="lamp-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0" y="6" z="0" /> 
 	        <SCALE sx="0.8" sy="0.8" sz="0.8" />  
@@ -724,8 +664,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
-                       
 	        <TRANSLATION x="13.5" y="0" z="1.5" /> 
 	        
 	        <DESCENDANTS>
@@ -740,7 +678,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="1.5" y="0" z="1.5" /> 
 	        
@@ -757,7 +694,6 @@
 	    
 	        <MATERIAL id="doors-mat" />     
 	        <TEXTURE id="doors-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="0.1" y="3.5" z="10" /> 
 	        <ROTATION axis="y" angle="90" />
@@ -774,7 +710,6 @@
 	    
 	        <MATERIAL id="painting-mat" />     
 	        <TEXTURE id="painting-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="7.5" y="4.5" z="0.2" /> 
 	        <SCALE sx="5" sy="4" sz="1" />  
@@ -791,7 +726,7 @@
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
                        
-	        <TRANSLATION x="0" y="-0.5" z="0" /> 
+	        <TRANSLATION x="0" y="-0.8" z="0" /> 
 	        <ROTATION axis="z" angle="180" />
 	        <ROTATION axis="x" angle="-90" />
 	        
@@ -909,6 +844,7 @@
 	            <DESCENDANT id="wall4" /> 
 	            <DESCENDANT id="floor" /> 
 	            <DESCENDANT id="table" /> 
+	            <DESCENDANT id="ornament" /> 
 	            <DESCENDANT id="chair1" /> 
 	            <DESCENDANT id="chair2" /> 
 	            <DESCENDANT id="chair3" /> 
@@ -917,7 +853,7 @@
 	            <DESCENDANT id="lamp2" /> 
 	            <DESCENDANT id="doors" /> 
 	            <DESCENDANT id="painting" /> 
-	            <DESCENDANT id="ornament" />     
+	                
 	        </DESCENDANTS>
 
 	    </NODE>
