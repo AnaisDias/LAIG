@@ -104,13 +104,13 @@
 			this.normals.push(0);
 
 			// normal to vertex 2
-			this.normals.push(x1);
-			this.normals.push(y1);
+			this.normals.push(x3);
+			this.normals.push(y3);
 			this.normals.push(0);
 			
 			// normal to vertex 3
-            this.normals.push(x2);
-			this.normals.push(y2);
+            this.normals.push(x4);
+			this.normals.push(y4);
 			this.normals.push(0);
 
 			// texture coordenates
