@@ -66,13 +66,6 @@
 
  				}
  				else{
- 					remainder = 1-(this.point[this.curPoint-1] % i);
-
- 					tx = this.controlPoints[i+1].x * remainder;
- 					ty = this.controlPoints[i+1].y * remainder;
- 					tz = this.controlPoints[i+1].z * remainder;
- 					matrix.push([tx,ty,tz]);
-
 
 	 				tx = this.controlPoints[i+1].x;
 	 				ty = this.controlPoints[i+1].y;
@@ -108,7 +101,7 @@
  					matrix.push([tx,ty,tz]);
 
  					//calcula a percentagem que falta para o ponto atual
-	 				remainder = 1-(this.point[this.curPoint] % i);
+	 				remainder = this.point[this.curPoint] % i;
 
 	 				tx = this.controlPoints[i+1].x * remainder;
  					ty = this.controlPoints[i+1].y * remainder;
@@ -121,15 +114,9 @@
 
  				}
  				else{
- 					remainder = 1-(this.point[this.curPoint-1] % i);
-
- 					tx = this.controlPoints[i+1].x * remainder;
- 					ty = this.controlPoints[i+1].y * remainder;
- 					tz = this.controlPoints[i+1].z * remainder;
- 					matrix.push([tx,ty,tz]);
 
  					//calcula a percentagem que falta para o ponto atual
- 					remainder = 1-(this.point[this.curPoint] % i);
+ 					remainder = this.point[this.curPoint] % i;
 
 	 				tx = this.controlPoints[i+1].x * remainder;
  					ty = this.controlPoints[i+1].y * remainder;
@@ -166,7 +153,7 @@
 	 		else if(this.points[this.curPoint] > i && this.points[this.curPoint] < (i+1)){
 
 				//calcula a percentagem que falta para o ponto atual
-				remainder = 1-(this.point[this.curPoint] % i);
+				remainder = this.point[this.curPoint] % i;
 
 				tx = this.controlPoints[i+1].x * remainder;
 				ty = this.controlPoints[i+1].y * remainder;
