@@ -31,7 +31,7 @@
  		return null;
  	}
  	for(i = 0; i < (this.controlPoints.length - 1); i++){
- 		//falta fazer para se for igual a 0 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 		
  		if(curPoint > 0){
  			//se for igual ao próximo ponto
  			if(this.points[this.curPoint] == (i+1)){
@@ -59,6 +59,10 @@
 	 				ty = this.controlPoints[i+1].y;
 	 				tz = this.controlPoints[i+1].z;
 	 				matrix.push([tx,ty,tz]);
+	 				matrix.ang = this.angCP[i+1];
+
+	 				this.curPoint++;
+	 				return matrix;
 
  				}
  				else{
@@ -69,13 +73,23 @@
  					tz = this.controlPoints[i+1].z * remainder;
  					matrix.push([tx,ty,tz]);
 
+
+	 				tx = this.controlPoints[i+1].x;
+	 				ty = this.controlPoints[i+1].y;
+	 				tz = this.controlPoints[i+1].z;
+	 				matrix.push([tx,ty,tz]);
+	 				matrix.ang = this.angCP[i+1];
+
+	 				this.curPoint++;
+ 					return matrix;
+
  				}
 
 	 		}
 	 		//se o ponto estiver dentro deste controlPoint
 	 		else if(this.points[this.curPoint] > i && this.points[this.curPoint] < (i+1)){
 	 			// se o ponto anterior pertencer a um ponto de translação anterior
-	 			if(this.points[this.curPoint-1] < i){
+ 				if(this.points[this.curPoint-1] < i){
  					//verifica se o ponto pertence a um ponto de translação ainda mais antigo
  					j = i-1;
  					while(this.points[this.curPoint-1] < j){
@@ -93,21 +107,89 @@
  					tz = this.controlPoints[j+1].z * remainder;
  					matrix.push([tx,ty,tz]);
 
- 				}
- 				remainder = 1-(this.point[this.curPoint-1] % j);
+ 					//calcula a percentagem que falta para o ponto atual
+	 				remainder = 1-(this.point[this.curPoint] % i);
 
- 				tx = this.controlPoints[j+1].x * remainder;
- 				ty = this.controlPoints[j+1].y * remainder;
- 				tz = this.controlPoints[j+1].z * remainder;
- 				matrix.push([tx,ty,tz]);
+	 				tx = this.controlPoints[i+1].x * remainder;
+ 					ty = this.controlPoints[i+1].y * remainder;
+ 					tz = this.controlPoints[i+1].z * remainder;
+	 				matrix.push([tx,ty,tz]);
+	 				matrix.ang = this.angCP[i+1];
+
+	 				this.curPoint++;
+	 				return matrix;
+
+ 				}
+ 				else{
+ 					remainder = 1-(this.point[this.curPoint-1] % i);
+
+ 					tx = this.controlPoints[i+1].x * remainder;
+ 					ty = this.controlPoints[i+1].y * remainder;
+ 					tz = this.controlPoints[i+1].z * remainder;
+ 					matrix.push([tx,ty,tz]);
+
+ 					//calcula a percentagem que falta para o ponto atual
+ 					remainder = 1-(this.point[this.curPoint] % i);
+
+	 				tx = this.controlPoints[i+1].x * remainder;
+ 					ty = this.controlPoints[i+1].y * remainder;
+ 					tz = this.controlPoints[i+1].z * remainder;
+	 				matrix.push([tx,ty,tz]);
+	 				matrix.ang = this.angCP[i+1];
+
+	 				this.curPoint++;
+ 					return matrix;
+
+ 				}
 
 	 		}
 
 
  		}
+ 		else{
+			//se for igual ao próximo ponto
+ 			if(this.points[this.curPoint] == (i+1)){
+ 				
+				tx = this.controlPoints[i+1].x;
+				ty = this.controlPoints[i+1].y;
+				tz = this.controlPoints[i+1].z;
+				matrix.push([tx,ty,tz]);
+				matrix.ang = this.angCP[i+1];
+
+				this.curPoint++;
+				return matrix;
+
+ 				
+
+	 		}
+	 		//se o ponto estiver dentro deste controlPoint
+	 		else if(this.points[this.curPoint] > i && this.points[this.curPoint] < (i+1)){
+
+				//calcula a percentagem que falta para o ponto atual
+				remainder = 1-(this.point[this.curPoint] % i);
+
+				tx = this.controlPoints[i+1].x * remainder;
+				ty = this.controlPoints[i+1].y * remainder;
+				tz = this.controlPoints[i+1].z * remainder;
+				matrix.push([tx,ty,tz]);
+				matrix.ang = this.angCP[i+1];
+
+				this.curPoint++;
+				return matrix;
+
+ 				
+	 		}
+ 		}
+
+ 		//se nenhum dos ifs retornar significa que esta translação tem de ser feita sempre...
+	 	tx = this.controlPoints[i+1].x;
+ 		ty = this.controlPoints[i+1].y;
+ 		tz = this.controlPoints[i+1].z;
+ 		matrix.push([tx,ty,tz]);
+ 		
  	}
 
- 	this.curPoint++;
+ 	
  	
  	return matrix;
  };
@@ -120,7 +202,7 @@
  		var difx = this.controlPoints[i+1].x - this.controlPoints[i].x;
  		var difz = this.controlPoints[i+1].z - this.controlPoints[i].z;
 
- 		this.angCP[i] = acos(difx/(Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2)));
+ 		this.angCP[i+1] = acos(difx/(Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2)));
 
  	}
 
