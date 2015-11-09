@@ -18,6 +18,7 @@
  LinearAnimation.prototype.constructor = LinearAnimation;
 
 //FAZER COM QUE O PRIMEIRO CONTROL POINT SEJA (0,0,0) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
  /**
  * retorna uma matriz para a transformação a fazer
  */
