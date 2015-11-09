@@ -18,21 +18,31 @@
  LinearAnimation.prototype.constructor = LinearAnimation;
 
 //FAZER COM QUE O PRIMEIRO CONTROL POINT SEJA (0,0,0) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ /**
+ * retorna uma matriz para a transformação a fazer
+ */
  LinearAnimation.prototype.animate = function(){
 
- 	var matrix = [];
+ 	var matrix = mat4.create();
  	var j = 0;
  	var tx = 0;
  	var ty = 0;
  	var tz = 0;
  	var remainder = 0;
  	//verifica se chegou ao fim da animação
- 	if(curPoint >= (this.time * 10){
+ 	if(this.curPoint >= (this.time * 10){
  		return null;
+ 	}
+ 	//faz a rotação do objeto para o ângulo atual
+ 	for(i = 0; i < (this.controlPoints.length - 1); i++){
+ 		if(this.points[this.curPoint] > i && this.points[this.curPoint] <= (i+1)){
+ 			mat4.rotate(matrix,matrix,this.angCP[i+1],[0,1,0]);
+ 			break;
+ 		}
  	}
  	for(i = 0; i < (this.controlPoints.length - 1); i++){
  		
- 		if(curPoint > 0){
+ 		if(this.curPoint > 0){
  			//se for igual ao próximo ponto
  			if(this.points[this.curPoint] == (i+1)){
  				// se o ponto anterior pertencer a um ponto de translação anterior
@@ -43,7 +53,7 @@
  						tx = this.controlPoints[j+1].x;
  						ty = this.controlPoints[j+1].y;
  						tz = this.controlPoints[j+1].z;
- 						matrix.push([tx,ty,tz]);
+ 						mat4.translate(matrix,matrix,[tx,ty,tz]);
  						j--;
  					}
  					//calcula quanta percentagem falta
@@ -52,14 +62,13 @@
  					tx = this.controlPoints[j+1].x * remainder;
  					ty = this.controlPoints[j+1].y * remainder;
  					tz = this.controlPoints[j+1].z * remainder;
- 					matrix.push([tx,ty,tz]);
+ 					mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 
 	 				tx = this.controlPoints[i+1].x;
 	 				ty = this.controlPoints[i+1].y;
 	 				tz = this.controlPoints[i+1].z;
-	 				matrix.push([tx,ty,tz]);
-	 				matrix.ang = this.angCP[i+1];
+	 				mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 	 				this.curPoint++;
 	 				return matrix;
@@ -70,8 +79,7 @@
 	 				tx = this.controlPoints[i+1].x;
 	 				ty = this.controlPoints[i+1].y;
 	 				tz = this.controlPoints[i+1].z;
-	 				matrix.push([tx,ty,tz]);
-	 				matrix.ang = this.angCP[i+1];
+	 				mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 	 				this.curPoint++;
  					return matrix;
@@ -89,7 +97,7 @@
  						tx = this.controlPoints[j+1].x;
  						ty = this.controlPoints[j+1].y;
  						tz = this.controlPoints[j+1].z;
- 						matrix.push([tx,ty,tz]);
+ 						mat4.translate(matrix,matrix,[tx,ty,tz]);
  						j--;
  					}
  					//calcula quanta percentagem falta
@@ -98,7 +106,7 @@
  					tx = this.controlPoints[j+1].x * remainder;
  					ty = this.controlPoints[j+1].y * remainder;
  					tz = this.controlPoints[j+1].z * remainder;
- 					matrix.push([tx,ty,tz]);
+ 					mat4.translate(matrix,matrix,[tx,ty,tz]);
 
  					//calcula a percentagem que falta para o ponto atual
 	 				remainder = this.point[this.curPoint] % i;
@@ -106,8 +114,7 @@
 	 				tx = this.controlPoints[i+1].x * remainder;
  					ty = this.controlPoints[i+1].y * remainder;
  					tz = this.controlPoints[i+1].z * remainder;
-	 				matrix.push([tx,ty,tz]);
-	 				matrix.ang = this.angCP[i+1];
+	 				mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 	 				this.curPoint++;
 	 				return matrix;
@@ -121,8 +128,7 @@
 	 				tx = this.controlPoints[i+1].x * remainder;
  					ty = this.controlPoints[i+1].y * remainder;
  					tz = this.controlPoints[i+1].z * remainder;
-	 				matrix.push([tx,ty,tz]);
-	 				matrix.ang = this.angCP[i+1];
+ 					mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 	 				this.curPoint++;
  					return matrix;
@@ -140,8 +146,7 @@
 				tx = this.controlPoints[i+1].x;
 				ty = this.controlPoints[i+1].y;
 				tz = this.controlPoints[i+1].z;
-				matrix.push([tx,ty,tz]);
-				matrix.ang = this.angCP[i+1];
+				mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 				this.curPoint++;
 				return matrix;
@@ -158,8 +163,7 @@
 				tx = this.controlPoints[i+1].x * remainder;
 				ty = this.controlPoints[i+1].y * remainder;
 				tz = this.controlPoints[i+1].z * remainder;
-				matrix.push([tx,ty,tz]);
-				matrix.ang = this.angCP[i+1];
+				mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 				this.curPoint++;
 				return matrix;
@@ -172,7 +176,7 @@
 	 	tx = this.controlPoints[i+1].x;
  		ty = this.controlPoints[i+1].y;
  		tz = this.controlPoints[i+1].z;
- 		matrix.push([tx,ty,tz]);
+ 		mat4.translate(matrix,matrix,[tx,ty,tz]);
  		
  	}
 
@@ -237,14 +241,10 @@
  		
  		dist = Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
 
- 		/*if (dist < this.velocity){
- 			this.points[j] += 1;
- 		}
- 		else*/
  		//verifica se existe distancia de pontos de controlo anteriores
  		if (curDistance > 0){
  			if(curDistance <= dist){
-	 			this.points[j] = i + (dist-curDistance)/dist;
+	 			this.points[j] = i + curDistance/dist;
 	 			j++;
 	 		} 
 	 	}
@@ -257,7 +257,7 @@
  		else if ((dist-curDistance) > this.velocity){
  			curDistance += this.velocity;
  			while(curDistance < dist){
- 				this.points[j] = i + (dist-curDistance)/dist;
+ 				this.points[j] = i + curDistance/dist;
  				j++;
  				curDistance += this.velocity;
  			}
