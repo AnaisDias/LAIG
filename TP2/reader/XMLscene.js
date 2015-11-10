@@ -35,6 +35,8 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis=new CGFaxis(this);
 	this.lightsBool = [];
+
+	this.cyl = new ClosedCylinder(this, 1, 8, 8, 0.5,0.5);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -453,7 +455,6 @@ XMLscene.prototype.updateLights = function(){
 
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
-    this.shader.bind();
 	
 	// Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -471,8 +472,12 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
-
-	
+	this.pushMatrix();
+	this.translate(5,5,5);//centro
+	this.rotate(degToRad(45),0,1,0);//rotacao
+	this.translate(5,0,0);//raio
+	this.cyl.display();
+	this.popMatrix();
 	// ---- END Background, camera and axis setup
 
 	// it is important that things depending on the proper loading of the graph
@@ -498,14 +503,11 @@ XMLscene.prototype.display = function () {
 
 	}	
 
-    this.shader.unbind();
 };
 
 
 XMLscene.prototype.update = function (currTime){
 
-	for(each animation)
-		funçcalculas direção do objeto
 
 
 };
