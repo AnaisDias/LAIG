@@ -7,26 +7,40 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  	this.initAngle = initAngle;
  	this.rotAngle = rotAngle;
  	this.curAngle=initAngle;
+ 	this.initTime = Date.now();
+ 	this.curTime = Date.now();
+ 	this.firstTime = true;
  	this.setVelocity();
+
+ 	console.log(this.velocity);
 
 };
 
- CircularAnimation.prototype.constructor = LinearAnimation;
+ CircularAnimation.prototype.constructor = CircularAnimation;
 
  CircularAnimation.prototype.display = function(){
  	//onde se faz as transformaçoes (mudar para matrizes)
- 	this.scene.pushMatrix();
+ 	
  	this.scene.translate(this.center[0], this.center[1], this.center[2]);
- 	this.scene.rotate(degToRad(curAngle), 0,1,0);
- 	this.scene.translate(this.radius[0], this.radius[1], this.radius[2]);
- 	this.scene.popMatrix();
+ 	//console.log("translate done");
+ 	this.scene.rotate(degToRad(this.curAngle), 0,1,0);
+ 	this.scene.translate(this.radius, 0, 0);
  }
 
- CircularAnimation.prototype.update = function(){
+ CircularAnimation.prototype.update = function(currTime){
 
  	//onde se mudam os parametros
- 	if(!(curAngle>=rotAngle)){
- 		curAngle += this.velocity;
+ 	if(!(this.curAngle>=(this.rotAngle+this.initAngle))){
+ 		if(this.firstTime){
+ 			this.firstTime = false;
+ 			this.initTime = currTime;
+ 			this.curTime = currTime;
+ 		}
+ 		else{
+ 			this.curTime=currTime;
+ 		}
+ 		this.curAngle = this.initAngle + this.velocity*(this.curTime-this.initTime);
+ 		console.log("curAngle is " + this.curAngle);
  	}
  	
  };
@@ -34,5 +48,6 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
 
  CircularAnimation.prototype.setVelocity = function(){
 
- 	this.velocity = rotAngle / (this.time * 10);
+ 	this.velocity = this.rotAngle / (this.time * 1000);
+
  }

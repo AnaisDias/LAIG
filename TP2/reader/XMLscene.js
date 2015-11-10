@@ -14,7 +14,7 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
-    
+    this.setUpdatePeriod(10);
     this.initCameras();
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -37,6 +37,8 @@ XMLscene.prototype.init = function (application) {
 	this.lightsBool = [];
 
 	this.cyl = new ClosedCylinder(this, 1, 8, 8, 0.5,0.5);
+	this.circA = new CircularAnimation(this, 5, [5,5,5], 2, 20, 50);
+	console.debug(this);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -472,10 +474,12 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
+	//this.circA.update();
 	this.pushMatrix();
-	this.translate(5,5,5);//centro
+	this.circA.display();
+	/*this.translate(5,5,5);//centro
 	this.rotate(degToRad(45),0,1,0);//rotacao
-	this.translate(5,0,0);//raio
+	this.translate(5,0,0);//raio*/
 	this.cyl.display();
 	this.popMatrix();
 	// ---- END Background, camera and axis setup
@@ -508,6 +512,6 @@ XMLscene.prototype.display = function () {
 
 XMLscene.prototype.update = function (currTime){
 
-
+	this.circA.update(currTime);
 
 };
