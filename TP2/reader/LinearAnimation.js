@@ -9,9 +9,12 @@
  	this.controlPoints = controlPoints; 
  	this.curPoint= 0;
  	this.initTime = Date.now();
- 	this.tmatrix = mat4.create();
+ 	this.tx = 0;
+ 	this.ty = 0;
+ 	this.tz = 0;
  	this.firstTime = true;
  	this.angCP = [];
+ 	this.angNow = 0;
  	this.points = [];
  	this.setVelocityAndTime();
  	this.calculateAngles();
@@ -29,18 +32,21 @@
 
  	var matrix = mat4.create();
  	var j = 0;
- 	var tx = 0;
- 	var ty = 0;
- 	var tz = 0;
+ 	
  	var remainder = 0;
+
+ 	console.log("curTime = " + (curTime - this.initTime) / 1000);
  	//verifica se chegou ao fim da animação
  	if(curTime <= (this.initTime + this.time * 1000)){
+ 		this.tx = 0;
+ 		this.ty = 0;
+ 		this.tz = 0;
  		
 	 	//faz a rotação do objeto para o ângulo atual
 	 	for(i = 0; i < (this.points.length - 1); i++){
 	 		if(curTime > this.points[i] && curTime <= this.points[i+1]){
-	 			mat4.rotate(matrix,matrix,this.angCP[i+1],[0,1,0]);
-	 			console.log(this.angCP[i+1]);
+	 			this.angNow = this.angCP[i+1];
+	 			console.log("new angle: " + this.angCP[i+1]);
 	 			break;
 	 		}
 	 	}
@@ -50,28 +56,23 @@
 	 			//se for igual ao próximo ponto
 	 			if(this.points[i+1] == curTime){
 
-	 				tx = this.controlPoints[i+1].x;
-		 			ty = this.controlPoints[i+1].y;
-		 			tz = this.controlPoints[i+1].z;
-		 			mat4.translate(matrix,matrix,[tx,ty,tz]);
+	 				this.tx += this.controlPoints[i+1][0];
+		 			this.ty += this.controlPoints[i+1][1];
+		 			this.tz += this.controlPoints[i+1][2];
 
-		 			this.tmatrix = matrix;
-		 			console.log(i+1);
 	 				return;
 
 		 		}
 		 		//se o ponto estiver dentro deste controlPoint
 		 		else if(this.points[i] < curTime && this.points[i+1] > curTime){
 
-		 			remainder = (curTime-this.points[i])/(this.points[i+1]-points[i]) ;
+		 			remainder = (curTime-this.points[i])/(this.points[i+1]-this.points[i]) ;
+		 			console.log("remainder " + (i+1) +" is: "+ remainder);
 
-		 			tx = this.controlPoints[i+1].x * remainder;
-	 				ty = this.controlPoints[i+1].y * remainder;
-	 				tz = this.controlPoints[i+1].z * remainder;
-	 				mat4.translate(matrix,matrix,[tx,ty,tz]);
+		 			this.tx += this.controlPoints[i+1][0] * remainder;
+	 				this.ty += this.controlPoints[i+1][1] * remainder;
+	 				this.tz += this.controlPoints[i+1][2] * remainder;
 
-	 				this.tmatrix = matrix;
-	 				console.log(i+1);
 	 				return;
 
 				}
@@ -79,30 +80,28 @@
 	 			
 
 	 		//se nenhum dos ifs retornar significa que esta translação tem de ser feita sempre...
-		 	tx = this.controlPoints[i+1].x;
-	 		ty = this.controlPoints[i+1].y;
-	 		tz = this.controlPoints[i+1].z;
-	 		mat4.translate(matrix,matrix,[tx,ty,tz]);
-
+		 	this.tx += this.controlPoints[i+1][0];
+	 		this.ty += this.controlPoints[i+1][1];
+	 		this.tz += this.controlPoints[i+1][2];
+	 		
 	 	}
 	 		
 	 }
 
 
 
-	console.log(i+1);
-	this.tmatrix = matrix; 	
+		
  	
  };
 
  LinearAnimation.prototype.display = function(){
- 	if(this.firstTime){
- 		this.firstTime = false;
- 	}
- 	else
- 		if(this.matrix != null)
- 			this.scene.multMatrix(this.matrix);
  	
+ 	this.scene.translate(this.tx, this.ty, this.tz);
+ 	this.scene.rotate(this.angNow,0,1,0);
+ 	console.log("tx " + this.tx);
+	console.log("ty " + this.ty);
+	console.log("tz " + this.tz);
+
  };
 
  LinearAnimation.prototype.calculateAngles = function(){
@@ -110,10 +109,10 @@
  	this.angCP[0] = 0;
  	for(i = 0; i < (this.controlPoints.length - 1); i++){
 
- 		var difx = this.controlPoints[i+1].x - this.controlPoints[i].x;
- 		var difz = this.controlPoints[i+1].z - this.controlPoints[i].z;
+ 		difx = this.controlPoints[i+1][0];
+ 		difz = this.controlPoints[i+1][2];
 
- 		this.angCP[i+1] = Math.acos(difx/(Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2))));
+ 		this.angCP[i+1] = Math.asin(difx/Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2)));
 
  	}
 
@@ -130,11 +129,11 @@
 
  	for(i = 0; i < (this.controlPoints.length - 1); i++){
 
- 		difx = this.controlPoints[i+1].x - this.controlPoints[i].x;
- 		difz = this.controlPoints[i+1].z - this.controlPoints[i].z;
- 		dify = this.controlPoints[i+1].y - this.controlPoints[i].y;
+ 		difx = this.controlPoints[i+1][0];
+ 		difz = this.controlPoints[i+1][2];
+ 		dify = this.controlPoints[i+1][1];
 
- 		difxz += Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2));
+ 		difxz = Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2));
  		
  		dist += Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
 
@@ -144,16 +143,23 @@
  	this.points[0] = this.initTime;
 
  	for(i = 0; i < (this.controlPoints.length - 1); i++){
-
- 		difx = this.controlPoints[i+1].x - this.controlPoints[i].x;
- 		difz = this.controlPoints[i+1].z - this.controlPoints[i].z;
- 		dify = this.controlPoints[i+1].y - this.controlPoints[i].y;
-
- 		difxz += Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2));
  		
- 		curDist = Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
+ 		difx = this.controlPoints[i+1][0];
+ 		difz = this.controlPoints[i+1][2];
+ 		dify = this.controlPoints[i+1][1];
 
+ 		console.log("difx " + difx);
+ 		console.log("difz " + difz);
+ 		console.log("dify " + dify);
+
+ 		difxz = Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2));
+ 		
+ 		curDist += Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
+
+ 		console.log("curDist " + curDist);
+ 		console.log("difxz " + difxz);
  		var x = curDist/dist;
+ 		console.log("x = " + x);
  		this.points[i+1] = this.initTime + this.time * 1000 * x;
 
  		console.log("Added point " + this.points[i+1]);
@@ -161,57 +167,3 @@
 
  };
 
- /*LinearAnimation.prototype.setPoints = function(){
-	
-	var dist = 0;
-	var j = 0;
-	var curDistance = 0;
-
-	for(i = 0; i < (this.controlPoints.length - 1); i++){
-
- 		var difx = this.controlPoints[i+1].x - this.controlPoints[i].x;
- 		var difz = this.controlPoints[i+1].z - this.controlPoints[i].z;
- 		var dify = this.controlPoints[i+1].y - this.controlPoints[i].y;
-
- 		var difxz += Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2));
- 		
- 		dist = Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
-
- 		//verifica se existe distancia de pontos de controlo anteriores
- 		if (curDistance > 0){
- 			if(curDistance <= dist){
-	 			this.points[j] = i + curDistance/dist;
-	 			j++;
-	 		} 
-	 	}
-
- 		if ((dist-curDistance) == this.velocity){
- 			this.points[j] = i+1;
- 			j++;
- 			curDistance = 0;
- 		}
- 		else if ((dist-curDistance) > this.velocity){
- 			curDistance += this.velocity;
- 			while(curDistance < dist){
- 				this.points[j] = i + curDistance/dist;
- 				j++;
- 				curDistance += this.velocity;
- 			}
- 			if(curDistance == dist){
- 				this.points[j] = i + 1;
- 				j++;
- 				curDistance = 0;
- 			}
- 			else curDistance = curDistance - dist;
- 		}
- 		else if ((dist-curDistance) < this.velocity){
-
-	 		if(curDistance > dist){
-	 			curDistance = curDistance - dist;
-	 		}
- 			else curDistance = this.velocity-(dist-curDistance);
- 		}
-
- 	}
-
- }*/

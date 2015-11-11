@@ -37,30 +37,33 @@ XMLscene.prototype.init = function (application) {
 	this.lightsBool = [];
 
 	this.controlPoints = [];
-	this.controlPoints[0] = 0;
-	this.controlPoints[0].x = 0;
-	this.controlPoints[0].y = 0;
-	this.controlPoints[0].z = 0;
+	this.controlPoints[0] = [];
+	this.controlPoints[0][0] = 0;
 
-	this.controlPoints[1] = 0;
-	this.controlPoints[1].x = 1;
-	this.controlPoints[1].y = 1;
-	this.controlPoints[1].z = 1;
+	console.log("this.controlPoints[0][0] " + this.controlPoints[0][0]);
 
-	this.controlPoints[2] = 0;
-	this.controlPoints[2].x = 2;
-	this.controlPoints[2].y = 2;
-	this.controlPoints[2].z = 2;
+	this.controlPoints[0][1] = 0;
+	this.controlPoints[0][2] = 0;
 
-	this.controlPoints[3] = 0;
-	this.controlPoints[3].x = 3;
-	this.controlPoints[3].y = 3;
-	this.controlPoints[3].z = 3;
+	this.controlPoints[1] = [];
+	this.controlPoints[1][0] = 1;
+	this.controlPoints[1][1] = 1;
+	this.controlPoints[1][2] = 1;
 
-	this.controlPoints[4] = 0;
-	this.controlPoints[4].x = 4;
-	this.controlPoints[4].y = 4;
-	this.controlPoints[4].z = 4;
+	this.controlPoints[2] = [];
+	this.controlPoints[2][0] = 1;
+	this.controlPoints[2][1] = 1;
+	this.controlPoints[2][2] = 0;
+
+	this.controlPoints[3] = [];
+	this.controlPoints[3][0] = 1;
+	this.controlPoints[3][1] = 1;
+	this.controlPoints[3][2] = 1;
+
+	this.controlPoints[4] = [];
+	this.controlPoints[4][0] = 3;
+	this.controlPoints[4][1] = 1;
+	this.controlPoints[4][2] = 1;
 
 	this.cyl = new ClosedCylinder(this, 1, 8, 8, 0.5,0.5);
 	this.circA = new LinearAnimation(this, 10, this.controlPoints);
