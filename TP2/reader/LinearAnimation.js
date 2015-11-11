@@ -10,6 +10,7 @@
  	this.curPoint= 0;
  	this.initTime = Date.now();
  	this.tmatrix = mat4.create();
+ 	this.firstTime = true;
  	this.angCP = [];
  	this.points = [];
  	this.setVelocityAndTime();
@@ -33,12 +34,13 @@
  	var tz = 0;
  	var remainder = 0;
  	//verifica se chegou ao fim da animação
- 	if(curTime <= (this.initTime + this.time * 1000){
+ 	if(curTime <= (this.initTime + this.time * 1000)){
  		
 	 	//faz a rotação do objeto para o ângulo atual
 	 	for(i = 0; i < (this.points.length - 1); i++){
 	 		if(curTime > this.points[i] && curTime <= this.points[i+1]){
 	 			mat4.rotate(matrix,matrix,this.angCP[i+1],[0,1,0]);
+	 			console.log(this.angCP[i+1]);
 	 			break;
 	 		}
 	 	}
@@ -54,6 +56,7 @@
 		 			mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 		 			this.tmatrix = matrix;
+		 			console.log(i+1);
 	 				return;
 
 		 		}
@@ -68,160 +71,39 @@
 	 				mat4.translate(matrix,matrix,[tx,ty,tz]);
 
 	 				this.tmatrix = matrix;
+	 				console.log(i+1);
 	 				return;
 
 				}
 
-	 				/*// se o ponto anterior pertencer a um ponto de translação anterior
-	 				if(this.points[this.curPoint-1] < i){
-	 					//verifica se o ponto pertence a um ponto de translação ainda mais antigo
-	 					j = i-1;
-	 					while(this.points[this.curPoint-1] < j){
-	 						tx = this.controlPoints[j+1].x;
-	 						ty = this.controlPoints[j+1].y;
-	 						tz = this.controlPoints[j+1].z;
-	 						mat4.translate(matrix,matrix,[tx,ty,tz]);
-	 						j--;
-	 					}
-	 					//calcula quanta percentagem falta
-	 					remainder = 1-(this.point[this.curPoint-1] % j);
-
-	 					tx = this.controlPoints[j+1].x * remainder;
-	 					ty = this.controlPoints[j+1].y * remainder;
-	 					tz = this.controlPoints[j+1].z * remainder;
-	 					mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-
-		 				tx = this.controlPoints[i+1].x;
-		 				ty = this.controlPoints[i+1].y;
-		 				tz = this.controlPoints[i+1].z;
-		 				mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-		 				this.curPoint++;
-		 				return matrix;
-
-	 				}
-	 				else{
-
-		 				tx = this.controlPoints[i+1].x;
-		 				ty = this.controlPoints[i+1].y;
-		 				tz = this.controlPoints[i+1].z;
-		 				mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-		 				this.curPoint++;
-	 					return matrix;
-
-	 				}
-
-		 		}
-
-		 		//se o ponto estiver dentro deste controlPoint
-		 		else if(this.points[this.curPoint] > i && this.points[this.curPoint] < (i+1)){
-		 			// se o ponto anterior pertencer a um ponto de translação anterior
-	 				if(this.points[this.curPoint-1] < i){
-	 					//verifica se o ponto pertence a um ponto de translação ainda mais antigo
-	 					j = i-1;
-	 					while(this.points[this.curPoint-1] < j){
-	 						tx = this.controlPoints[j+1].x;
-	 						ty = this.controlPoints[j+1].y;
-	 						tz = this.controlPoints[j+1].z;
-	 						mat4.translate(matrix,matrix,[tx,ty,tz]);
-	 						j--;
-	 					}
-	 					//calcula quanta percentagem falta
-	 					remainder = 1-(this.point[this.curPoint-1] % j);
-
-	 					tx = this.controlPoints[j+1].x * remainder;
-	 					ty = this.controlPoints[j+1].y * remainder;
-	 					tz = this.controlPoints[j+1].z * remainder;
-	 					mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-	 					//calcula a percentagem que falta para o ponto atual
-		 				remainder = this.point[this.curPoint] % i;
-
-		 				tx = this.controlPoints[i+1].x * remainder;
-	 					ty = this.controlPoints[i+1].y * remainder;
-	 					tz = this.controlPoints[i+1].z * remainder;
-		 				mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-		 				this.curPoint++;
-		 				return matrix;
-
-	 				}
-	 				else{
-
-	 					//calcula a percentagem que falta para o ponto atual
-	 					remainder = this.point[this.curPoint] % i;
-
-		 				tx = this.controlPoints[i+1].x * remainder;
-	 					ty = this.controlPoints[i+1].y * remainder;
-	 					tz = this.controlPoints[i+1].z * remainder;
-	 					mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-		 				this.curPoint++;
-	 					return matrix;
-
-	 				}
-
-		 		}
-
-
-	 		}
-	 		else{
-				//se for igual ao próximo ponto
-	 			if(this.points[this.curPoint] == (i+1)){
-	 				
-					tx = this.controlPoints[i+1].x;
-					ty = this.controlPoints[i+1].y;
-					tz = this.controlPoints[i+1].z;
-					mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-					this.curPoint++;
-					return matrix;
-
-	 				
-
-		 		}
-		 		//se o ponto estiver dentro deste controlPoint
-		 		else if(this.points[this.curPoint] > i && this.points[this.curPoint] < (i+1)){
-
-					//calcula a percentagem que falta para o ponto atual
-					remainder = this.point[this.curPoint] % i;
-
-					tx = this.controlPoints[i+1].x * remainder;
-					ty = this.controlPoints[i+1].y * remainder;
-					tz = this.controlPoints[i+1].z * remainder;
-					mat4.translate(matrix,matrix,[tx,ty,tz]);
-
-					this.curPoint++;
-					return matrix;
-
-	 				
-		 		}
-	 		}*/
+	 			
 
 	 		//se nenhum dos ifs retornar significa que esta translação tem de ser feita sempre...
 		 	tx = this.controlPoints[i+1].x;
 	 		ty = this.controlPoints[i+1].y;
 	 		tz = this.controlPoints[i+1].z;
 	 		mat4.translate(matrix,matrix,[tx,ty,tz]);
-	 		
+
 	 	}
-
-	 	
-	 	
-	 	this.tmatrix = matrix;
-	 	return;
-
+	 		
 	 }
+
+
+
+	console.log(i+1);
+	this.tmatrix = matrix; 	
  	
  };
 
  LinearAnimation.prototype.display = function(){
-
- 	this.scene.multMatrix(this.matrix);
+ 	if(this.firstTime){
+ 		this.firstTime = false;
+ 	}
+ 	else
+ 		if(this.matrix != null)
+ 			this.scene.multMatrix(this.matrix);
  	
- }
+ };
 
  LinearAnimation.prototype.calculateAngles = function(){
 
@@ -231,7 +113,7 @@
  		var difx = this.controlPoints[i+1].x - this.controlPoints[i].x;
  		var difz = this.controlPoints[i+1].z - this.controlPoints[i].z;
 
- 		this.angCP[i+1] = acos(difx/(Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2)));
+ 		this.angCP[i+1] = Math.acos(difx/(Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2))));
 
  	}
 
@@ -273,9 +155,11 @@
 
  		var x = curDist/dist;
  		this.points[i+1] = this.initTime + this.time * 1000 * x;
+
+ 		console.log("Added point " + this.points[i+1]);
   	}
 
- }
+ };
 
  /*LinearAnimation.prototype.setPoints = function(){
 	
