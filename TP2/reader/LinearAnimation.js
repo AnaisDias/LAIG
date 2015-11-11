@@ -9,7 +9,7 @@
  	this.controlPoints = controlPoints; 
  	this.curPoint= 0;
  	this.initTime = Date.now();
- 	this.curTime = Date.now();
+ 	this.tmatrix = mat4.create();
  	this.angCP = [];
  	this.points = [];
  	this.setVelocityAndTime();
@@ -24,7 +24,7 @@
  /**
  * retorna uma matriz para a transformação a fazer
  */
- LinearAnimation.prototype.animate = function(curTime){
+ LinearAnimation.prototype.update = function(curTime){
 
  	var matrix = mat4.create();
  	var j = 0;
@@ -53,7 +53,8 @@
 		 			tz = this.controlPoints[i+1].z;
 		 			mat4.translate(matrix,matrix,[tx,ty,tz]);
 
-		 			return matrix;
+		 			this.tmatrix = matrix;
+	 				return;
 
 		 		}
 		 		//se o ponto estiver dentro deste controlPoint
@@ -66,7 +67,8 @@
 	 				tz = this.controlPoints[i+1].z * remainder;
 	 				mat4.translate(matrix,matrix,[tx,ty,tz]);
 
-	 				return matrix;
+	 				this.tmatrix = matrix;
+	 				return;
 
 				}
 
@@ -208,11 +210,18 @@
 
 	 	
 	 	
-	 	return matrix;
+	 	this.tmatrix = matrix;
+	 	return;
 
 	 }
  	
  };
+
+ LinearAnimation.prototype.display = function(){
+
+ 	this.scene.multMatrix(this.matrix);
+ 	
+ }
 
  LinearAnimation.prototype.calculateAngles = function(){
 
