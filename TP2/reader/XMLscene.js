@@ -66,7 +66,9 @@ XMLscene.prototype.init = function (application) {
 	this.controlPoints[4][2] = 1;
 
 	this.cyl = new ClosedCylinder(this, 1, 8, 8, 0.5,0.5);
+
 	this.circA = new LinearAnimation(this, 10, this.controlPoints);
+
 	console.debug(this);
 };
 
@@ -448,7 +450,6 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t){
 		leaf.display();
 	}
 	else if (leaf._type== "cylinder"){
-		//this.scale(1,leaf.height,1);
 		leaf.display();
 	}
 	else if(leaf._type == "sphere"){
@@ -506,9 +507,6 @@ XMLscene.prototype.display = function () {
 	//this.circA.update();
 	this.pushMatrix();
 	this.circA.display();
-	/*this.translate(5,5,5);//centro
-	this.rotate(degToRad(45),0,1,0);//rotacao
-	this.translate(5,0,0);//raio*/
 	this.cyl.display();
 	this.popMatrix();
 	// ---- END Background, camera and axis setup

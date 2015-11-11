@@ -12,8 +12,6 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  	this.firstTime = true;
  	this.setVelocity();
 
- 	console.log(this.velocity);
-
 };
 
  CircularAnimation.prototype.constructor = CircularAnimation;

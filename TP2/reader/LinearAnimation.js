@@ -23,11 +23,7 @@
 
  LinearAnimation.prototype.constructor = LinearAnimation;
 
-//FAZER COM QUE O PRIMEIRO CONTROL POINT SEJA (0,0,0) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
- /**
- * retorna uma matriz para a transformação a fazer
- */
  LinearAnimation.prototype.update = function(curTime){
 
  	var matrix = mat4.create();
@@ -35,7 +31,7 @@
  	
  	var remainder = 0;
 
- 	console.log("curTime = " + (curTime - this.initTime) / 1000);
+ 	//console.log("curTime = " + (curTime - this.initTime) / 1000);
  	//verifica se chegou ao fim da animação
  	if(curTime <= (this.initTime + this.time * 1000)){
  		this.tx = 0;
@@ -46,7 +42,7 @@
 	 	for(i = 0; i < (this.points.length - 1); i++){
 	 		if(curTime > this.points[i] && curTime <= this.points[i+1]){
 	 			this.angNow = this.angCP[i+1];
-	 			console.log("new angle: " + this.angCP[i+1]);
+	 			//console.log("new angle: " + this.angCP[i+1]);
 	 			break;
 	 		}
 	 	}
@@ -67,7 +63,7 @@
 		 		else if(this.points[i] < curTime && this.points[i+1] > curTime){
 
 		 			remainder = (curTime-this.points[i])/(this.points[i+1]-this.points[i]) ;
-		 			console.log("remainder " + (i+1) +" is: "+ remainder);
+		 			//console.log("remainder " + (i+1) +" is: "+ remainder);
 
 		 			this.tx += this.controlPoints[i+1][0] * remainder;
 	 				this.ty += this.controlPoints[i+1][1] * remainder;
@@ -89,18 +85,18 @@
 	 }
 
 
+	//console.log(i+1);
+	this.tmatrix = matrix; 	
 
-		
- 	
  };
 
  LinearAnimation.prototype.display = function(){
  	
  	this.scene.translate(this.tx, this.ty, this.tz);
  	this.scene.rotate(this.angNow,0,1,0);
- 	console.log("tx " + this.tx);
+ 	/*console.log("tx " + this.tx);
 	console.log("ty " + this.ty);
-	console.log("tz " + this.tz);
+	console.log("tz " + this.tz);*/
 
  };
 
@@ -148,21 +144,21 @@
  		difz = this.controlPoints[i+1][2];
  		dify = this.controlPoints[i+1][1];
 
- 		console.log("difx " + difx);
+ 		/*console.log("difx " + difx);
  		console.log("difz " + difz);
- 		console.log("dify " + dify);
+ 		console.log("dify " + dify);*/
 
  		difxz = Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2));
  		
  		curDist += Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
 
- 		console.log("curDist " + curDist);
- 		console.log("difxz " + difxz);
+ 		/*console.log("curDist " + curDist);
+ 		console.log("difxz " + difxz);*/
  		var x = curDist/dist;
- 		console.log("x = " + x);
+ 		//console.log("x = " + x);
  		this.points[i+1] = this.initTime + this.time * 1000 * x;
 
- 		console.log("Added point " + this.points[i+1]);
+ 		//console.log("Added point " + this.points[i+1]);
   	}
 
  };

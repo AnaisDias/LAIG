@@ -42,6 +42,13 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}
 
+	error = this.parseAnimations(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
 	error = this.parseLights(rootElement);
 
 	if (error != null) {
@@ -314,6 +321,60 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 	console.log("Read ILLUMINATION/background item with value r "+this.illumination.background.r + ", value g " + this.illumination.background.g + ", value b " 
 		+ this.illumination.background.b + " and value a " + this.illumination.background.a);
 
+};
+
+MySceneGraph.prototype.parseAnimations = function(rootElement){
+	var elemsList =  rootElement.getElementsByTagName('ANIMATIONS');
+
+	if(elemsList.length != 1 && elemsList.length !=0){
+		return "There is more than one ANIMATIONS element.";
+	}
+
+	if(elemsList[0] == undefined){
+		return;
+	}
+	var animationElems =  elemsList[0].getElementsByTagName('ANIMATION');
+
+	
+	console.log(animationElems.length + " animations to be processed");
+	
+	this.animations = [];
+	for(i = 0; i<animationElems.length; i++){
+		var id = animationElems[i].attributes.getNamedItem("id").value;
+		var span = animationElems[i].attributes.getNamedItem("span").value;
+		var type = animationElems[i].attributes.getNamedItem("type").value;
+
+		this.animations[id].id = id;
+		this.animations[id].span = span;
+		this.animations[id].type = type;
+
+		if(type == "linear"){
+			var controlpoints = animationElems[i].getElementsByTagName('controlpoint');
+			if(controlpoints.length == 0){
+				return "Linear animations must have at least one control point!";
+			}
+			var i = 0;
+			for(var controlpoint in controlpoints){
+				this.animations[id].controlpoint[i].xx = controlpoint.attributes.getNamedItem("xx").value;
+				this.animations[id].controlpoint[i].yy = controlpoint.attributes.getNamedItem("yy").value;
+				this.animations[id].controlpoint[i].zz = controlpoint.attributes.getNamedItem("zz").value;
+				i++;
+			}
+		}
+
+		else if(type == "circular"){
+			this.animations[id].center = animationElems[i].attributes.getNamedItem("center").value;
+			this.animations[id].radius = animationElems[i].attributes.getNamedItem("radius").value;
+			this.animations[id].startang = animationElems[i].attributes.getNamedItem("startang").value;
+			this.animations[id].rotang = animationElems[i].attributes.getNamedItem("rotang").value;
+
+			if(this.animations[id].center == null || this.animations[id].radius == null ||
+			 this.animations[id].startang == null || this.animations[id].rotang == null){
+				return "Circular animations arguments missing";
+			}
+		}
+	}
+	
 };
 
 MySceneGraph.prototype.parseLights = function(rootElement){
