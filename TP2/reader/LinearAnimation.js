@@ -55,7 +55,8 @@
 	 				this.tx += this.controlPoints[i+1][0];
 		 			this.ty += this.controlPoints[i+1][1];
 		 			this.tz += this.controlPoints[i+1][2];
-
+		 			console.log("ehehe");
+		 			console.debug(this.tx);
 	 				return;
 
 		 		}

@@ -15,7 +15,7 @@
 		​<ANIMATION id="illuminati" span="10" type="circular" center="0 1 0" radius="1" startang="10" rotang="360" />
 		<ANIMATION id="ghosts" span="5" type="linear">
 			<controlpoint xx="0" yy="0" zz="0" />
-			<controlpoint xx="1" yy="0" zz="0" />
+			<controlpoint xx="2" yy="0" zz="0" />
 			<controlpoint xx="0" yy="1" zz="0" />
 		</ANIMATION>
 	</ANIMATIONS>

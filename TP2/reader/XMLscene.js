@@ -182,12 +182,14 @@ XMLscene.prototype.onGraphLoaded = function ()
 			var span = parseFloat(this.graph.animations[i].span);
 			var cp = [];
 			var j = 0;
-			for(var control in this.graph.animations[i].controlpoints){
-				cp[j][0] = parseFloat(this.graph.animations[i].controlpoints[control].xx);
-				cp[j][1] = parseFloat(this.graph.animations[i].controlpoints[control].yy);
-				cp[j][2] = parseFloat(this.graph.animations[i].controlpoints[control].zz);
+			for(var control in this.graph.animations[i].controlpoint){
+				cp[j] = [];
+				cp[j][0] = parseFloat(this.graph.animations[i].controlpoint[control].xx);		
+				cp[j][1] = parseFloat(this.graph.animations[i].controlpoint[control].yy);
+				cp[j][2] = parseFloat(this.graph.animations[i].controlpoint[control].zz);
 				j++;
 			}
+			//console.debug(cp);
 			this.animations[i] = new LinearAnimation(this, span, cp);
 		}
 
@@ -309,7 +311,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	}
 
 	this.createTransfMatrixes();
-	this.drawNode(this.graph.nodes[this.graph.scene_id]);
+	//this.drawNode(this.graph.nodes[this.graph.scene_id]);
 
     
 };
@@ -452,8 +454,8 @@ XMLscene.prototype.drawNode = function (node){
 	this.multMatrix(node.matrix);
 	if(node.animation != undefined){
 		this.animations[node.animation].display();
-		console.debug(this.animations[node.animation]);
-		console.log("should animate");
+		//console.debug(this.animations[node.animation]);
+		//console.log("should animate");
 	}
 
 	for(var i in node.descendants){

@@ -354,14 +354,15 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 			if(controlpoints.length == 0){
 				return "Linear animations must have at least one control point!";
 			}
+			this.animations[id].controlpoint = [];
 			for(var i=0; i<controlpoints.length; i++){
-				this.animations[id].controlpoint = [];
+				
 				this.animations[id].controlpoint[i] = [];
 				this.animations[id].controlpoint[i].xx = controlpoints[i].attributes.getNamedItem("xx").value;
 				this.animations[id].controlpoint[i].yy = controlpoints[i].attributes.getNamedItem("yy").value;
 				this.animations[id].controlpoint[i].zz = controlpoints[i].attributes.getNamedItem("zz").value;
-				i++;
 			}
+			//console.debug(this.animations[id].controlpoint);
 		}
 
 		else if(type == "circular"){
