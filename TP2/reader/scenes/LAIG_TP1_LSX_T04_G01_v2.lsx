@@ -11,6 +11,15 @@
 	    <reference length="3" />
 	</INITIALS>
 
+	<ANIMATIONS>
+		​<ANIMATION id="illuminati" span="10" type="circular" center="0 1 0" radius="1" startang="10" rotang="360" />
+		<ANIMATION id="ghosts" span="5" type="linear">
+			<controlpoint xx="0" yy="0" zz="0" />
+			<controlpoint xx="1" yy="0" zz="0" />
+			<controlpoint xx="0" yy="1" zz="0" />
+		</ANIMATION>
+	</ANIMATIONS>
+
 	<ILLUMINATION>
     	<ambient r="0" g="0" b="0" a="1" />            <!-- global ambient -->
     	<background r="0" g="0" b="0" a="1" />         <!-- background color -->
@@ -537,6 +546,7 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
+	        <ANIMATIONREF id="ghosts"/>
                        
 	        <TRANSLATION x="10" y="0" z="7.5" />
 	        <ROTATION axis="y" angle="90" /> 
@@ -817,7 +827,9 @@
 	                                  <!-- id="clear" clears texture declaration received from parent node      -->
                        
 	        <TRANSLATION x="7.5" y="5" z="10" /> 
-	        <SCALE sx="1.5" sy="2" sz="1.5" />  
+	        <SCALE sx="1.5" sy="2" sz="1.5" /> 
+
+	        <ANIMATIONREF id="illuminati"/> 
 	        
 
 	        <DESCENDANTS>

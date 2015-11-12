@@ -344,6 +344,7 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 		var span = animationElems[i].attributes.getNamedItem("span").value;
 		var type = animationElems[i].attributes.getNamedItem("type").value;
 
+		this.animations[id] = [];
 		this.animations[id].id = id;
 		this.animations[id].span = span;
 		this.animations[id].type = type;
@@ -353,23 +354,33 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 			if(controlpoints.length == 0){
 				return "Linear animations must have at least one control point!";
 			}
-			var i = 0;
-			for(var controlpoint in controlpoints){
-				this.animations[id].controlpoint[i].xx = controlpoint.attributes.getNamedItem("xx").value;
-				this.animations[id].controlpoint[i].yy = controlpoint.attributes.getNamedItem("yy").value;
-				this.animations[id].controlpoint[i].zz = controlpoint.attributes.getNamedItem("zz").value;
+			for(var i=0; i<controlpoints.length; i++){
+				this.animations[id].controlpoint = [];
+				this.animations[id].controlpoint[i] = [];
+				this.animations[id].controlpoint[i].xx = controlpoints[i].attributes.getNamedItem("xx").value;
+				this.animations[id].controlpoint[i].yy = controlpoints[i].attributes.getNamedItem("yy").value;
+				this.animations[id].controlpoint[i].zz = controlpoints[i].attributes.getNamedItem("zz").value;
 				i++;
 			}
 		}
 
 		else if(type == "circular"){
-			this.animations[id].center = animationElems[i].attributes.getNamedItem("center").value;
+			var center = animationElems[i].attributes.getNamedItem("center").value;
+			center = center.split(" ");
+			if (center.length != 3){
+				return "Animation center must have 3 args!";
+			}
+
+			this.animations[id].center = [];
+			this.animations[id].center.x = center[0];
+			this.animations[id].center.y = center[1];
+			this.animations[id].center.z = center[2]; 
 			this.animations[id].radius = animationElems[i].attributes.getNamedItem("radius").value;
 			this.animations[id].startang = animationElems[i].attributes.getNamedItem("startang").value;
 			this.animations[id].rotang = animationElems[i].attributes.getNamedItem("rotang").value;
 
-			if(this.animations[id].center == null || this.animations[id].radius == null ||
-			 this.animations[id].startang == null || this.animations[id].rotang == null){
+			if(this.animations[id].center == undefined || this.animations[id].radius == undefined ||
+			 this.animations[id].startang == undefined || this.animations[id].rotang == undefined){
 				return "Circular animations arguments missing";
 			}
 		}
@@ -817,8 +828,20 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			return "TEXTURE element must be declared in the TEXTURES tag first.";
 		}
 
-
 		this.nodes[id].texture = ntexture;
+
+		//ANIMATION
+		var animation = nodesElems[i].getElementsByTagName('ANIMATIONREF');
+		if(animation[0] != undefined){
+
+		var animationref = animation[0].attributes.getNamedItem('id').value;
+
+		if(this.animations[animationref]==undefined && animationref!="null"){
+			return "ANIMATIONREF element must be declared in the ANIMATIONS tag first.";
+		}
+		this.nodes[id].animation = animationref;
+	}
+
 		//DESCENDANTS		
 		var descElem = getUniqueElement(nodesElems[i],'DESCENDANTS');
 		if(descElem == -1){

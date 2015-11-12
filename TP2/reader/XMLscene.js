@@ -67,7 +67,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.cyl = new ClosedCylinder(this, 1, 8, 8, 0.5,0.5);
 
-	this.circA = new LinearAnimation(this, 10, this.controlPoints);
+	this.circA = new CircularAnimation(this, 5, [5,5,5], 2, 20, 90);
 
 	console.debug(this);
 };
@@ -173,7 +173,39 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.setGlobalAmbientLight(this.graph.illumination.ambient.r, this.graph.illumination.ambient.g, this.graph.illumination.ambient.b,
 		this.graph.illumination.ambient.a);
 	
-	
+	//Animations
+	this.animations = [];
+
+	for(var i in this.graph.animations){
+		if(this.graph.animations[i].type == "linear"){
+
+			var span = parseFloat(this.graph.animations[i].span);
+			var cp = [];
+			var j = 0;
+			for(var control in this.graph.animations[i].controlpoints){
+				cp[j][0] = parseFloat(this.graph.animations[i].controlpoints[control].xx);
+				cp[j][1] = parseFloat(this.graph.animations[i].controlpoints[control].yy);
+				cp[j][2] = parseFloat(this.graph.animations[i].controlpoints[control].zz);
+				j++;
+			}
+			this.animations[i] = new LinearAnimation(this, span, cp);
+		}
+
+		else if(this.graph.animations[i].type == "circular"){
+			var span = this.graph.animations[i].span;
+			var center = [];
+			center[0] = this.graph.animations[i].center.x;
+			center[1] = this.graph.animations[i].center.y;
+			center[2] = this.graph.animations[i].center.z;
+
+			var radius = parseFloat(this.graph.animations[i].radius);
+			var initAng = parseFloat(this.graph.animations[i].startang);
+			var rotAng = parseFloat(this.graph.animations[i].rotang);
+
+			this.animations[i] = new CircularAnimation(this, span, center, radius, initAng, rotAng);
+		}
+	}
+
 	//Textures
 	this.texture = [];
 	if(this.graph.textures.length>0){
@@ -416,7 +448,13 @@ XMLscene.prototype.drawNode = function (node){
 
 
 	}*/
+
 	this.multMatrix(node.matrix);
+	if(node.animation != undefined){
+		this.animations[node.animation].display();
+		console.debug(this.animations[node.animation]);
+		console.log("should animate");
+	}
 
 	for(var i in node.descendants){
 
@@ -504,11 +542,12 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
-	//this.circA.update();
+	/*//this.circA.update();
 	this.pushMatrix();
+
 	this.circA.display();
 	this.cyl.display();
-	this.popMatrix();
+	this.popMatrix();*/
 	// ---- END Background, camera and axis setup
 
 	// it is important that things depending on the proper loading of the graph
@@ -538,7 +577,11 @@ XMLscene.prototype.display = function () {
 
 
 XMLscene.prototype.update = function (currTime){
-
-	this.circA.update(currTime);
+	if(this.animations != undefined){
+	for(var i in this.animations){
+		this.animations[i].update(currTime);
+		console.log("update done");
+	}
+}
 
 };

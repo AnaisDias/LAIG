@@ -23,12 +23,13 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  	//console.log("translate done");
  	this.scene.rotate(degToRad(this.curAngle), 0,1,0);
  	this.scene.translate(this.radius, 0, 0);
+ 	//this.scene.translate(this.center[0], this.center[1], this.center[2]);
  }
 
  CircularAnimation.prototype.update = function(currTime){
 
  	//onde se mudam os parametros
- 	if(!(this.curAngle>=(this.rotAngle+this.initAngle))){
+ 	if(this.curAngle<(this.rotAngle+this.initAngle)){
  		if(this.firstTime){
  			this.firstTime = false;
  			this.initTime = currTime;
