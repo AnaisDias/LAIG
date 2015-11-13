@@ -65,10 +65,30 @@ XMLscene.prototype.init = function (application) {
 	this.controlPoints[4][1] = 1;
 	this.controlPoints[4][2] = 1;
 
+	this.controlVert = [	// U = 0
+						[ // V = 0..3;
+							 [ -2.0, -2.0, 1.0, 1 ],
+							 [ -2.0, -1.0, -2.0, 1 ],
+							 [ -2.0, 1.0, 5.0, 1 ]
+						],
+						// U = 1
+						[ // V = 0..3
+							 [ 0, -2.0, 0, 1 ],
+							 [ 0, -1.0, -1.0, 5 ],
+							 [ 0, 1.0, 1.5, 5 ]
+						],
+						// U = 2
+						[ // V = 0..3
+							 [ 2.0, -2.0, -1.0, 1 ],
+							 [ 2.0, -1.0, 2.0, 1 ],
+							 [ 2.0, 1.0, -5.0, 1 ]
+						]
+					];
+
 	this.cyl = new ClosedCylinder(this, 1, 8, 8, 0.5,0.5);
 
 	this.circA = new CircularAnimation(this, 5, [5,5,5], 2, 20, 90);
-
+	this.plane = new Patch(this, 2, 10, 10, this.controlVert);
 	console.debug(this);
 };
 
@@ -544,6 +564,9 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
+	this.pushMatrix();
+	this.plane.display();
+	this.popMatrix();
 	/*//this.circA.update();
 	this.pushMatrix();
 

@@ -1,43 +1,54 @@
-function Patch(scene, order, partsU, partsV) {
-   	CGFobject.call(this,scene);
+function Patch(scene, order, partsU, partsV, controlPoints) {
+   	CGFnurbsObject.call(this,scene);
     this.partsU = partsU;
     this.partsV = partsV;
     this.order = order;
+    this.controlPoints = controlPoints;
+    this.obj = null;
+    console.debug(this);
+    this.init();
+
 }
 
-Patch.prototype = Object.create(CGFscene.prototype);
+Patch.prototype = Object.create(CGFnurbsObject.prototype);
 Patch.prototype.constructor = Patch;
 
 
 Patch.prototype.init = function () {
-	
-	this.surface = this.makeSurface("0", this.order, // degree on U: 2 control vertexes U
+
+	if(this.order == 1){
+		this.knotsU = [0,0,1,1];
+
+	}
+	else if(this.order == 2){
+		this.knotsU = [0,0,0,1,1,1];
+	}
+	else if(this.order == 3){
+		this.knotsU = [0,0,0,0,1,1,1,1];
+	}
+	this.knotsV = this.knotsU;
+
+	this.surface = this.makeSurface(this.order, // degree on U: 2 control vertexes U
 					 this.order, // degree on V: 2 control vertexes on V
-					[0, 1, 0, 1], // knots for U
-					[0, 1, 0, 1], // knots for V
-					[	// U = 0
-						[ // V = 0..1;
-							 [0, 0.0, 0, 1 ],
-							 [0, 0.0, 1, 1 ]
-							
-						],
-						// U = 1
-						[ // V = 0..1
-							 [ 1, 0.0, 0.0, 1 ],
-							 [ 1, 0.0, 1.0, 1 ]							 
-						]
-					]);
+					this.knotsU, // knots for U
+					this.knotsV, // knots for V
+					this.controlPoints);
+
 
 };
 
-Patch.prototype.makeSurface = function (id, degree1, degree2, knots1, knots2, controlvertexes) {
+Patch.prototype.makeSurface = function (degree1, degree2, knots1, knots2, controlvertexes) {
 		
 	var nurbsSurface = new CGFnurbsSurface(degree1, degree2, knots1, knots2, controlvertexes);
 	getSurfacePoint = function(u, v) {
 		return nurbsSurface.getPoint(u, v);
 	};
 
-	var obj = new CGFnurbsObject(this, getSurfacePoint, this.partsU, this.partsV);
-	return obj;
+	var obj = new CGFnurbsObject(this.scene, getSurfacePoint, this.partsU, this.partsV);
+	this.obj = obj;
 
 };
+
+Patch.prototype.display = function(){
+	this.obj.display();
+}
