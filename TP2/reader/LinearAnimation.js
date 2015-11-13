@@ -70,6 +70,9 @@
 	 				this.ty += this.controlPoints[i+1][1] * remainder;
 	 				this.tz += this.controlPoints[i+1][2] * remainder;
 
+		 			console.log(this.tx);
+		 			console.log(this.ty);
+		 			console.log(this.tz);
 	 				return;
 
 				}
@@ -94,7 +97,9 @@
  LinearAnimation.prototype.display = function(){
  	
  	this.scene.translate(this.tx, this.ty, this.tz);
- 	this.scene.rotate(this.angNow,0,1,0);
+ 	if(this.angNow != 361){
+ 		this.scene.rotate(this.angNow,0,1,0);
+ 	}
  	/*console.log("tx " + this.tx);
 	console.log("ty " + this.ty);
 	console.log("tz " + this.tz);*/
@@ -108,8 +113,10 @@
 
  		difx = this.controlPoints[i+1][0];
  		difz = this.controlPoints[i+1][2];
-
- 		this.angCP[i+1] = Math.asin(difx/Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2)));
+ 		if(difx != 0 || difz != 0){
+ 			this.angCP[i+1] = Math.asin(difx/Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2)));
+ 		}
+ 		else this.angCP[i+1] = 361*Math.PI/180;
 
  	}
 
@@ -153,8 +160,8 @@
  		
  		curDist += Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
 
- 		/*console.log("curDist " + curDist);
- 		console.log("difxz " + difxz);*/
+ 		//console.log("curDist " + curDist);
+ 		//console.log("difxz " + difxz);
  		var x = curDist/dist;
  		//console.log("x = " + x);
  		this.points[i+1] = this.initTime + this.time * 1000 * x;
