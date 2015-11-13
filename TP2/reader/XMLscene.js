@@ -471,6 +471,7 @@ XMLscene.prototype.drawNode = function (node){
 
 	}*/
 
+
 	this.multMatrix(node.matrix);
 	if(node.animation != undefined){
 		this.animations[node.animation].display();
@@ -516,6 +517,10 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t){
 		this.scale(leaf.radius*2, leaf.radius*2, leaf.radius*2);
 		leaf.display();
 	}
+	else if(leaf._type == "plane" || leaf._type == "patch"){
+		leaf.display();
+	}
+
 };
 
 XMLscene.prototype.isLeaf = function (id){

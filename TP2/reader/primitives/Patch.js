@@ -29,7 +29,7 @@ Patch.prototype.init = function () {
 	this.knotsV = this.knotsU;
 
 	this.surface = this.makeSurface(this.order, // degree on U: 2 control vertexes U
-					 this.order, // degree on V: 2 control vertexes on V
+					this.order, // degree on V: 2 control vertexes on V
 					this.knotsU, // knots for U
 					this.knotsV, // knots for V
 					this.controlPoints);

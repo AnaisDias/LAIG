@@ -625,9 +625,10 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 		var id = leavesElems[i].attributes.getNamedItem("id").value;
 		var type = leavesElems[i].attributes.getNamedItem("type").value;
-		var args = leavesElems[i].attributes.getNamedItem("args").value;
+		
 
 		if (this.leaves[id] != undefined){
+			console.debug(this.leaves[id]);
 			return "Leaves ids must not be repeated";
 		}
 		this.leaves[id]=[];
@@ -638,6 +639,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 		this.leaves[id].args = [];
 
 		if (type == "rectangle"){
+			var args = leavesElems[i].attributes.getNamedItem("args").value;
 			var a = args.split(" ");
 			if (a.length != 4){
 				return "Rectangle leaves must have 4 args: left top x, left top y, right bottom x, right bottom y!";
@@ -660,6 +662,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 		}
 
 		else if (type == "cylinder"){
+			var args = leavesElems[i].attributes.getNamedItem("args").value;
 			var a = args.split(" ");
 			if (a.length != 5){
 				return "Cylinder leaves must have 5 args: height, bottom radius, top radius, stacks, slices!";
@@ -684,6 +687,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 		}
 
 		else if (type == "sphere"){
+			var args = leavesElems[i].attributes.getNamedItem("args").value;
 			var a = args.split(" ");
 			if (a.length != 3){
 				return "Sphere leaves must have 3 args: radius, stacks, slices!";
@@ -704,6 +708,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 		}
 
 		else if(type == "triangle"){
+			var args = leavesElems[i].attributes.getNamedItem("args").value;
 			var a = args.split(" ");
 			var b = args.split("  ");
 
@@ -758,7 +763,56 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 		}
 
-		
+		else if(type == "plane"){
+			var parts  = leavesElems[i].attributes.getNamedItem("parts").value;
+			if(parts == undefined){
+				return "Plane leaf must have parts argument defined!";
+			}
+			this.leaves[id].parts = parts;
+			console.log("Read leaf with id " + id 
+			+ ", type " + this.leaves[id]._type
+			+ " and parts: " + this.leaves[id].parts);
+		}
+/*
+		else if(type == "patch"){
+			var order  = parseInt(leavesElems[i].attributes.getNamedItem("order").value);
+			var partsU  = parseInt(leavesElems[i].attributes.getNamedItem("partsU").value);
+			var partsV  = parseInt(leavesElems[i].attributes.getNamedItem("partsV").value);
+
+			if(order == undefined || partsU == undefined || partsV == undefined){
+				return "Patch leaf must have order, partsU and partsV arguments."
+			}
+
+			var controlpoints = leavesElems[i].getElementsByTagName('controlpoint');
+			if(controlpoints.length!= Math.pow(order+1, 2)){
+				return "The number of controlpoints in a Patch leaf must be equal to (order+1)^2.";
+			}
+
+			this.leaves[id].order = order;
+			this.leaves[id].partsU = partsU;
+			this.leaves[id].partsV = partsV;
+			var k =0;
+			this.leaves[id].controlpoints = [];
+			for(var i = 0 ; i<order+1; i++){
+				this.leaves[id].controlpoints[i] = [];
+				for(var j = 0; j<order+1; j++){
+
+					this.leaves[id].controlpoints[i][0] = controlpoints[k].attributes.getNamedItem("x").value;
+					this.leaves[id].controlpoints[i][1] = controlpoints[k].attributes.getNamedItem("y").value;
+					this.leaves[id].controlpoints[i][2] = controlpoints[k].attributes.getNamedItem("z").value;
+					k++;
+				}
+				
+			}
+			//this.leaves[id].controlpoints = controlpoints;
+			console.debug(this.leaves[id].controlpoints);
+			console.log("Read leaf with id " + id 
+			+ ", type " + this.leaves[id]._type
+			+ ", order: " + this.leaves[id].order 
+			+ ", partsU: " + this.leaves[id].partsU
+			+ ", partsV: " + this.leaves[id].partsV);
+		}
+		*/
 
 	}
 
@@ -864,7 +918,7 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 				return "Node cannot be descendant to himself!";
 			}
 
-			if (id_desc == null || id_desc.length==0){
+			if (id_desc == null || id_desc.length==0 || id_desc == undefined){
 				return "Descendant id cannot be empty.";
 			}
 

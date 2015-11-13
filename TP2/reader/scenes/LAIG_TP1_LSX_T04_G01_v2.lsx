@@ -182,6 +182,17 @@
     	<LEAF id="cyl" type="cylinder" args="1 0.5 0.5 8 16" /> 
     	<LEAF id="sph" type="sphere" args="1 16 16" />
     	<LEAF id="tri" type="triangle" args="-0.5 -0.5 0  0.5 -0.5 0  0 0.5 0"/>
+    	<LEAF id="patch" type="patch" order="2" partsU="10" partsV="10">
+    		<controlpoint x="-2.0" y="-2.0" z="1" />
+    		<controlpoint x="-2" y="-2.0" z="-2" />
+    		<controlpoint x="-2" y="1" z="5" />
+    		<controlpoint x="0" y="-2.0" z="0" />
+    		<controlpoint x="0" y="-1" z="-1" />
+    		<controlpoint x="0" y="1" z="1.5" />
+    		<controlpoint x="2" y="-2" z="-1" />
+    		<controlpoint x="2" y="-1" z="2" />
+    		<controlpoint x="2" y="1" z="-5" />
+    	</LEAF>
     	
 
 	</LEAVES>
