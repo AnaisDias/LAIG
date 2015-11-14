@@ -324,6 +324,21 @@ XMLscene.prototype.onGraphLoaded = function ()
 				this.leaves[i] = new Sphere(this, radius, stacks, slices, 1, 1);
 				this.leaves[i]._type = "sphere";
 				break;
+			case "plane":
+				var parts = this.graph.leaves[i].parts;
+
+				this.leaves[i] = new Plane(this, parts);
+				this.leaves[i]._type = "plane";
+				break;
+			case "patch":
+				var order = this.graph.leaves[i].order;
+				var partsU = this.graph.leaves[i].partsU;
+				var partsV = this.graph.leaves[i].partsV;
+				var cp = this.graph.leaves[i].controlpoints;
+
+				this.leaves[i] = new Patch(this, order, partsU, partsV, cp);
+				this.leaves[i]._type = "patch";
+				break;
 		}
 
 

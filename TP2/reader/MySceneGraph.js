@@ -621,6 +621,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 	console.log(leavesElems.length + " leaves to be processed");
 
 	this.leaves = [];
+	console.debug(leavesElems);
 	for(i=0; i < leavesElems.length; i++){
 
 		var id = leavesElems[i].attributes.getNamedItem("id").value;
@@ -773,7 +774,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			+ ", type " + this.leaves[id]._type
 			+ " and parts: " + this.leaves[id].parts);
 		}
-/*
+
 		else if(type == "patch"){
 			var order  = parseInt(leavesElems[i].attributes.getNamedItem("order").value);
 			var partsU  = parseInt(leavesElems[i].attributes.getNamedItem("partsU").value);
@@ -793,13 +794,15 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			this.leaves[id].partsV = partsV;
 			var k =0;
 			this.leaves[id].controlpoints = [];
-			for(var i = 0 ; i<order+1; i++){
-				this.leaves[id].controlpoints[i] = [];
+			for(var t = 0 ; t<order+1; t++){
+				this.leaves[id].controlpoints[t] = [];
 				for(var j = 0; j<order+1; j++){
+					this.leaves[id].controlpoints[t][j] = [];
 
-					this.leaves[id].controlpoints[i][0] = controlpoints[k].attributes.getNamedItem("x").value;
-					this.leaves[id].controlpoints[i][1] = controlpoints[k].attributes.getNamedItem("y").value;
-					this.leaves[id].controlpoints[i][2] = controlpoints[k].attributes.getNamedItem("z").value;
+					this.leaves[id].controlpoints[t][j][0] = parseFloat(controlpoints[k].attributes.getNamedItem("x").value);
+					this.leaves[id].controlpoints[t][j][1] = parseFloat(controlpoints[k].attributes.getNamedItem("y").value);
+					this.leaves[id].controlpoints[t][j][2] = parseFloat(controlpoints[k].attributes.getNamedItem("z").value);
+					this.leaves[id].controlpoints[t][j][3] = 1;
 					k++;
 				}
 				
@@ -812,7 +815,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			+ ", partsU: " + this.leaves[id].partsU
 			+ ", partsV: " + this.leaves[id].partsV);
 		}
-		*/
+		
 
 	}
 
