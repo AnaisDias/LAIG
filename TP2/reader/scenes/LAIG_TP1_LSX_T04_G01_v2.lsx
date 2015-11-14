@@ -193,6 +193,7 @@
     		<controlpoint x="2" y="-1" z="2" />
     		<controlpoint x="2" y="1" z="-5" />
     	</LEAF>
+    	<LEAF id="terrain" type="terrain" texture="scenes/textures/terrainmap.jpg" heightmap="scenes/textures/smallmap.jpg" />
     	
 
 	</LEAVES>
@@ -200,7 +201,19 @@
 
 	<NODES>
 
-	    <ROOT id="scene" />     
+	    <ROOT id="scene" /> 
+
+	    <NODE id="mountain">
+	    	<MATERIAL id="null" />     
+	        <TEXTURE id="null" />      
+
+	        <TRANSLATION x="-20" y="0" z="0" />
+	        <SCALE sx="40" sy="1" sz="40" />
+
+	        <DESCENDANTS>
+	            <DESCENDANT id="terrain" />       
+	        </DESCENDANTS>
+	    </NODE>    
 
 	    <NODE id="wall1">      
 
@@ -853,6 +866,22 @@
 
 	    </NODE>
 
+	    <NODE id="weirdthing">
+
+	    <MATERIAL id="ornament-mat" />     
+	    <TEXTURE id="lamp-tex" />      
+	                                  <!-- id="clear" clears texture declaration received from parent node      -->
+        
+	    <TRANSLATION x="0.4" y="5" z="15" /> 
+	    <ROTATION axis="y" angle="90" />
+        <SCALE sx="0.5" sy="0.5" sz="0.5" /> 
+        
+        <DESCENDANTS>
+             <DESCENDANT id="patch" />   
+        </DESCENDANTS>
+
+	    </NODE>
+
 	    <NODE id="scene">      
 	    
 	        <MATERIAL id="mat-default" />     
@@ -875,6 +904,8 @@
 	            <DESCENDANT id="lamp2" /> 
 	            <DESCENDANT id="doors" /> 
 	            <DESCENDANT id="painting" /> 
+	            <DESCENDANT id="weirdthing" />
+	            <DESCENDANT id="mountain" />
 	                
 	        </DESCENDANTS>
 

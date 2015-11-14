@@ -815,6 +815,25 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 			+ ", partsU: " + this.leaves[id].partsU
 			+ ", partsV: " + this.leaves[id].partsV);
 		}
+
+		else if(type == "terrain"){
+			var texture  = leavesElems[i].attributes.getNamedItem("texture").value;
+			var heightmap = leavesElems[i].attributes.getNamedItem("heightmap").value;
+			if(texture == undefined){
+				return "Terrain leaf must have texture argument defined!";
+			}
+			if(heightmap == undefined){
+				return "Terrain leaf must have heightmap argument defined!";
+			}
+
+			this.leaves[id].texture = texture;
+			this.leaves[id].heightmap = heightmap;
+
+			console.log("Read leaf with id " + id 
+			+ ", type " + this.leaves[id]._type
+			+ ", texture: " + this.leaves[id].texture
+			+ " and heightmap: " + this.leaves[id].heightmap);
+		}
 		
 
 	}
@@ -859,6 +878,7 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			return "MATERIAL element is missing.";
 		}
 		if(material == -2){
+			console.debug(material);
 			return "MATERIAL element is missing or there is more than one.";
 		}
 

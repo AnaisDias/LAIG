@@ -1,6 +1,5 @@
-function Terrain(scene, texture) {
+function Terrain(scene) {
    	CGFnurbsObject.call(this,scene);
-    this.parts = parts;
     this.obj = null;
     this.init();
 

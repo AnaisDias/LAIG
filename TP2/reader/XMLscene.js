@@ -34,6 +34,12 @@ XMLscene.prototype.init = function (application) {
 
 
 	this.axis=new CGFaxis(this);
+
+	this.shader = new CGFshader(this.gl, "shaders/texture3.vert", "shaders/texture3.frag");
+	this.shader.setUniformsValues({normScale: 10});
+	this.shader.setUniformsValues({uSampler2: 2});
+	this.shader.setUniformsValues({uSampler: 1});
+
 	this.lightsBool = [];
 
 	this.controlPoints = [];
@@ -85,11 +91,7 @@ XMLscene.prototype.init = function (application) {
 						]
 					];
 
-	this.cyl = new ClosedCylinder(this, 1, 8, 8, 0.5,0.5);
 
-	this.circA = new CircularAnimation(this, 5, [5,5,5], 2, 20, 90);
-	this.plane = new Patch(this, 2, 10, 10, this.controlVert);
-	console.debug(this);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -97,7 +99,7 @@ XMLscene.prototype.initLights = function () {
 	this.lightids=[];
 	this.lights = [];
 
-    this.shader.bind();
+   // this.shader.bind();
 
     j=0;
 
@@ -153,7 +155,7 @@ XMLscene.prototype.initLights = function () {
 
 	this.lightsloaded = true;
  
-    this.shader.unbind();
+  //  this.shader.unbind();
 };
 
 XMLscene.prototype.initCameras = function () {
@@ -338,6 +340,15 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 				this.leaves[i] = new Patch(this, order, partsU, partsV, cp);
 				this.leaves[i]._type = "patch";
+				break;
+			case "terrain":
+				var ttexture = this.graph.leaves[i].texture;
+				var heightmap = this.graph.leaves[i].heightmap;
+
+				this.leaves[i] = new Terrain(this);
+				this.leaves[i]._type = "terrain";
+				this.leaves[i].texture = new CGFtexture(this,ttexture);
+				this.leaves[i].heightmap = new CGFtexture(this,heightmap);
 				break;
 		}
 
@@ -535,6 +546,27 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t){
 	else if(leaf._type == "plane" || leaf._type == "patch"){
 		leaf.display();
 	}
+	else if(leaf._type == "terrain"){
+
+		console.debug(this.defaultShader);
+		this.setActiveShader(this.shader);
+		
+		this.pushMatrix();
+		leaf.texture.bind(1);
+		leaf.heightmap.bind(2);
+		leaf.display();
+		//leaf.texture.unbind(1);
+		//leaf.heightmap.unbind(2);
+		this.popMatrix();
+
+		leaf.texture.unbind(1);
+		leaf.heightmap.unbind(2);
+		
+		this.setActiveShader(this.defaultShader);
+		console.debug(this.defaultShader);
+
+
+	}
 
 };
 
@@ -584,9 +616,9 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
-	this.pushMatrix();
+	/*this.pushMatrix();
 	this.plane.display();
-	this.popMatrix();
+	this.popMatrix();*/
 	/*//this.circA.update();
 	this.pushMatrix();
 
