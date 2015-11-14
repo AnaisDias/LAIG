@@ -6,8 +6,7 @@
 
  	this.scene = scene;
  	this.time = time;
- 	this.controlPoints = controlPoints; 
- 	this.curPoint= 0;
+ 	this.controlPoints = controlPoints;
  	this.initTime = Date.now();
  	this.tx = 0;
  	this.ty = 0;
@@ -16,7 +15,6 @@
  	this.angCP = [];
  	this.angNow = 0;
  	this.points = [];
- 	this.setVelocityAndTime();
  	this.calculateAngles();
 
 };
@@ -30,8 +28,11 @@
  	var j = 0;
  	
  	var remainder = 0;
-
- 	//console.log("curTime = " + (curTime - this.initTime) / 1000);
+ 	if(this.firstTime){
+ 		this.firstTime = false;
+ 		this.initTime = curTime;
+ 		this.setVelocityAndTime();
+ 	}
  	//verifica se chegou ao fim da animação
  	if(curTime <= (this.initTime + this.time * 1000)){
  		this.tx = 0;
@@ -42,7 +43,6 @@
 	 	for(i = 0; i < (this.points.length - 1); i++){
 	 		if(curTime > this.points[i] && curTime <= this.points[i+1]){
 	 			this.angNow = this.angCP[i+1];
-	 			//console.log("new angle: " + this.angCP[i+1]);
 	 			break;
 	 		}
 	 	}
@@ -55,8 +55,6 @@
 	 				this.tx += this.controlPoints[i+1][0];
 		 			this.ty += this.controlPoints[i+1][1];
 		 			this.tz += this.controlPoints[i+1][2];
-		 			console.log("ehehe");
-		 			console.debug(this.tx);
 	 				return;
 
 		 		}
@@ -64,15 +62,10 @@
 		 		else if(this.points[i] < curTime && this.points[i+1] > curTime){
 
 		 			remainder = (curTime-this.points[i])/(this.points[i+1]-this.points[i]) ;
-		 			//console.log("remainder " + (i+1) +" is: "+ remainder);
 
 		 			this.tx += this.controlPoints[i+1][0] * remainder;
 	 				this.ty += this.controlPoints[i+1][1] * remainder;
 	 				this.tz += this.controlPoints[i+1][2] * remainder;
-
-		 			console.log(this.tx);
-		 			console.log(this.ty);
-		 			console.log(this.tz);
 	 				return;
 
 				}
@@ -100,9 +93,6 @@
  	if(this.angNow != 361){
  		this.scene.rotate(this.angNow,0,1,0);
  	}
- 	/*console.log("tx " + this.tx);
-	console.log("ty " + this.ty);
-	console.log("tz " + this.tz);*/
 
  };
 
@@ -152,21 +142,14 @@
  		difz = this.controlPoints[i+1][2];
  		dify = this.controlPoints[i+1][1];
 
- 		/*console.log("difx " + difx);
- 		console.log("difz " + difz);
- 		console.log("dify " + dify);*/
-
  		difxz = Math.sqrt(Math.pow(difx,2)+Math.pow(difz,2));
  		
  		curDist += Math.sqrt(Math.pow(difxz,2)+Math.pow(dify,2));
 
- 		//console.log("curDist " + curDist);
- 		//console.log("difxz " + difxz);
  		var x = curDist/dist;
- 		//console.log("x = " + x);
+ 		
  		this.points[i+1] = this.initTime + this.time * 1000 * x;
 
- 		//console.log("Added point " + this.points[i+1]);
   	}
 
  };

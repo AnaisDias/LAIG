@@ -37,16 +37,13 @@ XMLscene.prototype.init = function (application) {
 
 	this.shader = new CGFshader(this.gl, "shaders/texture3.vert", "shaders/texture3.frag");
 	this.shader.setUniformsValues({normScale: 10});
-	this.shader.setUniformsValues({uSampler2: 2});
-	this.shader.setUniformsValues({uSampler: 1});
+	this.shader.setUniformsValues({uSampler2: 1});
 
 	this.lightsBool = [];
 
 	this.controlPoints = [];
 	this.controlPoints[0] = [];
 	this.controlPoints[0][0] = 0;
-
-	console.log("this.controlPoints[0][0] " + this.controlPoints[0][0]);
 
 	this.controlPoints[0][1] = 0;
 	this.controlPoints[0][2] = 0;
@@ -414,8 +411,8 @@ XMLscene.prototype.setDescMaterialsTextures = function (node){
 				this.graph.nodes[node.descendants[i]].inheritedMat=node.inheritedMat;
 			}
 			else{
-			this.graph.nodes[node.descendants[i]].inheritedMat=node.material;
-		}
+				this.graph.nodes[node.descendants[i]].inheritedMat=node.material;
+			}
 		
 		}
 		if(this.graph.nodes[node.descendants[i]].texture=="null" && node.texture!="clear"){
@@ -437,11 +434,12 @@ XMLscene.prototype.drawNode = function (node){
 
 	var matID = node.material;
 	var texID = node.texture;
-
+	var descMat;
 
 	if(texID != "null" ) {
 
 		if(matID != "null"){
+			descMat = matID;
 
 			if(texID=="clear"){
 				this.materials[matID].setTexture(null);
@@ -453,6 +451,7 @@ XMLscene.prototype.drawNode = function (node){
 			}
 			}
 		else{
+			descMat = node.inheritedMat;
 			if(texID=="clear"){
 				if(node.inheritedMat!=undefined && node.inheritedMat!="null"){
 				this.materials[node.inheritedMat].setTexture(null);
@@ -468,6 +467,7 @@ XMLscene.prototype.drawNode = function (node){
 		}
 	}
 	else if(matID != "null"){
+		descMat = matID;
 		if(node.inheritedTex!="null" || node.inheritedTex!=undefined){
 		this.materials[matID].setTexture(this.texture[node.inheritedTex]);
 		}
@@ -476,6 +476,7 @@ XMLscene.prototype.drawNode = function (node){
 	}
 
 	else{
+		descMat = node.inheritedMat;
 		if(node.inheritedMat!="null" && node.inheritedMat!=undefined){
 			if(node.inheritedTex!="null" && node.inheritedTex!=undefined){
 				this.materials[node.inheritedMat].setTexture(this.texture[node.inheritedTex]);
@@ -501,18 +502,16 @@ XMLscene.prototype.drawNode = function (node){
 	this.multMatrix(node.matrix);
 	if(node.animation != undefined){
 		this.animations[node.animation].display();
-		//console.debug(this.animations[node.animation]);
-		//console.log("should animate");
 	}
 
 	for(var i in node.descendants){
 
 		if(this.isLeaf(node.descendants[i])){
 			if(texID == "null" || texID == "clear"){
-				this.drawLeaf(this.leaves[node.descendants[i]], 1, 1);
+				this.drawLeaf(this.leaves[node.descendants[i]], 1, 1, descMat);
 			}
 			else{
-				this.drawLeaf(this.leaves[node.descendants[i]], this.texture[texID].amplif.s, this.texture[texID].amplif.t);
+				this.drawLeaf(this.leaves[node.descendants[i]], this.texture[texID].amplif.s, this.texture[texID].amplif.t, descMat);
 			}
 		}
 		else {
@@ -524,7 +523,7 @@ XMLscene.prototype.drawNode = function (node){
 	this.popMatrix();
 };
 
-XMLscene.prototype.drawLeaf = function (leaf, s, t){
+XMLscene.prototype.drawLeaf = function (leaf, s, t, descMat){
 
 	if(leaf._type == "rectangle"){
 		leaf.changeTextureAmplif(s,t);
@@ -548,22 +547,17 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t){
 	}
 	else if(leaf._type == "terrain"){
 
-		console.debug(this.defaultShader);
-		this.setActiveShader(this.shader);
-		
-		this.pushMatrix();
-		leaf.texture.bind(1);
-		leaf.heightmap.bind(2);
-		leaf.display();
-		//leaf.texture.unbind(1);
-		//leaf.heightmap.unbind(2);
-		this.popMatrix();
-
-		leaf.texture.unbind(1);
-		leaf.heightmap.unbind(2);
-		
-		this.setActiveShader(this.defaultShader);
-		console.debug(this.defaultShader);
+		if(descMat != null && descMat != undefined){
+			this.materials[descMat].setTexture(leaf.texture);
+			this.materials[descMat].apply();
+			this.pushMatrix();
+			this.setActiveShader(this.shader);
+			leaf.heightmap.bind(1);
+			leaf.display();
+			leaf.heightmap.unbind(1);
+			this.setActiveShader(this.defaultShader);
+			this.popMatrix();
+		}
 
 
 	}
@@ -644,7 +638,7 @@ XMLscene.prototype.display = function () {
 
 
 		//nodes
-		
+		this.setDescMaterialsTextures(this.graph.nodes[this.graph.scene_id]);
 		this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
 
@@ -655,10 +649,9 @@ XMLscene.prototype.display = function () {
 
 XMLscene.prototype.update = function (currTime){
 	if(this.animations != undefined){
-	for(var i in this.animations){
-		this.animations[i].update(currTime);
-		console.log("update done");
+		for(var i in this.animations){
+			this.animations[i].update(currTime);
+		}
 	}
-}
 
 };
