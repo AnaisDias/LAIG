@@ -193,7 +193,7 @@
     		<controlpoint x="2" y="-1" z="2" />
     		<controlpoint x="2" y="1" z="-5" />
     	</LEAF>
-    	<LEAF id="terrain" type="terrain" texture="scenes/textures/terrainmap.jpg" heightmap="scenes/textures/smallmap.jpg" />
+    	<LEAF id="terrain" type="terrain" texture="scenes/textures/terreno.jpg" heightmap="scenes/textures/heightmap2.png" />
     	
 
 	</LEAVES>

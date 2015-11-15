@@ -39,7 +39,6 @@ Terrain.prototype.makeSurface = function (degree1, degree2, knots1, knots2, cont
 
 	var obj = new CGFnurbsObject(this.scene, getSurfacePoint, 100, 100);
 	this.obj = obj;
-	console.debug(this.obj);
 
 };
 
