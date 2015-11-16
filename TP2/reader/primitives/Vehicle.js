@@ -92,19 +92,6 @@ Vehicle.prototype.init = function () {
 
 };
 
-Vehicle.prototype.makeSurface = function (degree1, degree2, knots1, knots2, controlvertexes) {
-		
-	var nurbsSurface = new CGFnurbsSurface(degree1, degree2, knots1, knots2, controlvertexes);
-	console.debug(nurbsSurface);
-	getSurfacePoint = function(u, v) {
-		return nurbsSurface.getPoint(u, v);
-	};
-
-	var obj = new CGFnurbsObject(this.scene, getSurfacePoint, 10, 10);
-	return obj;
-
-};
-
 Vehicle.prototype.display = function(){
 	this.scene.pushMatrix();
 
