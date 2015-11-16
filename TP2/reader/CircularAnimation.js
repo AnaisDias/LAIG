@@ -1,3 +1,14 @@
+/**
+* Circular animation
+* 
+* @constructor
+* @param scene {CGFscene} - Scene object will be drawn on
+* @param time {int} - Order of surface, can be 1, 2 or 3
+* @param center {Array} - Parts in U
+* @param radius {int} - Parts in V
+* @param initAngle {int} - Angle in which the animation starts
+* @param rotAngle {int} - Total angle of rotation of animation
+*/
 function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
 
  	this.scene = scene;
@@ -18,19 +29,23 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
 
  CircularAnimation.prototype.constructor = CircularAnimation;
 
+/**
+* Applies circular animation to scene/object
+*/
  CircularAnimation.prototype.display = function(){
- 	//onde se faz as transformaçoes (mudar para matrizes)
  	
  	this.scene.translate(this.center[0], this.center[1], this.center[2]);
- 	//console.log("translate done");
  	this.scene.rotate(degToRad(this.curAngle), 0,1,0);
  	this.scene.translate(this.radius, 0, 0);
- 	//this.scene.translate(this.center[0], this.center[1], this.center[2]);
  }
 
+/**
+* Updates angle of circular animation as time progresses
+*
+* @param currTime {int} - Current time in milliseconds
+*/
  CircularAnimation.prototype.update = function(currTime){
 
- 	//onde se mudam os parametros
  	if(this.curAngle<(this.rotAngle+this.initAngle)){
  		if(this.firstTime){
  			this.firstTime = false;
@@ -51,7 +66,9 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  	
  };
 
-
+/**
+* Calculates velocity of animation
+*/
  CircularAnimation.prototype.setVelocity = function(){
 
  	this.velocity = this.rotAngle / (this.time * 1000);

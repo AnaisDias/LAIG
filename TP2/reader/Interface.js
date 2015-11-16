@@ -5,7 +5,6 @@ var done = 0;
  */
 
 function Interface() {
-	//call CGFinterface constructor 
 	CGFinterface.call(this);
 };
 
@@ -13,15 +12,12 @@ Interface.prototype = Object.create(CGFinterface.prototype);
 Interface.prototype.constructor = Interface;
 
 /**
- * init
+ * Initializes interface
+ *
  * @param {CGFapplication} application
  */
 Interface.prototype.init = function(application) {
-	// call CGFinterface init
 	CGFinterface.prototype.init.call(this, application);
-	
-	// init GUI. For more information on the methods, check:
-	//  http://workshop.chromeexperiments.com/examples/gui
 	
 	this.gui = new dat.GUI();
 
@@ -30,6 +26,9 @@ Interface.prototype.init = function(application) {
 	return true;
 };
 
+/**
+ * Updates interface according to the current scene
+ */
 Interface.prototype.update = function(){
 	if(done == 0 && this.scene.lightsloaded){
 		done = 1;
