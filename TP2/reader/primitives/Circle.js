@@ -23,7 +23,9 @@ Circle.prototype = Object.create(CGFobject.prototype);
 Circle.prototype.constructor = Circle;
 
 
-
+/**
+* Initializes circle buffers
+*/
 Circle.prototype.initBuffers = function () {
 
 	var degToRad = Math.PI / 180.0;
