@@ -1,6 +1,12 @@
 /**
- * Sphere
+ * Sphere CGFobject object
  * @constructor
+ * @param {CGFscene} scene - Scene to change 
+ * @param {float} radius - Radius of the sphere
+ * @param {int} slices - Number of slices to devide the sphere with
+ * @param {float} stacks - Number of stacks to devide the sphere with
+ * @param {float} ampFactS - S amplification factor for texture
+ * @param {float} ampFactT - T amplification factor for texture
  */
  function Sphere(scene, radius, slices, stacks, ampFactS, ampFactT) {
  	CGFobject.call(this,scene);
@@ -15,7 +21,9 @@
  Sphere.prototype = Object.create(CGFobject.prototype);
  Sphere.prototype.constructor = Sphere;
 
-
+/**
+* Initializes sphere buffers
+*/
  Sphere.prototype.initBuffers = function() {
 
 

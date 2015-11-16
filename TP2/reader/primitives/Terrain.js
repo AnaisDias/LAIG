@@ -1,3 +1,8 @@
+/**
+ * Terrain CGFnurbsObject object
+ * @constructor
+ * @param {CGFscene} scene - Scene to change 
+ */
 function Terrain(scene) {
    	CGFnurbsObject.call(this,scene);
     this.obj = null;
@@ -8,10 +13,12 @@ function Terrain(scene) {
 Terrain.prototype = Object.create(CGFnurbsObject.prototype);
 Terrain.prototype.constructor = Terrain;
 
-
+/**
+ * Initializes objects that be used in the display function
+ */
 Terrain.prototype.init = function () {
 	
-	this.surface = this.makeSurface(1, // degree on U: 2 control vertexes U
+	this.makeSurface(1, // degree on U: 2 control vertexes U
 					 1, // degree on V: 2 control vertexes on V
 					[0, 0, 1, 1], // knots for U
 					[0, 0, 1, 1], // knots for V
@@ -30,6 +37,14 @@ Terrain.prototype.init = function () {
 
 };
 
+/**
+ * Creates the CGFnurbsObject to be called in the display function
+ * @param {int} degree1 - Degree on U
+ * @param {int} degree2 - Degree on V
+ * @param {array} knots1 - Knots for U
+ * @param {array} knots2 - Knots for V
+ * @param {array} controlvertexes - Control vertexes of the surface
+ */
 Terrain.prototype.makeSurface = function (degree1, degree2, knots1, knots2, controlvertexes) {
 		
 	var nurbsSurface = new CGFnurbsSurface(degree1, degree2, knots1, knots2, controlvertexes);
@@ -42,6 +57,9 @@ Terrain.prototype.makeSurface = function (degree1, degree2, knots1, knots2, cont
 
 };
 
+/**
+ * Draws the Terrain object in the scene
+ */
 Terrain.prototype.display = function(){
 	this.obj.display();
 };

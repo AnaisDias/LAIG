@@ -1,10 +1,14 @@
 /**
- * Rectangle
- * @param gl {WebGLRenderingContext}
+ * Triangle CGFobject object
  * @constructor
+ * @param {CGFscene} scene - Scene to change 
+ * @param {float} ltx - Left top x coordenate
+ * @param {float} lty - Left top y coordenate
+ * @param {float} rbx - Right bottom x coordenate
+ * @param {float} rby - Right bottom y coordenate
+ * @param {float} ampFactS - S amplification factor for texture
+ * @param {float} ampFactT - T amplification factor for texture
  */
-
-//Rectangle e uma subclasse de CGFobject
 function Rectangle(scene, ltx, lty, rbx, rby, ampFactS, ampFactT) {
 
 	CGFobject.call(this,scene);
@@ -29,6 +33,9 @@ function Rectangle(scene, ltx, lty, rbx, rby, ampFactS, ampFactT) {
 Rectangle.prototype = Object.create(CGFobject.prototype);
 Rectangle.prototype.constructor=Rectangle;
 
+/**
+* Initializes rectangle buffers
+*/
 Rectangle.prototype.initBuffers = function () {
 	this.vertices = [
             this.ltx, this.rby, 0,
@@ -61,6 +68,11 @@ Rectangle.prototype.initBuffers = function () {
 	this.initGLBuffers();
 };
 
+/**
+ * Changes rectangle's texture amplification coordenates
+ * @param {float} s - S coordenate
+ * @param {float} t - T coordenate
+ */
 Rectangle.prototype.changeTextureAmplif = function(s,t){
 	this.texCoords = [    
 		0, this.lengthT/t,

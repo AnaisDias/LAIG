@@ -1,3 +1,8 @@
+/**
+ * Vehicle Vehicle object
+ * @constructor
+ * @param {CGFscene} scene - Scene to change 
+ */
 function Vehicle(scene) {
    	CGFnurbsObject.call(this,scene);
    	this.top = null;
@@ -14,10 +19,11 @@ function Vehicle(scene) {
 Vehicle.prototype = Object.create(CGFnurbsObject.prototype);
 Vehicle.prototype.constructor = Vehicle;
 
-
+/**
+ * Initializes objects that be used in the display function
+ */
 Vehicle.prototype.init = function () {
 
-	
 	this.top = new Patch(this.scene,3, // degree on U: 2 control vertexes U
 					// degree on V: 2 control vertexes on V
 					20, // knots for U
@@ -53,11 +59,11 @@ Vehicle.prototype.init = function () {
 
 	this.sphere = new Sphere(this.scene, 1, 10, 10, 1, 1);
 
-
-
-
 };
 
+/**
+ * Draws the Vehicle object in the scene
+ */
 Vehicle.prototype.display = function(){
 	this.scene.pushMatrix();
 
