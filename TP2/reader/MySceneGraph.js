@@ -337,8 +337,9 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 
 	
 	console.log(animationElems.length + " animations to be processed");
-	
+	console.debug(animationElems);
 	this.animations = [];
+
 	for(i = 0; i<animationElems.length; i++){
 		var id = animationElems[i].attributes.getNamedItem("id").value;
 		var span = animationElems[i].attributes.getNamedItem("span").value;
@@ -355,12 +356,12 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 				return "Linear animations must have at least one control point!";
 			}
 			this.animations[id].controlpoint = [];
-			for(var i=0; i<controlpoints.length; i++){
+			for(var j=0; j<controlpoints.length; j++){
 				
-				this.animations[id].controlpoint[i] = [];
-				this.animations[id].controlpoint[i].xx = controlpoints[i].attributes.getNamedItem("xx").value;
-				this.animations[id].controlpoint[i].yy = controlpoints[i].attributes.getNamedItem("yy").value;
-				this.animations[id].controlpoint[i].zz = controlpoints[i].attributes.getNamedItem("zz").value;
+				this.animations[id].controlpoint[j] = [];
+				this.animations[id].controlpoint[j].xx = controlpoints[j].attributes.getNamedItem("xx").value;
+				this.animations[id].controlpoint[j].yy = controlpoints[j].attributes.getNamedItem("yy").value;
+				this.animations[id].controlpoint[j].zz = controlpoints[j].attributes.getNamedItem("zz").value;
 			}
 			//console.debug(this.animations[id].controlpoint);
 		}
@@ -386,6 +387,7 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 			}
 		}
 	}
+	console.debug(this.animations);
 	
 };
 
@@ -872,6 +874,8 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 
 		this.nodes[id].id = id;
 
+		this.nodes[id].firstTime = true;
+
 		//MATERIAL
 		var material = getUniqueElement(nodesElems[i],'MATERIAL');
 		if(material == -1){
@@ -911,13 +915,21 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 		//ANIMATION
 		var animation = nodesElems[i].getElementsByTagName('ANIMATIONREF');
 		if(animation[0] != undefined){
-
-		var animationref = animation[0].attributes.getNamedItem('id').value;
+			this.nodes[id].animationCounter = 0;
+			this.nodes[id].animationNr = animation.length;
+			this.nodes[id].animation = [];
+			for(var k = 0; k<animation.length; k++){
+				var animationref = animation[k].attributes.getNamedItem('id').value;
 
 		if(this.animations[animationref]==undefined && animationref!="null"){
 			return "ANIMATIONREF element must be declared in the ANIMATIONS tag first.";
 		}
-		this.nodes[id].animation = animationref;
+
+		this.nodes[id].animation[k] = animationref;
+
+			}
+
+		
 	}
 
 		//DESCENDANTS		

@@ -10,6 +10,8 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  	this.initTime = Date.now();
  	this.curTime = Date.now();
  	this.firstTime = true;
+ 	this.ended = false;
+ 	this.current = false;
  	this.setVelocity();
 
 };
@@ -40,6 +42,10 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  		}
  		this.curAngle = this.initAngle + this.velocity*(this.curTime-this.initTime);
  		console.log("curAngle is " + this.curAngle);
+ 	}
+ 	else{
+ 		this.ended = true;
+ 		this.current = false;
  	}
  	
  };

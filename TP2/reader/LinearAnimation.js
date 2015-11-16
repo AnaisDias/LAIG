@@ -15,6 +15,8 @@
  	this.angCP = [];
  	this.angNow = 0;
  	this.points = [];
+ 	this.ended = false;
+ 	this.current = false;
  	this.calculateAngles();
 
 };
@@ -79,6 +81,11 @@
 	 		
 	 	}
 	 		
+	 }
+
+	 else{
+	 	this.ended = true;
+	 	this.current = false;
 	 }
 
 
