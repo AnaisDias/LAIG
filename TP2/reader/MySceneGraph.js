@@ -356,12 +356,24 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 				return "Linear animations must have at least one control point!";
 			}
 			this.animations[id].controlpoint = [];
+			var k = 0;
 			for(var j=0; j<controlpoints.length; j++){
-				
-				this.animations[id].controlpoint[j] = [];
-				this.animations[id].controlpoint[j].xx = controlpoints[j].attributes.getNamedItem("xx").value;
-				this.animations[id].controlpoint[j].yy = controlpoints[j].attributes.getNamedItem("yy").value;
-				this.animations[id].controlpoint[j].zz = controlpoints[j].attributes.getNamedItem("zz").value;
+				if(j == 0){
+					if (parseFloat(controlpoints[0].attributes.getNamedItem("xx").value) != 0 
+					|| parseFloat(controlpoints[0].attributes.getNamedItem("yy").value) != 0 
+					|| parseFloat(controlpoints[0].attributes.getNamedItem("zz").value) != 0){
+						this.animations[id].controlpoint[k] = [];
+						this.animations[id].controlpoint[k].xx = 0;
+						this.animations[id].controlpoint[k].yy = 0;
+						this.animations[id].controlpoint[k].zz = 0;
+						k++;
+					}
+				}
+				this.animations[id].controlpoint[k] = [];
+				this.animations[id].controlpoint[k].xx = parseFloat(controlpoints[j].attributes.getNamedItem("xx").value);
+				this.animations[id].controlpoint[k].yy = parseFloat(controlpoints[j].attributes.getNamedItem("yy").value);
+				this.animations[id].controlpoint[k].zz = parseFloat(controlpoints[j].attributes.getNamedItem("zz").value);
+				k++;
 			}
 			//console.debug(this.animations[id].controlpoint);
 		}
@@ -804,7 +816,9 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 					this.leaves[id].controlpoints[t][j][0] = parseFloat(controlpoints[k].attributes.getNamedItem("x").value);
 					this.leaves[id].controlpoints[t][j][1] = parseFloat(controlpoints[k].attributes.getNamedItem("y").value);
 					this.leaves[id].controlpoints[t][j][2] = parseFloat(controlpoints[k].attributes.getNamedItem("z").value);
-					this.leaves[id].controlpoints[t][j][3] = 1;
+					if(controlpoints[k].attributes.getNamedItem("w") != null)
+						this.leaves[id].controlpoints[t][j][3] = parseFloat(controlpoints[k].attributes.getNamedItem("w").value);
+					else this.leaves[id].controlpoints[t][j][3] = 1;
 					k++;
 				}
 				

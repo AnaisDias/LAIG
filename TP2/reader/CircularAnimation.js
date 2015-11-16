@@ -46,6 +46,7 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  	else{
  		this.ended = true;
  		this.current = false;
+ 		this.curAngle = this.rotAngle+this.initAngle;
  	}
  	
  };

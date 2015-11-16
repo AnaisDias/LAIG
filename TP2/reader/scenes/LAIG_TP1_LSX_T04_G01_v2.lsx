@@ -200,42 +200,42 @@
     	</LEAF>
     	<LEAF id="terrain" type="terrain" texture="scenes/textures/terreno.jpg" heightmap="scenes/textures/heightmap2.png" />
     	<LEAF id="ufotop" type="patch" order="3" partsU="20" partsV="20">           
-        <controlpoint x="0" y="0" z="1" w="1"/>
-        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="-1" w="1"/>
-        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="2" y="-1" z="1" w="0.1111111111111111"/>
-        <controlpoint x="2" y="-1" z="-1" w="0.1111111111111111"/>
-        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="-2" y="-1" z="1" w="0.1111111111111111"/>
-        <controlpoint x="-2" y="-1" z="-1" w="0.1111111111111111"/>
-        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="1" w="1"/>
-        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="-1" w="1"/>
-    </LEAF>
+            <controlpoint x="0" y="0" z="1" w="1"/>
+            <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="-1" w="1"/>
+            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="2" y="-1" z="1" w="0.1111111111111111"/>
+            <controlpoint x="2" y="-1" z="-1" w="0.1111111111111111"/>
+            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="-2" y="-1" z="1" w="0.1111111111111111"/>
+            <controlpoint x="-2" y="-1" z="-1" w="0.1111111111111111"/>
+            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="1" w="1"/>
+            <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="-1" w="1"/>
+        </LEAF>
 
-	<LEAF id="ufobottom" type="patch" order="3" partsU="20" partsV="20">           
-		<controlpoint x="0" y="0" z="1" w="1"/>
-        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="-1" w="1"/>
-        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="2" y="-0.3" z="1" w="0.1111111111111111"/>
-        <controlpoint x="2" y="-0.3" z="-1" w="0.1111111111111111"/>
-        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="-2" y="-0.3" z="1" w="0.1111111111111111"/>
-        <controlpoint x="-2" y="-0.3" z="-1" w="0.1111111111111111"/>
-        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="1" w="1"/>
-        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
-        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
-        <controlpoint x="0" y="0" z="-1" w="1"/>
-    </LEAF>
+    	<LEAF id="ufobottom" type="patch" order="3" partsU="20" partsV="20">           
+    		<controlpoint x="0" y="0" z="1" w="1"/>
+            <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="-1" w="1"/>
+            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="2" y="-0.3" z="1" w="0.1111111111111111"/>
+            <controlpoint x="2" y="-0.3" z="-1" w="0.1111111111111111"/>
+            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="-2" y="-0.3" z="1" w="0.1111111111111111"/>
+            <controlpoint x="-2" y="-0.3" z="-1" w="0.1111111111111111"/>
+            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="1" w="1"/>
+            <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+            <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+            <controlpoint x="0" y="0" z="-1" w="1"/>
+        </LEAF>
     	
 
 	</LEAVES>
@@ -257,14 +257,25 @@
 	        </DESCENDANTS>
 	    </NODE>    
 
+        <NODE id="ufot">
+            <MATERIAL id="null" />     
+            <TEXTURE id="null" />      
+
+            <ROTATION axis="x" angle="180" />
+
+            <DESCENDANTS>
+                <DESCENDANT id="ufotop" />      
+            </DESCENDANTS>
+
+        </NODE>
+
 	    <NODE id="ufo">
 	    	<MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
 
-	        <ROTATION axis="x" angle="180" />
-
 	        <DESCENDANTS>
-	            <DESCENDANT id="ufotop" />       
+	            <DESCENDANT id="ufot" /> 
+                <DESCENDANT id="ufobottom" />       
 	        </DESCENDANTS>
 
 	    </NODE>
@@ -961,7 +972,7 @@
 	            <DESCENDANT id="painting" /> 
 	            <DESCENDANT id="weirdthing" />
 	            <DESCENDANT id="mountain" />
-	                
+                <!-- <DESCENDANT id="ufo" />	  -->              
 	        </DESCENDANTS>
 
 	    </NODE>

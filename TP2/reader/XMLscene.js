@@ -87,7 +87,6 @@ XMLscene.prototype.init = function (application) {
 							 [ 2.0, 1.0, -5.0, 1 ]
 						]
 					];
-	this.veh = new Vehicle(this);
 
 };
 
@@ -503,17 +502,18 @@ XMLscene.prototype.drawNode = function (node){
 	if(node.animation != undefined){
 		if(node.firstTime){
 			node.firstTime=false;
-			console.debug(node.animation);
+			//console.debug(node.animation);
 			this.animations[node.animation[0]].current = true;
 		}
-		console.debug(this.animations[node.animation[node.animationCounter]]);
+		//console.debug(this.animations[node.animation[node.animationCounter]]);
 		if(this.animations[node.animation[node.animationCounter]].ended && node.animationCounter < (node.animationNr-1)){
 			console.log("animation ended");
 			console.log("starting animation " + (node.animationCounter+1));
 			node.animationCounter +=1;
 			this.animations[node.animation[node.animationCounter]].current = true;
 		}
-		this.animations[node.animation[node.animationCounter]].display();
+		for(i = 0; i <= node.animationCounter;i++)
+			this.animations[node.animation[i]].display();
 	}
 
 	for(var i in node.descendants){
@@ -622,8 +622,6 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
-	this.veh.display();
-
 	/*this.pushMatrix();
 	this.plane.display();
 	this.popMatrix();*/
@@ -665,8 +663,8 @@ XMLscene.prototype.update = function (currTime){
 	if(this.animations != undefined){
 		for(var i in this.animations){
 			if(this.animations[i].current){
-			this.animations[i].update(currTime);
-		}
+				this.animations[i].update(currTime);
+			}
 		}
 	}
 

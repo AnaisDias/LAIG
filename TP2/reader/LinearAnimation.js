@@ -57,6 +57,7 @@
 	 				this.tx += this.controlPoints[i+1][0];
 		 			this.ty += this.controlPoints[i+1][1];
 		 			this.tz += this.controlPoints[i+1][2];
+
 	 				return;
 
 		 		}
@@ -68,6 +69,7 @@
 		 			this.tx += this.controlPoints[i+1][0] * remainder;
 	 				this.ty += this.controlPoints[i+1][1] * remainder;
 	 				this.tz += this.controlPoints[i+1][2] * remainder;
+
 	 				return;
 
 				}
@@ -78,6 +80,8 @@
 		 	this.tx += this.controlPoints[i+1][0];
 	 		this.ty += this.controlPoints[i+1][1];
 	 		this.tz += this.controlPoints[i+1][2];
+
+
 	 		
 	 	}
 	 		
@@ -86,11 +90,22 @@
 	 else{
 	 	this.ended = true;
 	 	this.current = false;
+	 	this.tx = 0;
+	 	this.ty = 0;
+	 	this.tz = 0;
+
+	 	for(i = 0; i < (this.controlPoints.length - 1); i++){
+			this.tx += this.controlPoints[i+1][0];
+	 		this.ty += this.controlPoints[i+1][1];
+	 		this.tz += this.controlPoints[i+1][2];
+	 		
+	 	}
 	 }
-
-
-	//console.log(i+1);
-	this.tmatrix = matrix; 	
+	 if(!this.ended){
+		 this.tx = 0;
+		 this.ty = 0;
+		 this.tz = 0;
+	}
 
  };
 
