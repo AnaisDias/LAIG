@@ -1,3 +1,13 @@
+/**
+* Patch CGFnurbsObject object, which is a NURBS surface
+* 
+* @constructor
+* @param scene {CGFscene} - Scene object will be drawn on
+* @param order {int} - Order of surface, can be 1, 2 or 3
+* @param partsU {int} - Parts in U
+* @param partsV {int} - Parts in V
+* @param controlPoints {Array} - Control points of surface
+*/
 function Patch(scene, order, partsU, partsV, controlPoints) {
    	CGFnurbsObject.call(this,scene);
     this.partsU = partsU;
@@ -13,7 +23,9 @@ function Patch(scene, order, partsU, partsV, controlPoints) {
 Patch.prototype = Object.create(CGFnurbsObject.prototype);
 Patch.prototype.constructor = Patch;
 
-
+/**
+* Initializes the NURBS surface
+*/
 Patch.prototype.init = function () {
 
 	if(this.order == 1){
@@ -37,6 +49,15 @@ Patch.prototype.init = function () {
 
 };
 
+/**
+ * Creates the CGFnurbsObject to be called in the display function
+ *
+ * @param {int} degree1 - Degree on U
+ * @param {int} degree2 - Degree on V
+ * @param {array} knots1 - Knots for U
+ * @param {array} knots2 - Knots for V
+ * @param {array} controlvertexes - Control vertices of surface
+ */
 Patch.prototype.makeSurface = function (degree1, degree2, knots1, knots2, controlvertexes) {
 		
 	var nurbsSurface = new CGFnurbsSurface(degree1, degree2, knots1, knots2, controlvertexes);
@@ -49,6 +70,9 @@ Patch.prototype.makeSurface = function (degree1, degree2, knots1, knots2, contro
 
 };
 
+/**
+ * Draws patch object in scene
+ */
 Patch.prototype.display = function(){
 	this.obj.display();
 }

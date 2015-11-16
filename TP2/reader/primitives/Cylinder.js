@@ -1,7 +1,14 @@
 /**
- * Cylinder
- * @constructor
- */
+* Cylinder CGFobject object
+* 
+* @constructor
+* @param scene 		Scene object will be drawn on
+* @param height		Height of cylinder
+* @param slices		Number of slices of cylinder
+* @param stacks 	Number of stacks of cylinder
+* @param topradius 	Radius of cylinder top
+* @param botradius 	Radius of cylinder bottom
+*/
  function Cylinder(scene, height, slices, stacks, topradius, botradius) {
  	CGFobject.call(this,scene);
 
@@ -25,6 +32,9 @@
  Cylinder.prototype = Object.create(CGFobject.prototype);
  Cylinder.prototype.constructor = Cylinder;
 
+/**
+* Initializes cylinder object buffers
+*/
  Cylinder.prototype.initBuffers = function() {
 
  	var degToRad = Math.PI / 180.0;
