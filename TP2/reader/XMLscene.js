@@ -35,7 +35,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis=new CGFaxis(this);
 
-	this.shader = new CGFshader(this.gl, "shaders/texture3.vert", "shaders/texture3.frag");
+	this.shader = new CGFshader(this.gl, "shaders/shader.vert", "shaders/shader.frag");
 	this.shader.setUniformsValues({normScale: 10});
 	this.shader.setUniformsValues({uSampler2: 1});
 
