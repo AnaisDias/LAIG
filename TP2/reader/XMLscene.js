@@ -192,7 +192,47 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.graph.illumination.ambient.a);
 	
 	//Animations
-	this.animations = [];
+	for(var i in this.graph.nodes){
+
+		if(this.graph.nodes[i].animationNr != undefined){
+			this.graph.nodes[i].newAnimations = [];
+
+			for(j = 0; j < this.graph.nodes[i].animation.length; j++){
+				var name = this.graph.nodes[i].animation[j];
+				if(this.graph.animations[name].type == "linear"){
+
+					var span = parseFloat(this.graph.animations[name].span);
+					var cp = [];
+					var k = 0;
+					for(var control in this.graph.animations[name].controlpoint){
+						cp[k] = [];
+						cp[k][0] = parseFloat(this.graph.animations[name].controlpoint[control].xx);		
+						cp[k][1] = parseFloat(this.graph.animations[name].controlpoint[control].yy);
+						cp[k][2] = parseFloat(this.graph.animations[name].controlpoint[control].zz);
+						k++;
+					}
+					this.graph.nodes[i].newAnimations[j] = new LinearAnimation(this, span, cp);
+
+				}
+
+				else if(this.graph.animations[name].type == "circular"){
+
+					var span = parseFloat(this.graph.animations[name].span);
+					var center = [];
+					center[0] = this.graph.animations[name].center.x;
+					center[1] = this.graph.animations[name].center.y;
+					center[2] = this.graph.animations[name].center.z;
+
+					var radius = parseFloat(this.graph.animations[name].radius);
+					var initAng = parseFloat(this.graph.animations[name].startang);
+					var rotAng = parseFloat(this.graph.animations[name].rotang);
+
+					this.graph.nodes[i].newAnimations[j] = new CircularAnimation(this, span, center, radius, initAng, rotAng);
+				}
+			}
+		}
+	}
+	/*this.animations = [];
 
 	for(var i in this.graph.animations){
 		if(this.graph.animations[i].type == "linear"){
@@ -224,7 +264,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 			this.animations[i] = new CircularAnimation(this, span, center, radius, initAng, rotAng);
 		}
-	}
+	}*/
 
 	//Textures
 	this.texture = [];
@@ -503,17 +543,17 @@ XMLscene.prototype.drawNode = function (node){
 		if(node.firstTime){
 			node.firstTime=false;
 			//console.debug(node.animation);
-			this.animations[node.animation[0]].current = true;
+			node.newAnimations[0].current = true;
 		}
 		//console.debug(this.animations[node.animation[node.animationCounter]]);
-		if(this.animations[node.animation[node.animationCounter]].ended && node.animationCounter < (node.animationNr-1)){
+		if(node.newAnimations[node.animationCounter].ended && node.animationCounter < (node.animationNr-1)){
 			console.log("animation ended");
 			console.log("starting animation " + (node.animationCounter+1));
 			node.animationCounter +=1;
-			this.animations[node.animation[node.animationCounter]].current = true;
+			node.newAnimations[node.animationCounter].current = true;
 		}
 		for(i = 0; i <= node.animationCounter;i++)
-			this.animations[node.animation[i]].display();
+			node.newAnimations[i].display();
 	}
 
 	for(var i in node.descendants){
@@ -660,10 +700,18 @@ XMLscene.prototype.display = function () {
 
 
 XMLscene.prototype.update = function (currTime){
-	if(this.animations != undefined){
-		for(var i in this.animations){
-			if(this.animations[i].current){
-				this.animations[i].update(currTime);
+	
+	for(var i in this.graph.nodes){
+
+		if(this.graph.nodes[i].newAnimations != undefined){
+
+			for(var j in this.graph.nodes[i].newAnimations){
+
+				if(this.graph.nodes[i].newAnimations[j].current){
+
+					this.graph.nodes[i].newAnimations[j].update(currTime);
+					
+				}
 			}
 		}
 	}

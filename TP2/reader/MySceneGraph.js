@@ -935,16 +935,16 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			for(var k = 0; k<animation.length; k++){
 				var animationref = animation[k].attributes.getNamedItem('id').value;
 
-		if(this.animations[animationref]==undefined && animationref!="null"){
-			return "ANIMATIONREF element must be declared in the ANIMATIONS tag first.";
-		}
+				if(this.animations[animationref]==undefined && animationref!="null"){
+					return "ANIMATIONREF element must be declared in the ANIMATIONS tag first.";
+				}
 
-		this.nodes[id].animation[k] = animationref;
+				this.nodes[id].animation[k] = animationref;
 
 			}
 
 		
-	}
+		}
 
 		//DESCENDANTS		
 		var descElem = getUniqueElement(nodesElems[i],'DESCENDANTS');
