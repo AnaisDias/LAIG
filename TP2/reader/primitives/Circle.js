@@ -1,6 +1,12 @@
 /**
-* Circle
+* Circle CGFobject object
+* 
 * @constructor
+* @param scene 		Scene object will be drawn on
+* @param slices		Number of slices of circle
+* @param bradius 	Radius of bottom of cylinder that circle will be a part of
+* @param tradius 	Radius of top of cylinder that circle will be a part of
+* @param side		Side of cylinder. Can either be "top" or "bottom"
 */
 function Circle(scene, slices, bradius, tradius, side) {
  	CGFobject.call(this,scene);
@@ -11,15 +17,12 @@ function Circle(scene, slices, bradius, tradius, side) {
 	this.side=side;
  	this.initBuffers();
 
-	/*console.debug(slices);
-	console.debug(side);
-	console.debug(tradius);
-	console.debug(bradius);
-*/
 };
 
 Circle.prototype = Object.create(CGFobject.prototype);
 Circle.prototype.constructor = Circle;
+
+
 
 Circle.prototype.initBuffers = function () {
 

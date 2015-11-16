@@ -12,12 +12,20 @@
 	</INITIALS>
 
 	<ANIMATIONS>
-		​<ANIMATION id="illuminati" span="10" type="circular" center="0 1 0" radius="1" startang="10" rotang="360" />
+		​<ANIMATION id="ufo1" span="5" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
 		<ANIMATION id="ghosts" span="5" type="linear">
 			<controlpoint xx="0" yy="0" zz="0" />
 			<controlpoint xx="2" yy="0" zz="0" />
 			<controlpoint xx="0" yy="1" zz="0" />
 		</ANIMATION>
+        <ANIMATION id="ufo2" span="3" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="-6" yy="0" zz="-2" />
+            <controlpoint xx="0" yy="-2" zz="2" />
+        </ANIMATION>
+        <ANIMATION id="ufo3" span="2" type="circular" center="0 0 0" radius="0.5" startang="0" rotang="50" />
+
+
 	</ANIMATIONS>
 
 	<ILLUMINATION>
@@ -57,6 +65,13 @@
        		<diffuse r="0.1" g="0.1" b="0.1" a="0.8" />        <!-- diffuse component -->
         	<specular r="1.0" g="1.0" b="0" a="1.0" />     <!-- specular component -->
     	</LIGHT>
+        <LIGHT id="light4">
+            <enable value="1" />                         <!-- enable/disable -->
+            <position x="10" y="15" z="17" w="1.0" />       <!-- light position -->
+            <ambient r="0" g="0" b="0" a="1.0" />        <!-- ambient component -->
+            <diffuse r="1.0" g="1.0" b="1.0" a="0.5" />        
+            <specular r="1.0" g="1.0" b="1.0" a="0.5" />  
+        </LIGHT>
 	</LIGHTS>
 
 	<TEXTURES>
@@ -88,6 +103,10 @@
         	<file path="textures/painting.png" />        <!-- path to file -->
         	<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     	</TEXTURE>
+        <TEXTURE id="ufo-tex">
+            <file path="textures/ufo.jpg" />
+            <amplif_factor s="1" t="1" />
+        </TEXTURE>
     
 	</TEXTURES>
 
@@ -194,43 +213,7 @@
     		<controlpoint x="2" y="1" z="-5" />
     	</LEAF>
     	<LEAF id="terrain" type="terrain" texture="scenes/textures/terreno.jpg" heightmap="scenes/textures/heightmap2.png" />
-    	<LEAF id="ufotop" type="patch" order="3" partsU="20" partsV="20">           
-            <controlpoint x="0" y="0" z="1" w="1"/>
-            <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="-1" w="1"/>
-            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="2" y="-1" z="1" w="0.1111111111111111"/>
-            <controlpoint x="2" y="-1" z="-1" w="0.1111111111111111"/>
-            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="-2" y="-1" z="1" w="0.1111111111111111"/>
-            <controlpoint x="-2" y="-1" z="-1" w="0.1111111111111111"/>
-            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="1" w="1"/>
-            <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="-1" w="1"/>
-        </LEAF>
-
-    	<LEAF id="ufobottom" type="patch" order="3" partsU="20" partsV="20">           
-    		<controlpoint x="0" y="0" z="1" w="1"/>
-            <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="-1" w="1"/>
-            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="2" y="-0.3" z="1" w="0.1111111111111111"/>
-            <controlpoint x="2" y="-0.3" z="-1" w="0.1111111111111111"/>
-            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="-2" y="-0.3" z="1" w="0.1111111111111111"/>
-            <controlpoint x="-2" y="-0.3" z="-1" w="0.1111111111111111"/>
-            <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="1" w="1"/>
-            <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
-            <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
-            <controlpoint x="0" y="0" z="-1" w="1"/>
-        </LEAF>
+        <LEAF id="ufo" type="vehicle" />
     	
 
 	</LEAVES>
@@ -244,7 +227,7 @@
 	    	<MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
 
-	        <TRANSLATION x="-20" y="0" z="0" />
+	        <TRANSLATION x="-20" y="0" z="10" />
 	        <SCALE sx="40" sy="1" sz="40" />
 
 	        <DESCENDANTS>
@@ -252,28 +235,26 @@
 	        </DESCENDANTS>
 	    </NODE>    
 
-        <NODE id="ufot">
+        <NODE id="ovni">
             <MATERIAL id="null" />     
-            <TEXTURE id="null" />      
+            <TEXTURE id="ufo-tex" />      
 
-            <ROTATION axis="x" angle="180" />
+            <TRANSLATION x="15" y="15" z="15" />
+            <SCALE sx="5" sy="5" sz="5"/>
+
+            <ANIMATIONREF id="ufo1"/> 
+            <ANIMATIONREF id="ufo2"/> 
+            <ANIMATIONREF id="ufo3"/> 
+            <ANIMATIONREF id="ufo2"/>
+
 
             <DESCENDANTS>
-                <DESCENDANT id="ufotop" />      
+                <DESCENDANT id="ufo" />      
             </DESCENDANTS>
 
         </NODE>
 
-	    <NODE id="ufo">
-	    	<MATERIAL id="null" />     
-	        <TEXTURE id="null" />      
-
-	        <DESCENDANTS>
-	            <DESCENDANT id="ufot" /> 
-                <DESCENDANT id="ufobottom" />       
-	        </DESCENDANTS>
-
-	    </NODE>
+	    
 
 	    <NODE id="wall1">      
 
@@ -630,7 +611,6 @@
 	    
 	        <MATERIAL id="null" />     
 	        <TEXTURE id="null" />      
-	        <ANIMATIONREF id="ghosts"/>
                        
 	        <TRANSLATION x="10" y="0" z="7.5" />
 	        <ROTATION axis="y" angle="90" /> 
@@ -913,10 +893,6 @@
 	        <TRANSLATION x="7.5" y="5" z="10" /> 
 	        <SCALE sx="1.5" sy="2" sz="1.5" /> 
 
-	        <ANIMATIONREF id="illuminati"/> 
-	        <ANIMATIONREF id="ghosts"/>
-	        
-
 	        <DESCENDANTS>
 	             <DESCENDANT id="pyramidBottom" />  
 	             <DESCENDANT id="pyramidSide1" /> 
@@ -924,22 +900,6 @@
 	             <DESCENDANT id="pyramidSide3" /> 
 	             <DESCENDANT id="pyramidSide4" />   
 	        </DESCENDANTS>
-
-	    </NODE>
-
-	    <NODE id="weirdthing">
-
-	    <MATERIAL id="ornament-mat" />     
-	    <TEXTURE id="lamp-tex" />      
-	                                  <!-- id="clear" clears texture declaration received from parent node      -->
-        
-	    <TRANSLATION x="0.4" y="5" z="15" /> 
-	    <ROTATION axis="y" angle="90" />
-        <SCALE sx="0.5" sy="0.5" sz="0.5" /> 
-        
-        <DESCENDANTS>
-             <DESCENDANT id="patch" />   
-        </DESCENDANTS>
 
 	    </NODE>
 
@@ -965,9 +925,9 @@
 	            <DESCENDANT id="lamp2" /> 
 	            <DESCENDANT id="doors" /> 
 	            <DESCENDANT id="painting" /> 
-	            <DESCENDANT id="weirdthing" />
 	            <DESCENDANT id="mountain" />
-                <!-- <DESCENDANT id="ufo" />	  -->              
+                <DESCENDANT id="ovni" /> 
+                            
 	        </DESCENDANTS>
 
 	    </NODE>

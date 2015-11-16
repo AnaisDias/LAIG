@@ -25,7 +25,7 @@ XMLscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
     this.enableTextures(true);
 
-    this.camera.zoom(-10);
+    this.camera.zoom(-100);
 
 	//added code for application defaults
 	
@@ -386,6 +386,10 @@ XMLscene.prototype.onGraphLoaded = function ()
 				this.leaves[i].texture = new CGFtexture(this,ttexture);
 				this.leaves[i].heightmap = new CGFtexture(this,heightmap);
 				break;
+			case "vehicle":
+				this.leaves[i] = new Vehicle(this);
+				this.leaves[i]._type = "vehicle";
+				break;
 		}
 
 
@@ -594,7 +598,7 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t, descMat){
 		this.scale(leaf.radius*2, leaf.radius*2, leaf.radius*2);
 		leaf.display();
 	}
-	else if(leaf._type == "plane" || leaf._type == "patch"){
+	else if(leaf._type == "plane" || leaf._type == "patch" || leaf._type=="vehicle"){
 		leaf.display();
 	}
 	else if(leaf._type == "terrain"){
@@ -613,6 +617,7 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t, descMat){
 
 
 	}
+
 
 };
 
@@ -661,6 +666,7 @@ XMLscene.prototype.display = function () {
 	this.axis.display();
 
 	this.setDefaultAppearance();
+
 
 	/*this.pushMatrix();
 	this.plane.display();
