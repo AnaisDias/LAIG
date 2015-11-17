@@ -1,6 +1,9 @@
 /**
- * Cylinder
+ * Linear Animation
  * @constructor
+ * @param {CGFscene} scene - Scene to change 
+ * @param {int} time - Time it will take to do the whole animation
+ * @param {array} controlPoints - Control points of the animation
  */
  function LinearAnimation(scene, time, controlPoints) {
 
@@ -23,35 +26,37 @@
 
  LinearAnimation.prototype.constructor = LinearAnimation;
 
-
+/**
+ * Updates the current position of the transformation
+ * @param {int} curTime - Current time in milliseconds 
+ */
  LinearAnimation.prototype.update = function(curTime){
 
- 	var matrix = mat4.create();
- 	var j = 0;
- 	
  	var remainder = 0;
+
  	if(this.firstTime){
  		this.firstTime = false;
  		this.initTime = curTime;
  		this.setVelocityAndTime();
  	}
- 	//verifica se chegou ao fim da animação
+
  	if(curTime <= (this.initTime + this.time * 1000)){
+
  		this.tx = 0;
  		this.ty = 0;
  		this.tz = 0;
  		
-	 	//faz a rotação do objeto para o ângulo atual
 	 	for(i = 0; i < (this.points.length - 1); i++){
+
 	 		if(curTime > this.points[i] && curTime <= this.points[i+1]){
 	 			this.angNow = this.angCP[i+1];
 	 			break;
 	 		}
+
 	 	}
 	 	for(i = 0; i < (this.controlPoints.length - 1); i++){
 	 		
 	 		
-	 			//se for igual ao próximo ponto
 	 			if(this.points[i+1] == curTime){
 
 	 				this.tx += this.controlPoints[i+1][0];
@@ -61,7 +66,6 @@
 	 				return;
 
 		 		}
-		 		//se o ponto estiver dentro deste controlPoint
 		 		else if(this.points[i] < curTime && this.points[i+1] > curTime){
 
 		 			remainder = (curTime-this.points[i])/(this.points[i+1]-this.points[i]) ;
@@ -74,9 +78,6 @@
 
 				}
 
-	 			
-
-	 		//se nenhum dos ifs retornar significa que esta translação tem de ser feita sempre...
 		 	this.tx += this.controlPoints[i+1][0];
 	 		this.ty += this.controlPoints[i+1][1];
 	 		this.tz += this.controlPoints[i+1][2];
@@ -109,6 +110,9 @@
 
  };
 
+/**
+ * Applies linear animation to scene/object
+ */
  LinearAnimation.prototype.display = function(){
  	
  	this.scene.translate(this.tx, this.ty, this.tz);
@@ -118,6 +122,9 @@
 
  };
 
+/**
+ * Calculates angles to be used by the animation
+ */
  LinearAnimation.prototype.calculateAngles = function(){
 
  	this.angCP[0] = 0;
@@ -134,6 +141,9 @@
 
  };
 
+/**
+ * Calculates velocity and time at which the animation will pass in each control point
+ */
  LinearAnimation.prototype.setVelocityAndTime = function(){
 
  	var dist = 0;

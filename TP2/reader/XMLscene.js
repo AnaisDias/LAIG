@@ -1,6 +1,15 @@
+/**
+* Converts from degree to radian
+* @param {float} deg - Degree to convert
+*/ 
 function degToRad(deg){
 	return (deg*Math.PI/180);
 }
+
+/**
+ * XMLscene CGFscene object
+ * @constructor
+ */
 function XMLscene() {
     CGFscene.call(this);
 }
@@ -11,6 +20,10 @@ var currTex;
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
+/**
+ * Initializes the scene
+ * @param {CGFapplication} application - CGFapplication used
+ */
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
@@ -90,12 +103,13 @@ XMLscene.prototype.init = function (application) {
 
 };
 
+/**
+ * Initializes lights of the scene
+ */
 XMLscene.prototype.initLights = function () {
 	
 	this.lightids=[];
 	this.lights = [];
-
-   // this.shader.bind();
 
     j=0;
 
@@ -151,19 +165,28 @@ XMLscene.prototype.initLights = function () {
 
 	this.lightsloaded = true;
  
-  //  this.shader.unbind();
 };
 
+
+/**
+ * Initializes the camera of the scene
+ */
 XMLscene.prototype.initCameras = function () {
     this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
 };
 
+/**
+ * Initializes the camera of the scene based on the graph
+ */
 XMLscene.prototype.initGraphCameras = function () {
     this.camera = new CGFcamera(0.4, this.graph.fnear, this.graph.ffar, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
 };
 
+/**
+ * Changes the CGFappearance used in the scene
+ */
 XMLscene.prototype.setDefaultAppearance = function () {
     this.setAmbient(0.2, 0.4, 0.8, 1.0);
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
@@ -173,9 +196,13 @@ XMLscene.prototype.setDefaultAppearance = function () {
 
 // Handler called when the graph is finally loaded. 
 // As loading is asynchronous, this may be called already after the application has started the run loop
+
+/**
+ * Handler called when the graph is finally loaded. 
+ */
 XMLscene.prototype.onGraphLoaded = function () 
 {
-	//initials
+	//Initials
 
 	this.camera.near = this.graph.initials.fnear;
 	this.camera.far = this.graph.initials.ffar;
@@ -184,8 +211,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.axis=new CGFaxis(this, this.graph.initials.rlength);
 
-	//illumination
-
+	//Illumination
 	this.gl.clearColor(this.graph.illumination.background.r,
 		this.graph.illumination.background.g,this.graph.illumination.background.b,this.graph.illumination.background.a);
 	this.setGlobalAmbientLight(this.graph.illumination.ambient.r, this.graph.illumination.ambient.g, this.graph.illumination.ambient.b,
@@ -232,39 +258,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 			}
 		}
 	}
-	/*this.animations = [];
-
-	for(var i in this.graph.animations){
-		if(this.graph.animations[i].type == "linear"){
-
-			var span = parseFloat(this.graph.animations[i].span);
-			var cp = [];
-			var j = 0;
-			for(var control in this.graph.animations[i].controlpoint){
-				cp[j] = [];
-				cp[j][0] = parseFloat(this.graph.animations[i].controlpoint[control].xx);		
-				cp[j][1] = parseFloat(this.graph.animations[i].controlpoint[control].yy);
-				cp[j][2] = parseFloat(this.graph.animations[i].controlpoint[control].zz);
-				j++;
-			}
-			//console.debug(cp);
-			this.animations[i] = new LinearAnimation(this, span, cp);
-		}
-
-		else if(this.graph.animations[i].type == "circular"){
-			var span = this.graph.animations[i].span;
-			var center = [];
-			center[0] = this.graph.animations[i].center.x;
-			center[1] = this.graph.animations[i].center.y;
-			center[2] = this.graph.animations[i].center.z;
-
-			var radius = parseFloat(this.graph.animations[i].radius);
-			var initAng = parseFloat(this.graph.animations[i].startang);
-			var rotAng = parseFloat(this.graph.animations[i].rotang);
-
-			this.animations[i] = new CircularAnimation(this, span, center, radius, initAng, rotAng);
-		}
-	}*/
 
 	//Textures
 	this.texture = [];
@@ -319,6 +312,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	}
 
+	//Leaves
 	this.leaves = [];
 	for(var i in this.graph.leaves){
 		switch(this.graph.leaves[i]._type){
@@ -396,15 +390,16 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	}
 
-	this.createTransfMatrixes();
-	//this.drawNode(this.graph.nodes[this.graph.scene_id]);
+	//Transformation matrices
+	this.createTransfMatrices();
 
     
 };
 
-
-
-XMLscene.prototype.createTransfMatrixes = function(){
+/**
+* Creates transformation matrices for each node
+*/
+XMLscene.prototype.createTransfMatrices = function(){
 
 	for(var i in this.graph.nodes){
 		var tmatrix = mat4.create();
@@ -444,6 +439,10 @@ XMLscene.prototype.createTransfMatrixes = function(){
 	}
 };
 
+/**
+* Sets materials and textures for each descendant of a node
+* @param node - Current node
+*/
 XMLscene.prototype.setDescMaterialsTextures = function (node){
 	for(var i in node.descendants){
 		var id = node.descendants[i];
@@ -470,6 +469,10 @@ XMLscene.prototype.setDescMaterialsTextures = function (node){
 	}
 };
 
+/**
+* Draws the current node and it's descendants
+* @param node - Current node
+*/
 XMLscene.prototype.drawNode = function (node){
 	
 	this.pushMatrix();
@@ -526,36 +529,24 @@ XMLscene.prototype.drawNode = function (node){
 			}
 			this.materials[node.inheritedMat].apply();
 		}
-	}/*
-	if(matID!="null"){
-
-		if(texID=="clear"){
-		this.materials[matID].setTexture(null);
-		}
-
-		else{
-			this.materials[matID].setTexture(this.texture[texID]);
-		}
-		this.materials[matID].apply();
-
-
-	}*/
+	}
 
 
 	this.multMatrix(node.matrix);
 	if(node.animation != undefined){
+
 		if(node.firstTime){
 			node.firstTime=false;
-			//console.debug(node.animation);
 			node.newAnimations[0].current = true;
 		}
-		//console.debug(this.animations[node.animation[node.animationCounter]]);
+
 		if(node.newAnimations[node.animationCounter].ended && node.animationCounter < (node.animationNr-1)){
 			console.log("animation ended");
 			console.log("starting animation " + (node.animationCounter+1));
 			node.animationCounter +=1;
 			node.newAnimations[node.animationCounter].current = true;
 		}
+
 		for(i = 0; i <= node.animationCounter;i++)
 			node.newAnimations[i].display();
 	}
@@ -579,6 +570,13 @@ XMLscene.prototype.drawNode = function (node){
 	this.popMatrix();
 };
 
+/**
+* Draws the current leaf
+* @param leaf - Current leaf
+* @param {float} s - S amplification factor for texture
+* @param {float} t - T amplification factor for texture
+* @param {string} descMat - Material id to be applied on 'terrain' type
+*/
 XMLscene.prototype.drawLeaf = function (leaf, s, t, descMat){
 
 	if(leaf._type == "rectangle"){
@@ -620,7 +618,11 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t, descMat){
 
 
 };
-
+/**
+* Checks if an id belongs to a leaf
+* @param {string} id - ID to check
+* @return true if id is a leaf, false otherwise 
+*/
 XMLscene.prototype.isLeaf = function (id){
 	for(var i in this.graph.leaves){
 		if (id==i) return true;
@@ -628,6 +630,9 @@ XMLscene.prototype.isLeaf = function (id){
 	return false;
 };
 
+/**
+* Updates lights of the scene
+*/
 XMLscene.prototype.updateLights = function(){
 
 	for(var i in this.lights){
@@ -647,7 +652,9 @@ XMLscene.prototype.updateLights = function(){
 };
 
 
-
+/**
+* Displays the scene
+*/
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
 	
@@ -704,7 +711,10 @@ XMLscene.prototype.display = function () {
 
 };
 
-
+/**
+* Updates the scene based on the current time
+* @param {int} currTime - Current time in milliseconds
+*/
 XMLscene.prototype.update = function (currTime){
 	
 	for(var i in this.graph.nodes){
