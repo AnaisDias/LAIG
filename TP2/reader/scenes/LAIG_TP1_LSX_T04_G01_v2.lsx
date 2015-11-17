@@ -12,18 +12,47 @@
 	</INITIALS>
 
 	<ANIMATIONS>
-		​<ANIMATION id="ufo1" span="5" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
-		<ANIMATION id="ghosts" span="5" type="linear">
-			<controlpoint xx="0" yy="0" zz="0" />
-			<controlpoint xx="2" yy="0" zz="0" />
-			<controlpoint xx="0" yy="1" zz="0" />
-		</ANIMATION>
-        <ANIMATION id="ufo2" span="3" type="linear">
+		​<ANIMATION id="ufo1" span="2" type="circular" center="0 0 0" radius="0" startang="0" rotang="180" />
+        <ANIMATION id="ufo2" span="2" type="linear">
             <controlpoint xx="0" yy="0" zz="0" />
-            <controlpoint xx="-6" yy="0" zz="-2" />
-            <controlpoint xx="0" yy="-2" zz="2" />
+            <controlpoint xx="2" yy="0" zz="1" />
         </ANIMATION>
-        <ANIMATION id="ufo3" span="2" type="circular" center="0 0 0" radius="0.5" startang="0" rotang="50" />
+        <ANIMATION id="ufo3" span="1" type="circular" center="0 0 0" radius="0" startang="0" rotang="180" />
+        <ANIMATION id="ufo4" span="2" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="-4" yy="-2" zz="-6" />
+            <controlpoint xx="2" yy="-1" zz="1" />
+        </ANIMATION>
+        <ANIMATION id="ufo5" span="1" type="circular" center="0 0 0" radius="0.2" startang="0" rotang="90" />
+        <ANIMATION id="levitate" span="2" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="0" yy="1" zz="0" />
+        </ANIMATION>
+        <ANIMATION id="staystill" span="4" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="0" yy="0" zz="0" />
+        </ANIMATION>
+        <ANIMATION id="shift" span="1" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="0" yy="0" zz="0.5" />
+            <controlpoint xx="0" yy="0" zz="-0.5" />
+            <controlpoint xx="0" yy="0" zz="0.5" />
+            <controlpoint xx="0" yy="0" zz="-0.5" />
+        </ANIMATION>
+        <ANIMATION id="shift2" span="1" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="0" yy="0" zz="-0.5" />
+            <controlpoint xx="0" yy="0" zz="0.5" />
+            <controlpoint xx="0" yy="0" zz="-0.5" />
+            <controlpoint xx="0" yy="0" zz="0.5" />
+        </ANIMATION>
+        <ANIMATION id="levitatedown" span="1" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="0" yy="-1" zz="0" />
+        </ANIMATION>
+
+
+
 
 
 	</ANIMATIONS>
@@ -244,7 +273,10 @@
 
             <ANIMATIONREF id="ufo1"/> 
             <ANIMATIONREF id="ufo2"/> 
-            <ANIMATIONREF id="ufo3"/> 
+            <ANIMATIONREF id="ufo3"/>
+            <ANIMATIONREF id="levitate"/> 
+            <ANIMATIONREF id="ufo4"/>
+            <ANIMATIONREF id="ufo5"/> 
 
 
             <DESCENDANTS>
@@ -508,7 +540,11 @@
 	        <TEXTURE id="null" />      
                        
 	        <TRANSLATION x="7.5" y="0" z="10" />
-	        <ROTATION axis="y" angle="90" />  
+	        <ROTATION axis="y" angle="90" />
+	        <ANIMATIONREF id="staystill"/>
+	        <ANIMATIONREF id="shift"/>
+	        <ANIMATIONREF id="levitate"/>
+	        <ANIMATIONREF id="levitatedown"/> 
 
 	        <DESCENDANTS>
 	            <DESCENDANT id="tableTop" /> 
@@ -615,6 +651,11 @@
 	        <ROTATION axis="y" angle="90" /> 
 	        <SCALE sx="1.1" sy="1.1" sz="1.1" />  
 
+	        <ANIMATIONREF id="staystill"/>
+	        <ANIMATIONREF id="shift"/>
+	        <ANIMATIONREF id="levitate"/>
+	        <ANIMATIONREF id="levitatedown"/> 
+
 	        <DESCENDANTS>
 	            <DESCENDANT id="chairLegFrontLeft" /> 
 	            <DESCENDANT id="chairLegFrontRight" /> 
@@ -633,7 +674,12 @@
                        
 	        <TRANSLATION x="10" y="0" z="12.5" />
 	        <ROTATION axis="y" angle="90" /> 
-	        <SCALE sx="1.1" sy="1.1" sz="1.1" />  
+	        <SCALE sx="1.1" sy="1.1" sz="1.1" /> 
+
+	        <ANIMATIONREF id="staystill"/>
+	        <ANIMATIONREF id="shift"/> 
+	        <ANIMATIONREF id="levitate"/>
+	        <ANIMATIONREF id="levitatedown"/> 
 
 	        <DESCENDANTS>
 	            <DESCENDANT id="chairLegFrontLeft" /> 
@@ -655,6 +701,11 @@
 	        <ROTATION axis="y" angle="-90" /> 
 	        <SCALE sx="1.1" sy="1.1" sz="1.1" />  
 
+	        <ANIMATIONREF id="staystill"/>
+	        <ANIMATIONREF id="shift2"/>
+	        <ANIMATIONREF id="levitate"/>
+	        <ANIMATIONREF id="levitatedown"/> 
+
 	        <DESCENDANTS>
 	            <DESCENDANT id="chairLegFrontLeft" /> 
 	            <DESCENDANT id="chairLegFrontRight" /> 
@@ -674,6 +725,11 @@
 	        <TRANSLATION x="5" y="0" z="12.5" />
 	        <ROTATION axis="y" angle="-90" /> 
 	        <SCALE sx="1.1" sy="1.1" sz="1.1" />  
+
+	        <ANIMATIONREF id="staystill"/>
+	        <ANIMATIONREF id="shift2"/>
+	        <ANIMATIONREF id="levitate"/>
+	        <ANIMATIONREF id="levitatedown"/> 
 
 	        <DESCENDANTS>
 	            <DESCENDANT id="chairLegFrontLeft" /> 
@@ -891,6 +947,11 @@
                        
 	        <TRANSLATION x="7.5" y="5" z="10" /> 
 	        <SCALE sx="1.5" sy="2" sz="1.5" /> 
+
+	        <ANIMATIONREF id="staystill"/>
+	        <ANIMATIONREF id="shift2"/>
+	        <ANIMATIONREF id="levitate"/>
+	        <ANIMATIONREF id="levitatedown"/> 
 
 	        <DESCENDANTS>
 	             <DESCENDANT id="pyramidBottom" />  
