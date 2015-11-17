@@ -39,8 +39,6 @@ XMLscene.prototype.init = function (application) {
     this.enableTextures(true);
 
     this.camera.zoom(-100);
-
-	//added code for application defaults
 	
    	this.gl.frontFace(this.gl.CCW);
    	this.gl.cullFace(this.gl.BACK);
@@ -193,9 +191,6 @@ XMLscene.prototype.setDefaultAppearance = function () {
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);	
 };
-
-// Handler called when the graph is finally loaded. 
-// As loading is asynchronous, this may be called already after the application has started the run loop
 
 /**
  * Handler called when the graph is finally loaded. 
@@ -618,6 +613,7 @@ XMLscene.prototype.drawLeaf = function (leaf, s, t, descMat){
 
 
 };
+
 /**
 * Checks if an id belongs to a leaf
 * @param {string} id - ID to check
@@ -656,6 +652,7 @@ XMLscene.prototype.updateLights = function(){
 * Displays the scene
 */
 XMLscene.prototype.display = function () {
+	
 	// ---- BEGIN Background, camera and axis setup
 	
 	// Clear image and depth buffer everytime we update the scene
@@ -674,21 +671,9 @@ XMLscene.prototype.display = function () {
 
 	this.setDefaultAppearance();
 
-
-	/*this.pushMatrix();
-	this.plane.display();
-	this.popMatrix();*/
-	/*//this.circA.update();
-	this.pushMatrix();
-
-	this.circA.display();
-	this.cyl.display();
-	this.popMatrix();*/
 	// ---- END Background, camera and axis setup
 
-	// it is important that things depending on the proper loading of the graph
-	// only get executed after the graph has loaded correctly.
-	// This is one possible way to do it
+
 	if (this.graph.loadedOk)
 	{
 		this.updateLights();
