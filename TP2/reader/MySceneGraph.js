@@ -1,4 +1,11 @@
-
+/**
+* MySceneGraph
+* Graph that represents the lsx scene
+* 
+* @constructor
+* @param filename {string} - LSX filename
+* @param scene {CGFscene} - Scene
+*/
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	
@@ -19,7 +26,7 @@ function MySceneGraph(filename, scene) {
 }
 
 /*
- * Callback to be executed after successful reading
+ * Callback that is executed after successful reading
  */
 MySceneGraph.prototype.onXMLReady=function() 
 {
@@ -85,8 +92,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	}
 
 	this.loadedOk=true;
-	
-	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
+
 	this.scene.onGraphLoaded();
 };
 
@@ -95,6 +101,7 @@ MySceneGraph.prototype.onXMLReady=function()
 
 /*
 *	Function to parse INITIALS
+* @param rootElement - Root element of lsx
 */
 MySceneGraph.prototype.parseInitials = function(rootElement){
 
@@ -107,11 +114,9 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 		return "INITIALS element is missing or there is more than one.";
 	}
 
-	// FRUSTRUM
 
 	this.initials=[];
 
-	// iterate over every element
 	var nnodes=elemsList[0].children.length;
 	if(nnodes != 7){
 		return "INITIALS element must have exactly 7 children.";
@@ -265,6 +270,12 @@ MySceneGraph.prototype.parseInitials = function(rootElement){
 	console.log("Read INITIALS/reference item with value length "+this.initials.rlength);
 };
 
+
+/**
+* Function that parses illumination elements
+* 
+* @param rootElement - Root element of lsx
+*/
 MySceneGraph.prototype.parseIllumination = function(rootElement){
 
 	var elemsList =  rootElement.getElementsByTagName('ILLUMINATION');
@@ -323,6 +334,11 @@ MySceneGraph.prototype.parseIllumination = function(rootElement){
 
 };
 
+/**
+* Function that parses animation elements
+* 
+* @param rootElement - Root element of lsx
+*/
 MySceneGraph.prototype.parseAnimations = function(rootElement){
 	var elemsList =  rootElement.getElementsByTagName('ANIMATIONS');
 
@@ -337,7 +353,6 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 
 	
 	console.log(animationElems.length + " animations to be processed");
-	console.debug(animationElems);
 	this.animations = [];
 
 	for(i = 0; i<animationElems.length; i++){
@@ -375,7 +390,6 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 				this.animations[id].controlpoint[k].zz = parseFloat(controlpoints[j].attributes.getNamedItem("zz").value);
 				k++;
 			}
-			//console.debug(this.animations[id].controlpoint);
 		}
 
 		else if(type == "circular"){
@@ -399,10 +413,14 @@ MySceneGraph.prototype.parseAnimations = function(rootElement){
 			}
 		}
 	}
-	console.debug(this.animations);
 	
 };
 
+/**
+* Function that parses lights elements
+* 
+* @param rootElement - Root element of lsx
+*/
 MySceneGraph.prototype.parseLights = function(rootElement){
 	var elemsList =  rootElement.getElementsByTagName('LIGHTS');
 	if (elemsList == null) {
@@ -480,7 +498,11 @@ MySceneGraph.prototype.parseLights = function(rootElement){
 
 };
 
-
+/**
+* Function that parses texture elements
+* 
+* @param rootElement - Root element of lsx
+*/
 MySceneGraph.prototype.parseTextures = function(rootElement){
 	var elemsList =  rootElement.getElementsByTagName('TEXTURES');
 	if (elemsList == null) {
@@ -542,6 +564,11 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
 
 };
 
+/**
+* Function that parses material elements
+* 
+* @param rootElement - Root element of lsx
+*/
 MySceneGraph.prototype.parseMaterials = function(rootElement){
  
 	var elemsList =  rootElement.getElementsByTagName('MATERIALS');
@@ -618,6 +645,11 @@ MySceneGraph.prototype.parseMaterials = function(rootElement){
 	}
 };
 
+/**
+* Function that parses leaf elements
+* 
+* @param rootElement - Root element of lsx
+*/
 MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 	var leavesList =  rootElement.getElementsByTagName('LEAVES');
@@ -635,7 +667,6 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 	console.log(leavesElems.length + " leaves to be processed");
 
 	this.leaves = [];
-	console.debug(leavesElems);
 	for(i=0; i < leavesElems.length; i++){
 
 		var id = leavesElems[i].attributes.getNamedItem("id").value;
@@ -643,7 +674,6 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 		
 
 		if (this.leaves[id] != undefined){
-			console.debug(this.leaves[id]);
 			return "Leaves ids must not be repeated";
 		}
 		this.leaves[id]=[];
@@ -823,8 +853,6 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 				}
 				
 			}
-			//this.leaves[id].controlpoints = controlpoints;
-			console.debug(this.leaves[id].controlpoints);
 			console.log("Read leaf with id " + id 
 			+ ", type " + this.leaves[id]._type
 			+ ", order: " + this.leaves[id].order 
@@ -856,6 +884,11 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 };
 
+/**
+* Function that parses node elements
+* 
+* @param rootElement - Root element of lsx
+*/
 MySceneGraph.prototype.parseNodes = function(rootElement){
 
 	var nodesList =  rootElement.getElementsByTagName('NODES');
@@ -866,10 +899,7 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 	if(nodesList.length != 1){
 		return "NODES element is missing or there is more than one.";
 	}
-
-	//ROOT ID
 	
-
 	var nodesElems = nodesList[0].getElementsByTagName('NODE');
 
 	
@@ -896,7 +926,6 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 			return "MATERIAL element is missing.";
 		}
 		if(material == -2){
-			console.debug(material);
 			return "MATERIAL element is missing or there is more than one.";
 		}
 
@@ -1085,6 +1114,13 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 
 };
 
+/**
+* Function that returns element of tag with specified tagname only if it is unique in the lsx
+* 
+* @param tag - Element that will be searched
+* @param tagName {string} - Name of desired element
+* @returns elem  - Unique element, or -1 or -2 in case of error
+*/
 function getUniqueElement(tag,tagName){
 
 	var elem = tag.getElementsByTagName(tagName);
