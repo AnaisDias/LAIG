@@ -44,8 +44,6 @@ Circle.prototype.initBuffers = function () {
 	//top circle
 	if(this.side == "top"){
 		for (i=0; i < this.slices; i++){
-			console.log("drawing circle top: " + i);
-
 			var x1 = Math.cos(ang_now) * this.tradius;
 			var y1 = Math.sin(ang_now) * this.tradius;
 
@@ -99,7 +97,6 @@ Circle.prototype.initBuffers = function () {
 	else{
 
 		for (i=0; i < this.slices; i++){
-			//console.log("drawing circle bot: " + i);
 
 			var x1 = Math.cos(ang_now) * this.bradius;
 			var y1 = Math.sin(ang_now) * this.bradius;
@@ -152,8 +149,6 @@ Circle.prototype.initBuffers = function () {
 
 
 	}
-	//console.debug(this.vertices);
-	//console.debug(this.indices);
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();

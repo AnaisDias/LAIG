@@ -56,7 +56,6 @@ function CircularAnimation(scene, time, center, radius, initAngle, rotAngle) {
  			this.curTime=currTime;
  		}
  		this.curAngle = this.initAngle + this.velocity*(this.curTime-this.initTime);
- 		console.log("curAngle is " + this.curAngle);
  	}
  	else{
  		this.ended = true;

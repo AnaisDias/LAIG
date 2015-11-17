@@ -536,8 +536,6 @@ XMLscene.prototype.drawNode = function (node){
 		}
 
 		if(node.newAnimations[node.animationCounter].ended && node.animationCounter < (node.animationNr-1)){
-			console.log("animation ended");
-			console.log("starting animation " + (node.animationCounter+1));
 			node.animationCounter +=1;
 			node.newAnimations[node.animationCounter].current = true;
 		}
