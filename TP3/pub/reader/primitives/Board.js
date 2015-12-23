@@ -2,10 +2,10 @@
  * Triangle CGFobject object
  * @constructor
  * @param {CGFscene} scene - Scene to change 
- * @param {float} ltx - Left top x coordenate
- * @param {float} lty - Left top y coordenate
- * @param {float} rbx - Right bottom x coordenate
- * @param {float} rby - Right bottom y coordenate
+ * @param {float} ltx - Left top x coordinate
+ * @param {float} lty - Left top y coordinate
+ * @param {float} rbx - Right bottom x coordinate
+ * @param {float} rby - Right bottom y coordinate
  * @param {float} ampFactS - S amplification factor for texture
  * @param {float} ampFactT - T amplification factor for texture
  */
@@ -31,6 +31,7 @@ Board.prototype.display = function () {
 	for(i = 1; i <= 25; i++){
 		this.scene.pushMatrix();
 		this.scene.registerForPick(i,this.squares[i]);
+		this.scene.rotate(degToRad(-90), 1,0,0);
 		this.scene.translate(this.squares[i].tx, this.squares[i].ty, this.squares[i].tz);
 		this.squares[i].display();
 		this.scene.popMatrix();
@@ -39,7 +40,7 @@ Board.prototype.display = function () {
 };
 
 /**
- * Changes Board's texture amplification coordenates
+ * Changes Board's texture amplification coordinates
  * @param {float} s - S coordenate
  * @param {float} t - T coordenate
  */

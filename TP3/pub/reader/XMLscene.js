@@ -59,53 +59,9 @@ XMLscene.prototype.init = function (application) {
 					[4,0], [4,1], [4,2], [4,3], [4,4]];
 
 	this.board = new Board(this);
+	this.piece = new Piece(this);
 
-	this.controlPoints = [];
-	this.controlPoints[0] = [];
-	this.controlPoints[0][0] = 0;
-
-	this.controlPoints[0][1] = 0;
-	this.controlPoints[0][2] = 0;
-
-	this.controlPoints[1] = [];
-	this.controlPoints[1][0] = 1;
-	this.controlPoints[1][1] = 1;
-	this.controlPoints[1][2] = 1;
-
-	this.controlPoints[2] = [];
-	this.controlPoints[2][0] = 1;
-	this.controlPoints[2][1] = 1;
-	this.controlPoints[2][2] = 0;
-
-	this.controlPoints[3] = [];
-	this.controlPoints[3][0] = 1;
-	this.controlPoints[3][1] = 1;
-	this.controlPoints[3][2] = 1;
-
-	this.controlPoints[4] = [];
-	this.controlPoints[4][0] = 3;
-	this.controlPoints[4][1] = 1;
-	this.controlPoints[4][2] = 1;
-
-	this.controlVert = [	// U = 0
-						[ // V = 0..3;
-							 [ -2.0, -2.0, 1.0, 1 ],
-							 [ -2.0, -1.0, -2.0, 1 ],
-							 [ -2.0, 1.0, 5.0, 1 ]
-						],
-						// U = 1
-						[ // V = 0..3
-							 [ 0, -2.0, 0, 1 ],
-							 [ 0, -1.0, -1.0, 5 ],
-							 [ 0, 1.0, 1.5, 5 ]
-						],
-						// U = 2
-						[ // V = 0..3
-							 [ 2.0, -2.0, -1.0, 1 ],
-							 [ 2.0, -1.0, 2.0, 1 ],
-							 [ 2.0, 1.0, -5.0, 1 ]
-						]
-					];
+	
 
 };
 
@@ -711,6 +667,11 @@ XMLscene.prototype.display = function () {
 		this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
 		this.materials["floor-mat"].apply();
 		this.board.display();
+		this.popMatrix();
+
+		this.pushMatrix();
+			this.translate(0,0.5,0);
+			this.piece.display();
 		this.popMatrix();
 
 		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
