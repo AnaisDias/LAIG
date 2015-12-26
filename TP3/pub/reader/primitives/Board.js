@@ -31,8 +31,11 @@ Board.prototype.display = function () {
 	for(i = 1; i <= 25; i++){
 		this.scene.pushMatrix();
 		this.scene.registerForPick(i,this.squares[i]);
+		this.scene.translate(0,0,15);
 		this.scene.rotate(degToRad(-90), 1,0,0);
+
 		this.scene.translate(this.squares[i].tx, this.squares[i].ty, this.squares[i].tz);
+		
 		this.squares[i].display();
 		this.scene.popMatrix();
 

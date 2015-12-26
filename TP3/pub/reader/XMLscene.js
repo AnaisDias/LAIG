@@ -59,12 +59,36 @@ XMLscene.prototype.init = function (application) {
 					[4,0], [4,1], [4,2], [4,3], [4,4]];
 
 	this.board = new Board(this);
-	this.piece = new Piece(this);
+	this.neutron = new Sphere(this, 1, 10, 10, 1, 1);
+	this.neutron.x = 2;
+	this.neutron.y = 2;
+	this.neutron.moving = false;
 
+
+	this.pieces = [];
+
+	for(var i = 0; i<5; i++){
+			this.pieces[i] = [];
+			this.pieces[i].obj = new Piece(this);
+			this.pieces[i].x = i;
+			this.pieces[i].y = 0;
+			this.pieces[i].moving = false;
+	}
+
+	for(var i = 0; i<5; i++){
+			this.pieces[i+5] = [];
+			this.pieces[i+5].obj = new Piece(this);
+			this.pieces[i+5].x = i;
+			this.pieces[i+5].y = 4;
+			this.pieces[i+5].moving = false;
+	}
 	
 
 };
 
+XMLscene.prototype.positionToTranslation(position){
+	return position*3 + 1.5;
+}
 /**
  * Initializes lights of the scene
  */
@@ -663,16 +687,28 @@ XMLscene.prototype.display = function () {
 	{
 		this.updateLights();
 		//initial transformations
+
+		this.pushMatrix();
+			this.translate(this.neutron.x*3+1.5, 1, this.neutron.y*3+1.5);
+			this.scale(1.5,1.5,1.5);
+			this.neutron.display();
+		this.popMatrix();
 		this.pushMatrix();
 		this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
 		this.materials["floor-mat"].apply();
 		this.board.display();
 		this.popMatrix();
 
-		this.pushMatrix();
-			this.translate(0,0.5,0);
-			this.piece.display();
+
+
+		for(piece in this.pieces){
+			this.pushMatrix();
+			this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5);
+			console.debug(piece);
+			this.pieces[piece].obj.display();
 		this.popMatrix();
+		}
+		
 
 		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
 		this.rotate(degToRad(this.graph.initials.rotations[0]), 1,0,0);
