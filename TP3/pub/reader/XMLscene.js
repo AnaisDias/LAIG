@@ -65,6 +65,11 @@ XMLscene.prototype.init = function (application) {
 						[2,2,2,2,2]];
 
 	this.player = 1;
+
+	this.nextPlay = 1;
+
+	this.possibleMoves = [];
+
 	this.board = new Board(this);
 	this.neutron = new Sphere(this, 1, 10, 10, 1, 1);
 	this.neutron.x = 2;
@@ -91,10 +96,10 @@ XMLscene.prototype.init = function (application) {
 	}
 	
 	this.canMoveMat = new CGFappearance(this);
-	this.materials[i].setShininess(120);
-	this.materials[i].setSpecular(0,255,0,1);
-	this.materials[i].setDiffuse(0,255,0,1);
-	this.materials[i].setAmbient(0,255,0,1);
+	this.canMoveMat.setShininess(120);
+	this.canMoveMat.setSpecular(0,255,0,1);
+	this.canMoveMat.setDiffuse(0,255,0,1);
+	this.canMoveMat.setAmbient(0,255,0,1);
 
 	//this.materials[i].setEmission(r,g,b,a);
 
@@ -660,8 +665,8 @@ XMLscene.prototype.logPicking = function ()
 				if (obj)
 				{
 					var customId = this.pickResults[i][1];				
-					console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + this.curPossibleMoves(this.mapPos[customId - 1]) );
-
+					console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + this.mapPos[customId - 1]);
+					this.curPossibleMoves(this.mapPos[customId - 1]);
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);
@@ -689,15 +694,40 @@ XMLscene.prototype.postGameRequest = function (requestString, onSuccess, onError
 /*
 * Function to save the current possible moves in the using variables
 */
-XMLscene.prototype.curPossibleMoves = function()
+XMLscene.prototype.curPossibleMoves = function(id)
 {
 
+	console.log("Requesting possible moves...");
 	// Compose Request String
-	//var requestString = "[jogada," + this.prologBoard + ", 0, 0, 3, 0, " + this.player + "]";
-	//postGameRequest(requestString,handleReply);
+	var requestString = "[jog_poss," + this.prologBoard + "," + id[0] + "," + id[1] + "," + this.player + "]";
+	this.postGameRequest(requestString,posMoves);
 
 };
 
+/*
+*	function to handle reply from possibleMove
+*/
+function posMoves(data){
+	response=JSON.parse(data.target.response);
+
+	console.log(response.message);
+
+	console.log("Possible moves: " + response.newBoard);
+	this.possibleMoves = response.newBoard;	
+	
+	this.player = response.newPlayer;
+
+	this.nextPlay = response.newPlay;
+
+	if(response.nx != "-1"){
+		this.neutron.x=response.nx;
+	}
+	if(response.ny != "-1"){
+		this.neutron.y=response.ny;
+	}
+
+}			
+			
 /**
 * Displays the scene
 */
