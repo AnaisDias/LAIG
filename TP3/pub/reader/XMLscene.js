@@ -58,6 +58,13 @@ XMLscene.prototype.init = function (application) {
 					[3,0], [3,1], [3,2], [3,3], [3,4],
 					[4,0], [4,1], [4,2], [4,3], [4,4]];
 
+	this.prologBoard = [[1,1,1,1,1],
+						[0,0,0,0,0],
+						[0,0,3,0,0],
+						[0,0,0,0,0],
+						[2,2,2,2,2]];
+
+	this.player = 1;
 	this.board = new Board(this);
 	this.neutron = new Sphere(this, 1, 10, 10, 1, 1);
 	this.neutron.x = 2;
@@ -83,10 +90,18 @@ XMLscene.prototype.init = function (application) {
 			this.pieces[i+5].moving = false;
 	}
 	
+	this.canMoveMat = new CGFappearance(this);
+	this.materials[i].setShininess(120);
+	this.materials[i].setSpecular(0,255,0,1);
+	this.materials[i].setDiffuse(0,255,0,1);
+	this.materials[i].setAmbient(0,255,0,1);
+
+	//this.materials[i].setEmission(r,g,b,a);
+
 
 };
 
-XMLscene.prototype.positionToTranslation(position){
+XMLscene.prototype.positionToTranslation = function (position) {
 	return position*3 + 1.5;
 }
 /**
@@ -645,14 +660,43 @@ XMLscene.prototype.logPicking = function ()
 				if (obj)
 				{
 					var customId = this.pickResults[i][1];				
-					console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + this.mapPos[customId - 1] );
+					console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + this.curPossibleMoves(this.mapPos[customId - 1]) );
 
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);
 		}		  
 	}
-}
+};
+
+/*
+* Function to send the request for prolog
+*/
+XMLscene.prototype.postGameRequest = function (requestString, onSuccess, onError)
+{
+
+	var request = new XMLHttpRequest();
+	request.open('POST', '../../game', true);
+
+	request.onload = onSuccess || function(data){console.log("Request successful. Reply: " + data.target.response);};
+	request.onerror = onError || function(){console.log("Error waiting for response");};
+
+	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	request.send('requestString='+encodeURIComponent(requestString));
+
+};
+
+/*
+* Function to save the current possible moves in the using variables
+*/
+XMLscene.prototype.curPossibleMoves = function()
+{
+
+	// Compose Request String
+	//var requestString = "[jogada," + this.prologBoard + ", 0, 0, 3, 0, " + this.player + "]";
+	//postGameRequest(requestString,handleReply);
+
+};
 
 /**
 * Displays the scene
@@ -703,10 +747,11 @@ XMLscene.prototype.display = function () {
 
 		for(piece in this.pieces){
 			this.pushMatrix();
+			this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
 			this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5);
-			console.debug(piece);
+		//	console.debug(piece);
 			this.pieces[piece].obj.display();
-		this.popMatrix();
+			this.popMatrix();
 		}
 		
 
