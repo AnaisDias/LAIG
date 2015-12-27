@@ -19,6 +19,7 @@ var prologBoard;
 var player;
 var nextPlay;
 var neutron;
+var clearBoard;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -77,6 +78,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.lastPicked = [];
 
+	clearBoard = false;
 
 	this.player1 = true;
 	this.player2 = false;
@@ -90,21 +92,28 @@ XMLscene.prototype.init = function (application) {
 	neutron.moving = false;
 	this.pieces = [];
 	
-	this.canMoveMat = new CGFappearance(this);
-	this.canMoveMat.setShininess(120);
-	this.canMoveMat.setSpecular(0,255,0,1);
-	this.canMoveMat.setDiffuse(0,255,0,1);
-	this.canMoveMat.setAmbient(0,255,0,1);
+	this.p1Mat = new CGFappearance(this);
+	this.p1Mat.setShininess(60);
+	this.p1Mat.setSpecular(0,255,0,1);
+	this.p1Mat.setDiffuse(0,255,0,1);
+	this.p1Mat.setAmbient(0,255,0,1);
 
-	this.cantMoveMat = new CGFappearance(this);
-	this.cantMoveMat.setShininess(120);
-	this.cantMoveMat.setSpecular(255,0,0,1);
-	this.cantMoveMat.setDiffuse(255,0,0,1);
-	this.cantMoveMat.setAmbient(255,0,0,1);
+	this.p2Mat = new CGFappearance(this);
+	this.p2Mat.setShininess(60);
+	this.p2Mat.setSpecular(255,0,0,1);
+	this.p2Mat.setDiffuse(255,0,0,1);
+	this.p2Mat.setAmbient(255,0,0,1);
+
+	this.possMoveSquare = new CGFappearance(this);
+	this.possMoveSquare.setShininess(60);
+	this.possMoveSquare.setSpecular(0,0,255,1);
+	this.possMoveSquare.setDiffuse(0,0,255,1);
+	this.possMoveSquare.setAmbient(0,0,255,1);
+
 	for(var i = 0; i<5; i++){
 			this.pieces[i] = [];
 			this.pieces[i].obj = new Piece(this);
-			this.pieces[i].material = this.canMoveMat;
+			this.pieces[i].material = this.p1Mat;
 			this.pieces[i].x = i;
 			this.pieces[i].y = 0;
 			this.pieces[i].moving = false;
@@ -113,7 +122,7 @@ XMLscene.prototype.init = function (application) {
 	for(var i = 0; i<5; i++){
 			this.pieces[i+5] = [];
 			this.pieces[i+5].obj = new Piece(this);
-			this.pieces[i+5].material = this.cantMoveMat;
+			this.pieces[i+5].material = this.p2Mat;
 			this.pieces[i+5].x = i;
 			this.pieces[i+5].y = 4;
 			this.pieces[i+5].moving = false;
@@ -704,18 +713,21 @@ XMLscene.prototype.logPicking = function ()
 					//console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + pos);
 					
 					if(player == "1"){
-						if(player1){
+						if(this.player1){
 							if(this.existsPos(pos)){
 								this.requestMove(this.lastPicked, pos);
 							}
-							else if((prologBoard[pos[0]][pos[1]] == 1 && player == "1" )||
-								(prologBoard[pos[0]][pos[1]] == 2 && player == "2" )) {
+							else if (nextPlay == "1"){
+								this.lastPicked = JSON.parse("[" + neutron.x + "," + neutron.y + "]");
+								this.curPossibleMoves(JSON.parse("[" + neutron.x + "," + neutron.y + "]"));
+							}
+							else if(prologBoard[pos[0]][pos[1]] == 1) {
 								this.lastPicked = this.mapPos[customId - 1];
 								this.curPossibleMoves(this.mapPos[customId - 1]);
 							}
 						}
 						else{
-							if(int1){
+							if(this.int1){
 								this.requestIntMove();
 							}
 							else {
@@ -724,18 +736,21 @@ XMLscene.prototype.logPicking = function ()
 						}
 					}
 					else {
-						if(player2){
+						if(this.player2){
 							if(this.existsPos(pos)){
 								this.requestMove(this.lastPicked, pos);
 							}
-							else if((prologBoard[pos[0]][pos[1]] == 1 && player == "1" )||
-								(prologBoard[pos[0]][pos[1]] == 2 && player == "2" )) {
+							else if (nextPlay == "1"){
+								this.lastPicked = JSON.parse("[" + neutron.x + "," + neutron.y + "]");
+								this.curPossibleMoves(JSON.parse("[" + neutron.x + "," + neutron.y + "]"));
+							}
+							else if(prologBoard[pos[0]][pos[1]] == 2) {
 								this.lastPicked = this.mapPos[customId - 1];
 								this.curPossibleMoves(this.mapPos[customId - 1]);
 							}
 						}
 						else{
-							if(int2){
+							if(this.int2){
 								this.requestIntMove();
 							}
 							else {
@@ -921,7 +936,7 @@ XMLscene.prototype.moveHandler = function(data){
 		console.log("Player " + player + " won!!");
 	}
 	
-
+	clearBoard = true;
 };
 
 /*
@@ -933,7 +948,7 @@ XMLscene.prototype.posMovesHandler = function (data){
 	console.log(response.message);
 	console.log("Possible moves: " + response.newBoard);
 	movesAllowed = JSON.parse(response.newBoard);
-
+	clearBoard = true;
 };			
 			
 /**
@@ -967,7 +982,14 @@ XMLscene.prototype.display = function () {
 			this.logPicking();
 			this.clearPickRegistration();
 		}
-	
+		if(clearBoard){	
+			this.board.clearMat();
+			clearBoard = false;
+		}
+		for(var i = 0; i < movesAllowed.length; i++){
+			this.board.squares[movesAllowed[i][0] * 5 + movesAllowed[i][1] + 1].showMaterial = true;
+		}
+		
 		this.updateLights();
 		//initial transformations
 
@@ -989,7 +1011,7 @@ XMLscene.prototype.display = function () {
 				
 				if(prologBoard[i][j] == 1 ){
 					this.pushMatrix();
-					this.canMoveMat.apply();
+					this.pieces[piece].material.apply();
 					this.pieces[piece].x = j;
 					this.pieces[piece].y = i;
 					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
@@ -1002,7 +1024,7 @@ XMLscene.prototype.display = function () {
 				}
 				else if( prologBoard[i][j] == 2){
 					this.pushMatrix();
-					this.cantMoveMat.apply();
+					this.pieces[piece].material.apply();
 					this.pieces[piece].x = j;
 					this.pieces[piece].y = i;
 					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);

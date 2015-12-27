@@ -30,6 +30,11 @@ Board.prototype.constructor=Board;
 Board.prototype.display = function () {
 	for(i = 1; i <= 25; i++){
 		this.scene.pushMatrix();
+		if(this.squares[i].showMaterial == true)
+			this.scene.possMoveSquare.apply();
+		else{
+			this.scene.materials["floor-mat"].apply();
+		}
 		this.scene.registerForPick(i,this.squares[i]);
 		this.scene.translate(0,0,15);
 		this.scene.rotate(degToRad(-90), 1,0,0);
@@ -55,30 +60,44 @@ Board.prototype.prepareSquares = function(){
 			this.squares[i].tx = (i-1) * 3; 
 			this.squares[i].ty = 12;
 			this.squares[i].tz = 0;
+			this.squares[i].showMaterial = false;
 		}
 		else if(i <= 10){
 			this.squares[i] = new Rectangle(this.scene, 0, 2.8, 2.8, 0, 2.8, 2.8);
 			this.squares[i].tx = (i - 6) * 3;  //i - 1 - 5
 			this.squares[i].ty = 9;
 			this.squares[i].tz = 0;
+			this.squares[i].showMaterial = false;
 		}
 		else if(i <= 15){
 			this.squares[i] = new Rectangle(this.scene, 0, 2.8, 2.8, 0, 2.8, 2.8);
 			this.squares[i].tx = (i - 11) * 3; 
 			this.squares[i].ty = 6;
 			this.squares[i].tz = 0;
+			this.squares[i].showMaterial = false;
 		}
 		else if(i <= 20){
 			this.squares[i] = new Rectangle(this.scene, 0, 2.8, 2.8, 0, 2.8, 2.8);
 			this.squares[i].tx = (i - 16) * 3; 
 			this.squares[i].ty = 3;
 			this.squares[i].tz = 0;
+			this.squares[i].showMaterial = false;
 		}
 		else if(i <= 25){
 			this.squares[i] = new Rectangle(this.scene, 0, 2.8, 2.8, 0, 2.8, 2.8);
 			this.squares[i].tx = (i - 21)* 3; 
 			this.squares[i].ty = 0;
 			this.squares[i].tz = 0;
+			this.squares[i].showMaterial = false;
 		}
 	}
+};
+
+/**
+* Sets showMaterial for all squares to false
+*/
+Board.prototype.clearMat = function(){
+	for(var i = 1; i < 26; i++){
+		this.squares[i].showMaterial = false;
+	}	
 };
