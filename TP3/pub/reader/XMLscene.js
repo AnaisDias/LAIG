@@ -113,7 +113,6 @@ XMLscene.prototype.init = function (application) {
 	for(var i = 0; i<5; i++){
 			this.pieces[i] = [];
 			this.pieces[i].obj = new Piece(this);
-			this.pieces[i].material = this.p1Mat;
 			this.pieces[i].x = i;
 			this.pieces[i].y = 0;
 			this.pieces[i].moving = false;
@@ -122,7 +121,6 @@ XMLscene.prototype.init = function (application) {
 	for(var i = 0; i<5; i++){
 			this.pieces[i+5] = [];
 			this.pieces[i+5].obj = new Piece(this);
-			this.pieces[i+5].material = this.p2Mat;
 			this.pieces[i+5].x = i;
 			this.pieces[i+5].y = 4;
 			this.pieces[i+5].moving = false;
@@ -1011,7 +1009,7 @@ XMLscene.prototype.display = function () {
 				
 				if(prologBoard[i][j] == 1 ){
 					this.pushMatrix();
-					this.pieces[piece].material.apply();
+					this.p1Mat.apply();
 					this.pieces[piece].x = j;
 					this.pieces[piece].y = i;
 					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
@@ -1024,7 +1022,7 @@ XMLscene.prototype.display = function () {
 				}
 				else if( prologBoard[i][j] == 2){
 					this.pushMatrix();
-					this.pieces[piece].material.apply();
+					this.p2Mat.apply();
 					this.pieces[piece].x = j;
 					this.pieces[piece].y = i;
 					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
