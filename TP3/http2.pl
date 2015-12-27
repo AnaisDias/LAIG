@@ -55,19 +55,14 @@ processString([_Par=Val], R):-
 % New board returns -1 on error
 %
 
-jogada(Board, Xi, Yi, Xf, Yf, Player, NewPlayer, NewPlay, NewBoard, Message, NX, NY):-		
+jogada(Board, NXi, NYi, Xi, Yi, Xf, Yf, Player, NewPlayer, NewPlay, NewBoard, Message, NX, NY):-		
 	
 	valida_jogada(Board,Xi, Yi, Xf, Yf, Player),
 	atualiza_jogada(Board,Xi, Yi, Xf, Yf, NewBoard),
 	
 	(
-		verifica_fim(Xf , Yf , NewBoard, Player),
-		(
-			Player == 1,
-			NewPlayer is 1;
-			Player == 2,
-			NewPlayer is 2
-		),
+		verifica_fim(NXi, NYi, NewBoard, Player, NewPlayer),
+		
 		NewPlay is 3,
 		Message = "The End"
 		;
@@ -92,22 +87,23 @@ jogada(Board, Xi, Yi, Xf, Yf, Player, NewPlayer, NewPlay, NewBoard, Message, NX,
 	NewBoard is -1,
 	Message = "Move Invalid".							
 
-jogada_neutrao(Board,NXi, NYi, NXf, NYf, Player, NewPlayer, NewPlay, NewBoard, Message, NX, NY):-
+jogada_neutrao(Board, NXi, NYi, NXf, NYf, Player, NewPlayer, NewPlay, NewBoard, Message, NX, NY):-
 
 	valida_jogada(Board, NXi, NYi, NXf, NYf,3),
 	atualiza_jogada(Board,NXi, NYi, NXf, NYf, NewBoard),
 	NX is NXf, NY is NYf,
-	(	
-		Player == 0,
-		NewPlayer is 0;
-		Player == 1,
-		NewPlayer is 1
-	),
+	
 	(
-		verifica_fim(NXf , NYf , NewBoard, Player),
+		verifica_fim(NXf , NYf , NewBoard, Player, NewPlayer),
 		NewPlay is 3,
 		Message = "The End"
 		;
+    ( 
+      Player == 0,
+      NewPlayer is 0;
+      Player == 1,
+      NewPlayer is 1
+    ),
 		NewPlay is 2,
 		Message = "Move Valid"
 	);
@@ -126,18 +122,13 @@ jog_poss(Board, Xi, Yi, Player, NewPlayer, NewPlay, NewBoard, Message, NX, NY):-
 	jogadas_possiveis(Board, Xi, Yi, 0, Player, NewBoard),
 	Message = "Success!".
 
-jogada_ale(Board, Player, NewPlayer, NewPlay, NewBoard, Message, NX, NY):-
+jogada_ale(Board, NXr, NYr, Player, NewPlayer, NewPlay, NewBoard, Message, NX, NY):-
 	jogada_aleatoria(Board, Xi, Yi, Xf, Yf, Player),
 	atualiza_jogada(Board, Xi, Yi, Xf, Yf, NewBoard),
 	NX is -1, NY is -1,
 	(
-		verifica_fim(Xf , Yf , NewBoard, Player),
-		(
-			Player == 1,
-			NewPlayer is 1;
-			Player == 2,
-			NewPlayer is 2
-		),
+		verifica_fim(NXr, NYr, NewBoard, Player, NewPlayer),
+		
 		NewPlay is 3,
 		Message = "The End"
 		;
@@ -157,16 +148,16 @@ jogada_ale_neutron(Board, Xi, Yi, Player, NewPlayer, NewPlay, NewBoard, Message,
 	NX is Xf,
 	NY is Yf,
 	(
-		Player == 1,
-		NewPlayer is 1;
-		Player == 2,
-		NewPlayer is 2
-	),
-	(
-		verifica_fim(Xf , Yf , NewBoard, Player),
+		verifica_fim(Xf , Yf , NewBoard, Player, NewPlayer),
 		NewPlay is 3,
 		Message = "The End"
 		;	
+    (
+    Player == 1,
+    NewPlayer is 1;
+    Player == 2,
+    NewPlayer is 2
+    ),
 		NewPlay is 2,
 		Message = "Made a Random Neutron Move"
 	).
@@ -176,17 +167,18 @@ jogada_int(Board, NXi, NYi, Player, NewPlayer, NewPlay, NewBoard, Message, NX, N
 	atualiza_jogada(Board, NXi, NYi, NXf, NYf, NewBoard),
 	NX is NXf,
 	NY is NYf,
+	
 	(
-		Player == 1,
-		NewPlayer is 1;
-		Player == 2,
-		NewPlayer is 2
-	),
-	(
-		verifica_fim(NXf , NYf , NewBoard, Player),
+		verifica_fim(NXf , NYf , NewBoard, Player, NewPlayer),
 		NewPlay is 3,
 		Message = "The End"
 		;	
+    (
+      Player == 1,
+      NewPlayer is 1;
+      Player == 2,
+      NewPlayer is 2
+    ),
 		NewPlay is 2,
 		Message = "Made an Inteligent Neutron Move"
 	).
@@ -301,14 +293,18 @@ muda_linha([Tab|Tail], Yf, E, [Tab|Tail_f]):-
         Y is Yf - 1,
         muda_linha(Tail, Y, E, Tail_f).
 
-verifica_fim(Nx,Ny,Tab,J):-
-        Nx == 0;
+verifica_fim(Nx,Ny,Tab,J,NJ):-
+        Nx == 0,
+        NJ is 1;
         J == 2,
-        verifica_encurralado(Tab, Nx, Ny) 
+        verifica_encurralado(Tab, Nx, Ny),
+        NJ is 1
         ; 
-        Nx == 4;
+        Nx == 4,
+        NJ is 2;
         J == 1,
-        verifica_encurralado(Tab, Nx, Ny).
+        verifica_encurralado(Tab, Nx, Ny),
+        NJ is 2.
 
 verifica_encurralado(Tab, NX, NY):-
         verifica_maximo(Tab, NX, NY, X0, Y0, 0, 3),

@@ -19,7 +19,6 @@ var prologBoard;
 var player;
 var nextPlay;
 var neutron;
-var firstPlay;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -76,7 +75,6 @@ XMLscene.prototype.init = function (application) {
 
 	this.lastPicked = [];
 
-	firstPlay = true;
 
 	this.board = new Board(this);
 	neutron = new Sphere(this, 1, 10, 10, 1, 1);
@@ -694,16 +692,20 @@ XMLscene.prototype.logPicking = function ()
 				var obj = this.pickResults[i][0];
 				if (obj)
 				{
-					var customId = this.pickResults[i][1];				
-					console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + this.mapPos[customId - 1]);
-					if(this.existsPos(this.mapPos[customId - 1])){
-						this.requestMove(this.lastPicked, this.mapPos[customId - 1]);
+					var customId = this.pickResults[i][1];
+					var pos = this.mapPos[customId - 1];				
+					//console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + pos);
+					this.requestRandMove();
+					/*if(this.existsPos(pos)){
+						//this.requestMove(this.lastPicked, pos);
+						
 						
 					}
-					else{
+					else if((prologBoard[pos[0]][pos[1]] == 1 && player == "1" )||
+						(prologBoard[pos[0]][pos[1]] == 2 && player == "2" )) {
 						this.lastPicked = this.mapPos[customId - 1];
 						this.curPossibleMoves(this.mapPos[customId - 1]);
-					}
+					}*/
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);
@@ -773,7 +775,7 @@ XMLscene.prototype.requestIntMove = function()
 				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
 			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
 		}
-		requestString = requestString.concat("]," + player + "]");
+		requestString = requestString.concat("]," + neutron.x + "," + neutron.y + "," + player + "]");
 	}
 	else{
 		var requestString = "[jogada_int, [";
@@ -804,7 +806,7 @@ XMLscene.prototype.requestRandMove = function()
 				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
 			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
 		}
-		requestString = requestString.concat("]," + player + "]");
+		requestString = requestString.concat("]," + neutron.x + ", " + neutron.y + ", " + player + "]");
 	}
 	else{
 		var requestString = "[jogada_ale_neutron, [";
@@ -832,14 +834,14 @@ XMLscene.prototype.requestMove = function(id1, id2)
 	this.lastPicked = [];
 	console.log("Requesting move for P" + player + "...");
 	// Compose Request String
-	if(nextPlay == "2" || firstPlay){
+	if(nextPlay == "2"){
 		var requestString = "[jogada, [";
 		for(var i = 0; i < 5; i++){
 			if(i == 0)
 				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
 			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
 		}
-		requestString = requestString.concat("]," + id1 + ", " + id2 + ", " + player + "]");
+		requestString = requestString.concat("]," + neutron.x + ", " + neutron.y + ", " + id1 + ", " + id2 + ", " + player + "]");
 	}
 	else{
 		var requestString = "[jogada_neutrao, [";
@@ -864,24 +866,22 @@ XMLscene.prototype.requestMove = function(id1, id2)
 XMLscene.prototype.moveHandler = function(data){
 	response=JSON.parse(data.target.response);
 	console.log(response.message);
-	if(response.message == "Move Valid"){
+	if(response.message != "Move Invalid"){
 		if(response.nx != "-1"){
 			neutron.x = parseInt(response.nx);
 		}
 		if(response.ny != "-1"){
 			neutron.y= parseInt(response.ny);
 		}
-		if(firstPlay){
-			firstPlay = false;
-			player = "2";
-			nextPlay = "2";
-			prologBoard = JSON.parse(response.newBoard);
-		}
-		else {
-			player = response.newPlayer;
-			nextPlay = response.newPlay;
-			prologBoard = JSON.parse(response.newBoard);	
-		}
+
+		player = response.newPlayer;
+		nextPlay = response.newPlay;
+		prologBoard = JSON.parse(response.newBoard);	
+		
+	}
+
+	if (response.message == "The End"){
+		console.log("Player " + player + " won!!");
 	}
 	
 
@@ -923,12 +923,14 @@ XMLscene.prototype.display = function () {
 	this.setDefaultAppearance();
 
 	// ---- END Background, camera and axis setup
-
-	this.logPicking();
-	this.clearPickRegistration();
-
+	
 	if (this.graph.loadedOk)
 	{
+		if(nextPlay != "3"){
+			this.logPicking();
+			this.clearPickRegistration();
+		}
+	
 		this.updateLights();
 		//initial transformations
 
