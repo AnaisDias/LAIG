@@ -84,10 +84,22 @@ XMLscene.prototype.init = function (application) {
 	neutron.y = 2;
 	neutron.moving = false;
 	this.pieces = [];
+	
+	this.canMoveMat = new CGFappearance(this);
+	this.canMoveMat.setShininess(120);
+	this.canMoveMat.setSpecular(0,255,0,1);
+	this.canMoveMat.setDiffuse(0,255,0,1);
+	this.canMoveMat.setAmbient(0,255,0,1);
 
+	this.cantMoveMat = new CGFappearance(this);
+	this.cantMoveMat.setShininess(120);
+	this.cantMoveMat.setSpecular(255,0,0,1);
+	this.cantMoveMat.setDiffuse(255,0,0,1);
+	this.cantMoveMat.setAmbient(255,0,0,1);
 	for(var i = 0; i<5; i++){
 			this.pieces[i] = [];
 			this.pieces[i].obj = new Piece(this);
+			this.pieces[i].material = this.canMoveMat;
 			this.pieces[i].x = i;
 			this.pieces[i].y = 0;
 			this.pieces[i].moving = false;
@@ -96,16 +108,13 @@ XMLscene.prototype.init = function (application) {
 	for(var i = 0; i<5; i++){
 			this.pieces[i+5] = [];
 			this.pieces[i+5].obj = new Piece(this);
+			this.pieces[i+5].material = this.cantMoveMat;
 			this.pieces[i+5].x = i;
 			this.pieces[i+5].y = 4;
 			this.pieces[i+5].moving = false;
 	}
 	
-	this.canMoveMat = new CGFappearance(this);
-	this.canMoveMat.setShininess(120);
-	this.canMoveMat.setSpecular(0,255,0,1);
-	this.canMoveMat.setDiffuse(0,255,0,1);
-	this.canMoveMat.setAmbient(0,255,0,1);
+	
 
 	//this.materials[i].setEmission(r,g,b,a);
 
@@ -854,9 +863,7 @@ XMLscene.prototype.requestMove = function(id1, id2)
 */
 XMLscene.prototype.moveHandler = function(data){
 	response=JSON.parse(data.target.response);
-
-	console.log(response);
-
+	console.log(response.message);
 	if(response.message == "Move Valid"){
 		if(response.nx != "-1"){
 			neutron.x = parseInt(response.nx);
@@ -868,12 +875,12 @@ XMLscene.prototype.moveHandler = function(data){
 			firstPlay = false;
 			player = "2";
 			nextPlay = "2";
-			prologBoard = JSON.parse(response.newBoard);	console.log(prologBoard);
+			prologBoard = JSON.parse(response.newBoard);
 		}
 		else {
 			player = response.newPlayer;
 			nextPlay = response.newPlay;
-			prologBoard = JSON.parse(response.newBoard);	console.log(prologBoard);
+			prologBoard = JSON.parse(response.newBoard);	
 		}
 	}
 	
@@ -886,7 +893,7 @@ XMLscene.prototype.moveHandler = function(data){
 */
 XMLscene.prototype.posMovesHandler = function (data){
 	response=JSON.parse(data.target.response);
-
+	console.log(response.message);
 	console.log("Possible moves: " + response.newBoard);
 	movesAllowed = JSON.parse(response.newBoard);
 
@@ -936,12 +943,27 @@ XMLscene.prototype.display = function () {
 		this.board.display();
 		this.popMatrix();
 
+		var piece = 0;
 		for(var i = 0; i < 5; i++){
-			var piece = 0;
+			
 			for(var j = 0; j < 5; j++){
 				
-				if(prologBoard[i][j] == 1 || prologBoard[i][j] == 2){
+				if(prologBoard[i][j] == 1 ){
 					this.pushMatrix();
+					this.canMoveMat.apply();
+					this.pieces[piece].x = j;
+					this.pieces[piece].y = i;
+					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
+					this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
+					this.pieces[piece].obj.display();
+					this.popMatrix();
+					piece++;
+					if(piece > 9)
+						break;
+				}
+				else if( prologBoard[i][j] == 2){
+					this.pushMatrix();
+					this.cantMoveMat.apply();
 					this.pieces[piece].x = j;
 					this.pieces[piece].y = i;
 					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
@@ -954,6 +976,8 @@ XMLscene.prototype.display = function () {
 				}
 
 			}
+			if(piece > 9)
+						break;
 		}
 		/*
 		for(piece in this.pieces){
