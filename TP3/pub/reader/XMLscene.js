@@ -14,8 +14,12 @@ function XMLscene() {
     CGFscene.call(this);
 }
 
-var currMat;
-var currTex;
+var movesAllowed;
+var prologBoard;
+var player;
+var nextPlay;
+var neutron;
+var firstPlay;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -58,25 +62,27 @@ XMLscene.prototype.init = function (application) {
 					[3,0], [3,1], [3,2], [3,3], [3,4],
 					[4,0], [4,1], [4,2], [4,3], [4,4]];
 
-	this.prologBoard = [[1,1,1,1,1],
+	prologBoard = [[1,1,1,1,1],
 						[0,0,0,0,0],
 						[0,0,3,0,0],
 						[0,0,0,0,0],
 						[2,2,2,2,2]];
 
-	this.player = 1;
+	player = "1"; //"1" or "2"
 
-	this.nextPlay = 1;
+	nextPlay = "2"; //"1" for neutron, "2" for jogada, "3" for end
 
-	this.possibleMoves = [];
+	movesAllowed = [];
+
+	this.lastPicked = [];
+
+	firstPlay = true;
 
 	this.board = new Board(this);
-	this.neutron = new Sphere(this, 1, 10, 10, 1, 1);
-	this.neutron.x = 2;
-	this.neutron.y = 2;
-	this.neutron.moving = false;
-
-
+	neutron = new Sphere(this, 1, 10, 10, 1, 1);
+	neutron.x = 2;
+	neutron.y = 2;
+	neutron.moving = false;
 	this.pieces = [];
 
 	for(var i = 0; i<5; i++){
@@ -653,7 +659,22 @@ XMLscene.prototype.updateLights = function(){
 	}
 };
 
-/**
+/*
+* Checks if pos exists in movesAllowed
+* @param pos position in this.mapPos
+* @return true if pos exists, false otherwise
+*/
+XMLscene.prototype.existsPos = function (pos){
+
+	for(var i = 0; i < movesAllowed.length; i++){
+		if(movesAllowed[i][0] == pos[0] && movesAllowed[i][1] == pos[1]){
+			return true;
+		}
+	}
+	return false;
+};
+
+/*
 * Logs the object clicked
 */
 XMLscene.prototype.logPicking = function ()
@@ -666,7 +687,14 @@ XMLscene.prototype.logPicking = function ()
 				{
 					var customId = this.pickResults[i][1];				
 					console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + this.mapPos[customId - 1]);
-					this.curPossibleMoves(this.mapPos[customId - 1]);
+					if(this.existsPos(this.mapPos[customId - 1])){
+						this.requestMove(this.lastPicked, this.mapPos[customId - 1]);
+						
+					}
+					else{
+						this.lastPicked = this.mapPos[customId - 1];
+						this.curPossibleMoves(this.mapPos[customId - 1]);
+					}
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);
@@ -676,6 +704,9 @@ XMLscene.prototype.logPicking = function ()
 
 /*
 * Function to send the request for prolog
+* @param requestString String to request
+* @param onSuccess Boolean
+* @param onError Boolean
 */
 XMLscene.prototype.postGameRequest = function (requestString, onSuccess, onError)
 {
@@ -693,40 +724,173 @@ XMLscene.prototype.postGameRequest = function (requestString, onSuccess, onError
 
 /*
 * Function to save the current possible moves in the using variables
+* @param id Position in prolog
 */
 XMLscene.prototype.curPossibleMoves = function(id)
 {
 
 	console.log("Requesting possible moves...");
 	// Compose Request String
-	var requestString = "[jog_poss," + this.prologBoard + "," + id[0] + "," + id[1] + "," + this.player + "]";
-	this.postGameRequest(requestString,posMoves);
+	var requestString = "[jog_poss, [";
+	for(var i = 0; i < 5; i++){
+		if(i == 0)
+			requestString = requestString.concat("[" + prologBoard[i] + "]"); 
+		else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
+	}
+	requestString = requestString.concat("]," + id[0] + "," + id[1] + ",");
+
+	if(nextPlay == "1"){
+		requestString = requestString.concat("3]");
+	}
+	else if(nextPlay == "2"){
+		requestString = requestString.concat(player + "]");
+	}
+	this.postGameRequest(requestString,this.posMovesHandler);
 
 };
 
 /*
-*	function to handle reply from possibleMove
+* Function to request an inteligent move from the game
 */
-function posMoves(data){
+XMLscene.prototype.requestIntMove = function()
+{
+
+	console.log("Requesting inteligent move...");
+	// Compose Request String
+	if(nextPlay == "2"){
+		var requestString = "[jogada_ale, [";
+		for(var i = 0; i < 5; i++){
+			if(i == 0)
+				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
+			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
+		}
+		requestString = requestString.concat("]," + player + "]");
+	}
+	else{
+		var requestString = "[jogada_int, [";
+		for(var i = 0; i < 5; i++){
+			if(i == 0)
+				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
+			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
+		}
+		requestString = requestString.concat("]," + neutron.x + "," + neutron.y + "," + player + "]");
+	}
+
+	this.postGameRequest(requestString,this.moveHandler);
+
+};
+
+/*
+* Function to save the current possible moves in the using variables
+*/
+XMLscene.prototype.requestRandMove = function()
+{
+
+	console.log("Requesting random move for P" + player + "...");
+	// Compose Request String
+	if(nextPlay == "2"){
+		var requestString = "[jogada_ale, [";
+		for(var i = 0; i < 5; i++){
+			if(i == 0)
+				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
+			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
+		}
+		requestString = requestString.concat("]," + player + "]");
+	}
+	else{
+		var requestString = "[jogada_ale_neutron, [";
+		for(var i = 0; i < 5; i++){
+			if(i == 0)
+				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
+			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
+		}
+		requestString = requestString.concat("]," + neutron.x + "," + neutron.y + "," + player + "]");
+	}
+
+	this.postGameRequest(requestString,this.moveHandler);
+
+};
+
+/*
+* Function to request making a move from prolog server
+* @param id1 Inicial position in prolog
+* @param id2 Final position in prolog
+*/
+XMLscene.prototype.requestMove = function(id1, id2)
+{
+
+	movesAllowed = [];
+	this.lastPicked = [];
+	console.log("Requesting move for P" + player + "...");
+	// Compose Request String
+	if(nextPlay == "2" || firstPlay){
+		var requestString = "[jogada, [";
+		for(var i = 0; i < 5; i++){
+			if(i == 0)
+				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
+			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
+		}
+		requestString = requestString.concat("]," + id1 + ", " + id2 + ", " + player + "]");
+	}
+	else{
+		var requestString = "[jogada_neutrao, [";
+		for(var i = 0; i < 5; i++){
+			if(i == 0)
+				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
+			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
+		}
+		requestString = requestString.concat("]," + id1 + ", " + id2 + ", " + player + "]");
+	}
+
+	this.postGameRequest(requestString,this.moveHandler);
+	
+
+};
+
+
+/*
+* Function to handle reply because of a move
+* @param data Variable to get the response from
+*/
+XMLscene.prototype.moveHandler = function(data){
 	response=JSON.parse(data.target.response);
 
-	console.log(response.message);
+	console.log(response);
+
+	if(response.message == "Move Valid"){
+		if(response.nx != "-1"){
+			neutron.x = parseInt(response.nx);
+		}
+		if(response.ny != "-1"){
+			neutron.y= parseInt(response.ny);
+		}
+		if(firstPlay){
+			firstPlay = false;
+			player = "2";
+			nextPlay = "2";
+			prologBoard = JSON.parse(response.newBoard);	console.log(prologBoard);
+		}
+		else {
+			player = response.newPlayer;
+			nextPlay = response.newPlay;
+			prologBoard = JSON.parse(response.newBoard);	console.log(prologBoard);
+		}
+	}
+	
+
+};
+
+/*
+* Function to handle reply from curPossMoves
+* @param data Variable to get the response from
+*/
+XMLscene.prototype.posMovesHandler = function (data){
+	response=JSON.parse(data.target.response);
 
 	console.log("Possible moves: " + response.newBoard);
-	this.possibleMoves = response.newBoard;	
-	
-	this.player = response.newPlayer;
+	movesAllowed = JSON.parse(response.newBoard);
 
-	this.nextPlay = response.newPlay;
-
-	if(response.nx != "-1"){
-		this.neutron.x=response.nx;
-	}
-	if(response.ny != "-1"){
-		this.neutron.y=response.ny;
-	}
-
-}			
+};			
 			
 /**
 * Displays the scene
@@ -756,16 +920,15 @@ XMLscene.prototype.display = function () {
 	this.logPicking();
 	this.clearPickRegistration();
 
-
 	if (this.graph.loadedOk)
 	{
 		this.updateLights();
 		//initial transformations
 
 		this.pushMatrix();
-			this.translate(this.neutron.x*3+1.5, 1, this.neutron.y*3+1.5);
+			this.translate(neutron.y*3+1.5, 1, neutron.x*3+1.5);
 			this.scale(1.5,1.5,1.5);
-			this.neutron.display();
+			neutron.display();
 		this.popMatrix();
 		this.pushMatrix();
 		this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
@@ -773,8 +936,26 @@ XMLscene.prototype.display = function () {
 		this.board.display();
 		this.popMatrix();
 
+		for(var i = 0; i < 5; i++){
+			var piece = 0;
+			for(var j = 0; j < 5; j++){
+				
+				if(prologBoard[i][j] == 1 || prologBoard[i][j] == 2){
+					this.pushMatrix();
+					this.pieces[piece].x = j;
+					this.pieces[piece].y = i;
+					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
+					this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
+					this.pieces[piece].obj.display();
+					this.popMatrix();
+					piece++;
+					if(piece > 9)
+						break;
+				}
 
-
+			}
+		}
+		/*
 		for(piece in this.pieces){
 			this.pushMatrix();
 			this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
@@ -782,7 +963,7 @@ XMLscene.prototype.display = function () {
 		//	console.debug(piece);
 			this.pieces[piece].obj.display();
 			this.popMatrix();
-		}
+		}*/
 		
 
 		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
