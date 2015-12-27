@@ -69,12 +69,19 @@ XMLscene.prototype.init = function (application) {
 
 	player = "1"; //"1" or "2"
 
+	
+
 	nextPlay = "2"; //"1" for neutron, "2" for jogada, "3" for end
 
 	movesAllowed = [];
 
 	this.lastPicked = [];
 
+
+	this.player1 = true;
+	this.player2 = false;
+	this.int1 = false;
+	this.int2 = true;
 
 	this.board = new Board(this);
 	neutron = new Sphere(this, 1, 10, 10, 1, 1);
@@ -695,19 +702,49 @@ XMLscene.prototype.logPicking = function ()
 					var customId = this.pickResults[i][1];
 					var pos = this.mapPos[customId - 1];				
 					//console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + pos);
-					this.requestRandMove();
-					/*if(this.existsPos(pos)){
-						//this.requestMove(this.lastPicked, pos);
-						
-						
+					
+					if(player == "1"){
+						if(player1){
+							if(this.existsPos(pos)){
+								this.requestMove(this.lastPicked, pos);
+							}
+							else if((prologBoard[pos[0]][pos[1]] == 1 && player == "1" )||
+								(prologBoard[pos[0]][pos[1]] == 2 && player == "2" )) {
+								this.lastPicked = this.mapPos[customId - 1];
+								this.curPossibleMoves(this.mapPos[customId - 1]);
+							}
+						}
+						else{
+							if(int1){
+								this.requestIntMove();
+							}
+							else {
+								this.requestRandMove();
+							}
+						}
 					}
-					else if((prologBoard[pos[0]][pos[1]] == 1 && player == "1" )||
-						(prologBoard[pos[0]][pos[1]] == 2 && player == "2" )) {
-						this.lastPicked = this.mapPos[customId - 1];
-						this.curPossibleMoves(this.mapPos[customId - 1]);
-					}*/
-				}
-			}
+					else {
+						if(player2){
+							if(this.existsPos(pos)){
+								this.requestMove(this.lastPicked, pos);
+							}
+							else if((prologBoard[pos[0]][pos[1]] == 1 && player == "1" )||
+								(prologBoard[pos[0]][pos[1]] == 2 && player == "2" )) {
+								this.lastPicked = this.mapPos[customId - 1];
+								this.curPossibleMoves(this.mapPos[customId - 1]);
+							}
+						}
+						else{
+							if(int2){
+								this.requestIntMove();
+							}
+							else {
+								this.requestRandMove();
+							}
+						}
+					}
+				} // end if (obj)
+			} //end for
 			this.pickResults.splice(0,this.pickResults.length);
 		}		  
 	}
@@ -766,7 +803,7 @@ XMLscene.prototype.curPossibleMoves = function(id)
 XMLscene.prototype.requestIntMove = function()
 {
 
-	console.log("Requesting inteligent move...");
+	console.log("Requesting inteligent move for P" + player + "...");
 	// Compose Request String
 	if(nextPlay == "2"){
 		var requestString = "[jogada_ale, [";
