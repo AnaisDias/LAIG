@@ -668,10 +668,11 @@ XMLscene.prototype.updateLights = function(){
 
 		var id= this.lightids[i];
 		eval("this.enabledlight = this.lightsBool"+i);
-		
+		this.lights[i].setVisible(false);
 		if(this.enabledlight){
 			this.lights[i].enable();
 			this.lights[i].update();
+
 		}
 		else if(!this.enabledlight){
 			this.lights[i].disable();
