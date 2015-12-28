@@ -20,6 +20,9 @@ var player;
 var nextPlay;
 var neutron;
 var clearBoard;
+var animating;
+var lastBoard;
+var checkBoard;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -33,6 +36,9 @@ XMLscene.prototype.init = function (application) {
 
     this.setUpdatePeriod(10);
     this.initCameras();
+
+    this.linearTime = 1;
+    this.upTime = 0.25;
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -56,42 +62,6 @@ XMLscene.prototype.init = function (application) {
 	*/
 	this.lightsBool = [];
 
-	this.mapPos = [[0,0], [0,1], [0,2], [0,3], [0,4],
-					[1,0], [1,1], [1,2], [1,3], [1,4],
-					[2,0], [2,1], [2,2], [2,3], [2,4],
-					[3,0], [3,1], [3,2], [3,3], [3,4],
-					[4,0], [4,1], [4,2], [4,3], [4,4]];
-
-	prologBoard = [[1,1,1,1,1],
-						[0,0,0,0,0],
-						[0,0,3,0,0],
-						[0,0,0,0,0],
-						[2,2,2,2,2]];
-
-	player = "1"; //"1" or "2"
-
-	
-
-	nextPlay = "2"; //"1" for neutron, "2" for jogada, "3" for end
-
-	movesAllowed = [];
-
-	this.lastPicked = [];
-
-	clearBoard = false;
-
-	this.player1 = true;
-	this.player2 = false;
-	this.int1 = false;
-	this.int2 = true;
-
-	this.board = new Board(this);
-	neutron = new Sphere(this, 1, 10, 10, 1, 1);
-	neutron.x = 2;
-	neutron.y = 2;
-	neutron.moving = false;
-	this.pieces = [];
-	
 	this.p1Mat = new CGFappearance(this);
 	this.p1Mat.setShininess(60);
 	this.p1Mat.setSpecular(0,255,0,1);
@@ -109,24 +79,74 @@ XMLscene.prototype.init = function (application) {
 	this.possMoveSquare.setSpecular(0,0,255,1);
 	this.possMoveSquare.setDiffuse(0,0,255,1);
 	this.possMoveSquare.setAmbient(0,0,255,1);
+	
+
+	this.mapPos = [[0,0], [0,1], [0,2], [0,3], [0,4],
+					[1,0], [1,1], [1,2], [1,3], [1,4],
+					[2,0], [2,1], [2,2], [2,3], [2,4],
+					[3,0], [3,1], [3,2], [3,3], [3,4],
+					[4,0], [4,1], [4,2], [4,3], [4,4]];
+
+	prologBoard = [[1,1,1,1,1],
+						[0,0,0,0,0],
+						[0,0,3,0,0],
+						[0,0,0,0,0],
+						[2,2,2,2,2]];
+
+	lastBoard = prologBoard;
+
+	player = "1"; //"1" or "2"
+
+	nextPlay = "2"; //"1" for neutron, "2" for jogada, "3" for end
+
+	movesAllowed = [];
+
+	this.lastPicked = [];
+
+	clearBoard = false;
+
+	checkBoard = true;
+
+	this.player1 = true;
+	this.player2 = false;
+	this.int1 = false;
+	this.int2 = true;
+
+	this.board = new Board(this);
+
+	neutron = new Sphere(this, 1, 10, 10, 1, 1);
+	neutron.x = 2;
+	neutron.y = 2;
+	neutron.moving = false;
+	neutron.animation = [];
+	neutron.animation[0] = new LinearAnimation(this, this.upTime, [[0,0,0],[0,2,0]]);
+	neutron.animation[2] = new LinearAnimation(this, this.upTime, [[0,0,0],[0,-2,0]]);
+
+	this.pieces = [];
 
 	for(var i = 0; i<5; i++){
 			this.pieces[i] = [];
 			this.pieces[i].obj = new Piece(this);
+			this.pieces[i].material = this.p1Mat;
 			this.pieces[i].x = i;
 			this.pieces[i].y = 0;
+			this.pieces[i].animation = [];
+			this.pieces[i].animation[0] = new LinearAnimation(this, this.upTime, [[0,0,0],[0,2,0]]);
+			this.pieces[i].animation[2] = new LinearAnimation(this, this.upTime, [[0,0,0],[0,-2,0]]);
 			this.pieces[i].moving = false;
 	}
 
 	for(var i = 0; i<5; i++){
 			this.pieces[i+5] = [];
 			this.pieces[i+5].obj = new Piece(this);
+			this.pieces[i+5].material = this.p2Mat;
 			this.pieces[i+5].x = i;
 			this.pieces[i+5].y = 4;
+			this.pieces[i+5].animation = [];
+			this.pieces[i+5].animation[0] = new LinearAnimation(this, this.upTime, [[0,0,0],[0,2,0]]);
+			this.pieces[i+5].animation[2] = new LinearAnimation(this, this.upTime, [[0,0,0],[0,-2,0]]);
 			this.pieces[i+5].moving = false;
 	}
-	
-	
 
 	//this.materials[i].setEmission(r,g,b,a);
 
@@ -917,18 +937,21 @@ XMLscene.prototype.requestMove = function(id1, id2)
 XMLscene.prototype.moveHandler = function(data){
 	response=JSON.parse(data.target.response);
 	console.log(response.message);
-	if(response.message != "Move Invalid"){
+	if(response.message != "Move Invalid"){/*
 		if(response.nx != "-1"){
 			neutron.x = parseInt(response.nx);
 		}
 		if(response.ny != "-1"){
 			neutron.y= parseInt(response.ny);
-		}
+		}*/
 
 		player = response.newPlayer;
 		nextPlay = response.newPlay;
+		lastBoard = prologBoard;
+		console.log(lastBoard.toString());
 		prologBoard = JSON.parse(response.newBoard);	
-		
+		console.log(prologBoard.toString());
+		animating = true;
 	}
 
 	if (response.message == "The End"){
@@ -949,7 +972,47 @@ XMLscene.prototype.posMovesHandler = function (data){
 	movesAllowed = JSON.parse(response.newBoard);
 	clearBoard = true;
 };			
-			
+	
+/**
+* Creates a linear animation to be used in update function
+*/
+XMLscene.prototype.checkBoard = function () {
+
+	var xi;
+	var yi;
+	var xf;
+	var yf;
+
+	for(var i = 0; i < 5; i++){
+		for (var j = 0; j < 5; j++){
+			if(lastBoard[i][j] != prologBoard[i][j]){
+				if(lastBoard[i][j] == 0){
+					xf = i;
+					yf = j;
+				}
+				else if(prologBoard[i][j] == 0){
+					xi = i;
+					yi = j;
+				}
+			}
+		}
+	}
+
+	if(neutron.x == xi && neutron.y == yi){
+		neutron.animation[1] = new LinearAnimation(this, this.linearTime, [[0,0,0],[(yf-yi)*3, 0, (xf-xi)*3]]);
+		neutron.moving = true;
+	}
+	else{
+		for (var piece in this.pieces){
+			if(this.pieces[piece].x == yi && this.pieces[piece].y == xi){
+				this.pieces[piece].animation[1] = new LinearAnimation(this, this.linearTime, [[0,0,0],[(yf-yi)*3, 0, (xf-xi)*3]]);
+				this.pieces[piece].moving = true;
+				break;
+			}
+		}
+	}
+};		
+
 /**
 * Displays the scene
 */
@@ -975,12 +1038,14 @@ XMLscene.prototype.display = function () {
 
 	// ---- END Background, camera and axis setup
 	
-	if (this.graph.loadedOk)
+	if (this.graph.loadedOk && !animating)
 	{
 		if(nextPlay != "3"){
 			this.logPicking();
-			this.clearPickRegistration();
 		}
+
+		this.clearPickRegistration();
+
 		if(clearBoard){	
 			this.board.clearMat();
 			clearBoard = false;
@@ -993,14 +1058,9 @@ XMLscene.prototype.display = function () {
 		//initial transformations
 
 		this.pushMatrix();
-			this.translate(neutron.y*3+1.5, 1, neutron.x*3+1.5);
-			this.scale(1.5,1.5,1.5);
-			neutron.display();
-		this.popMatrix();
-		this.pushMatrix();
-		this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
-		this.materials["floor-mat"].apply();
-		this.board.display();
+			this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
+			this.materials["floor-mat"].apply();
+			this.board.display();
 		this.popMatrix();
 
 		var piece = 0;
@@ -1009,45 +1069,52 @@ XMLscene.prototype.display = function () {
 			for(var j = 0; j < 5; j++){
 				
 				if(prologBoard[i][j] == 1 ){
+
 					this.pushMatrix();
-					this.p1Mat.apply();
-					this.pieces[piece].x = j;
-					this.pieces[piece].y = i;
-					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
-					this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
-					this.pieces[piece].obj.display();
+						this.p1Mat.apply();
+						this.pieces[piece].material = this.p1Mat;
+						this.pieces[piece].x = j;
+						this.pieces[piece].y = i;
+						this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
+						this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
+						this.pieces[piece].obj.display();
 					this.popMatrix();
+
 					piece++;
 					if(piece > 9)
 						break;
 				}
 				else if( prologBoard[i][j] == 2){
+
 					this.pushMatrix();
-					this.p2Mat.apply();
-					this.pieces[piece].x = j;
-					this.pieces[piece].y = i;
-					this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
-					this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
-					this.pieces[piece].obj.display();
+						this.p2Mat.apply();
+						this.pieces[piece].material = this.p2Mat;
+						this.pieces[piece].x = j;
+						this.pieces[piece].y = i;
+						this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
+						this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
+						this.pieces[piece].obj.display();
 					this.popMatrix();
+
 					piece++;
 					if(piece > 9)
 						break;
 				}
 
+				else if( prologBoard[i][j] == 3){
+					this.pushMatrix();
+						this.materials["floor-mat"].apply();
+						neutron.y = j;
+						neutron.x = i;
+						this.translate(neutron.y*3+1.5, 1, neutron.x*3+1.5);
+						this.scale(1.5,1.5,1.5);
+						neutron.display();
+					this.popMatrix();
+				}
 			}
 			if(piece > 9)
 						break;
 		}
-		/*
-		for(piece in this.pieces){
-			this.pushMatrix();
-			this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
-			this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5);
-		//	console.debug(piece);
-			this.pieces[piece].obj.display();
-			this.popMatrix();
-		}*/
 		
 
 		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
@@ -1062,6 +1129,71 @@ XMLscene.prototype.display = function () {
 		//this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
 
+	}
+	else if(animating){
+		
+		if(checkBoard){
+			this.checkBoard();
+			checkBoard = false;
+		}
+		this.board.clearMat();
+
+		this.clearPickRegistration();
+
+		this.updateLights();
+		//initial transformations
+
+		this.pushMatrix();
+			this.materials["floor-mat"].apply();
+			this.translate(neutron.y*3+1.5, 1, neutron.x*3+1.5);
+			for(var a in neutron.animation){
+				if(neutron.animation[a].ended){
+					this.translate(neutron.animation[a].tx , neutron.animation[a].ty ,neutron.animation[a].tz);
+				}
+				else if(neutron.animation[a].current){
+					this.translate(neutron.animation[a].tx , neutron.animation[a].ty ,neutron.animation[a].tz);
+				}
+			}
+			this.scale(1.5,1.5,1.5);
+			neutron.display();
+		this.popMatrix();
+
+		this.pushMatrix();
+			this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
+			this.materials["floor-mat"].apply();
+			this.board.display();
+		this.popMatrix();
+
+		for(var piece in this.pieces){
+			this.pushMatrix();
+				this.pieces[piece].material.apply();
+
+				this.translate(this.pieces[piece].x*3+1.5, 0.5, this.pieces[piece].y*3+1.5); 
+				if(this.pieces[piece].moving){
+					for(var a in this.pieces[piece].animation){
+						if(this.pieces[piece].animation[a].ended){
+							this.translate(this.pieces[piece].animation[a].tx , this.pieces[piece].animation[a].ty ,this.pieces[piece].animation[a].tz);
+						}
+						else if(this.pieces[piece].animation[a].current){
+							this.translate(this.pieces[piece].animation[a].tx , this.pieces[piece].animation[a].ty ,this.pieces[piece].animation[a].tz);
+						}
+					}
+				}
+
+				this.pieces[piece].obj.display();
+			this.popMatrix();
+		}
+
+		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
+		this.rotate(degToRad(this.graph.initials.rotations[0]), 1,0,0);
+		this.rotate(degToRad(this.graph.initials.rotations[1]), 0,1,0);
+		this.rotate(degToRad(this.graph.initials.rotations[2]), 0,0,1);
+		this.scale(this.graph.initials.sx, this.graph.initials.sy, this.graph.initials.sz);
+
+
+		//nodes
+		this.setDescMaterialsTextures(this.graph.nodes[this.graph.scene_id]);
+		//this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	}	
 
 };
@@ -1071,6 +1203,68 @@ XMLscene.prototype.display = function () {
 * @param {int} currTime - Current time in milliseconds
 */
 XMLscene.prototype.update = function (currTime){
+	
+	if(animating){
+
+		if(neutron.moving){
+			if(neutron.animation[2].ended){
+				neutron.moving = false;
+				animating = false;
+			}
+			else{
+
+				for(var j in neutron.animation){
+
+					if(neutron.animation[j].current){
+						neutron.animation[j].update(currTime);
+						break;
+					}
+					else if(!neutron.animation[j].ended){
+						neutron.animation[j].current = true;
+						neutron.animation[j].update(currTime);
+						break;
+					}
+				}
+			}
+		}
+
+		for(var i in this.pieces){
+			if(this.pieces[i].moving){
+				if(this.pieces[i].animation[2].ended){
+					this.pieces[i].moving = false;
+					animating = false;
+				}
+				else{
+					for(var j in this.pieces[i].animation){
+						if(this.pieces[i].animation[j].current){
+							this.pieces[i].animation[j].update(currTime);
+							break;
+						}
+						else if(!this.pieces[i].animation[j].ended){
+							this.pieces[i].animation[j].current = true;
+							this.pieces[i].animation[j].update(currTime);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	else{
+		if(!checkBoard){
+			for(var j in neutron.animation){
+				neutron.animation[j].current = false;
+				neutron.animation[j].ended = false;
+			}
+			for(var i in this.pieces){
+				for(var j in this.pieces[i].animation){
+					this.pieces[i].animation[j].current = false;
+					this.pieces[i].animation[j].ended = false;
+				}
+			}
+			checkBoard = true;
+		}
+	}
 	
 	for(var i in this.graph.nodes){
 
