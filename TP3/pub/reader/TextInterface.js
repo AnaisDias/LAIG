@@ -34,8 +34,8 @@ function TextInterface(scene, deltaX, deltaY, type) {
     }
 
     else if(this.type == "diff"){
-        this.button1 = 'Human vs Random Machine';
-        this.button2 = 'Human vs Intelligent Machine';
+        this.button1 = 'Random Machine';
+        this.button2 = 'Intelligent Machine';
     }
 
     else if(this.type == "mode"){

@@ -26,6 +26,7 @@ var checkBoard;
 var finished;
 var winner;
 var waiting;
+var movie;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -106,6 +107,8 @@ XMLscene.prototype.init = function (application) {
 
 	this.lastPicked = [];
 
+	movie = [];
+
 	clearBoard = false;
 
 	checkBoard = true;
@@ -172,7 +175,6 @@ XMLscene.prototype.init = function (application) {
 	this.hvhmode = false;
 	this.hvmmode = false;
 	this.mvmmode = false;
-	this.randomMachine=false;
 	this.intelMachine=false;
 
 };
@@ -741,6 +743,75 @@ XMLscene.prototype.existsPos = function (pos){
 	return false;
 };
 
+
+
+/*
+* Function to undo one move
+*/
+XMLscene.prototype.undo = function()
+{
+	if(movie.length > 0){
+		prologBoard = movie.pop();
+		lastBoard = prologBoard;
+		if(nextPlay == "2"){
+			nextPlay = "1";
+		}
+		else if(nextPlay == "1"){
+			nextPlay = "2";
+			if(player == "2")
+				player = "1";
+			else player = "2";
+		}
+		
+	}
+	this.board.clearMat();
+}
+
+/*
+* Function to reset the game
+*/
+XMLscene.prototype.resetGame = function ()
+{
+
+	prologBoard = [[1,1,1,1,1],
+						[0,0,0,0,0],
+						[0,0,3,0,0],
+						[0,0,0,0,0],
+						[2,2,2,2,2]];
+
+	lastBoard = prologBoard;
+
+	player = "1"; //"1" or "2"
+
+	nextPlay = "2"; //"1" for neutron, "2" for jogada, "3" for end
+
+	movesAllowed = [];
+
+	this.lastPicked = [];
+
+	movie = [];
+
+	clearBoard = false;
+
+	checkBoard = true;
+
+	waiting = false;
+
+	animating = false;
+
+	this.activeStartInterface = true;
+	this.activeDifficultyInterface = false;
+	this.activeModeInterface = false;
+	this.activeEndInterface = false;
+
+	this.winner = null;
+	this.finished = false;
+	this.hvhmode = false;
+	this.hvmmode = false;
+	this.mvmmode = false;
+	this.intelMachine=false;
+}
+
 /*
 * Logs the object clicked
 */
@@ -767,12 +838,10 @@ if(!waiting && !animating){
 							this.startReplay=true;
 						}
 						if(customId == 52){
-							this.randomMachine = true;
 							this.intelMachine = false;
 							this.activeDifficultyInterface=false;
 						}
 						if(customId == 53){
-							this.randomMachine=false;
 							this.intelMachine=true;
 							this.activeDifficultyInterface=false;
 						}
@@ -798,16 +867,16 @@ if(!waiting && !animating){
 							this.activeDifficultyInterface=true;
 						}
 						if(customId == 57){
-							//undo function
+							this.undo();//undo function
 						}
 						if(customId == 58){
-							//reset function
+							this.resetGame();//reset function
 						}
 					}
-					else{
-					if(player == "1"){
-						if(this.player1){
-							if(this.existsPos(pos)){
+					else if(!this.activeDifficultyInterface && !this.activeModeInterface && !this.activeStartInterface && !this.activeEndInterface){
+						if(player == "1"){
+							if(this.hvhmode || this.hvmmode){
+								if(this.existsPos(pos)){
 								this.requestMove(this.lastPicked, pos);
 								}
 								else if (nextPlay == "1"){
@@ -818,9 +887,9 @@ if(!waiting && !animating){
 									this.lastPicked = this.mapPos[customId - 1];
 									this.curPossibleMoves(this.mapPos[customId - 1]);
 								}
-							}
+								}
 							else{
-								if(this.int1){
+								if(this.intelMachine){
 									this.requestIntMove();
 								}
 								else {
@@ -829,7 +898,7 @@ if(!waiting && !animating){
 							}
 						}
 						else {
-							if(this.player2){
+							if(this.hvhmode){
 								if(this.existsPos(pos)){
 									this.requestMove(this.lastPicked, pos);
 								}
@@ -843,7 +912,7 @@ if(!waiting && !animating){
 								}
 							}
 							else{
-								if(this.int2){
+								if(this.intelMachine){
 									this.requestIntMove();
 								}
 								else {
@@ -1004,9 +1073,9 @@ XMLscene.prototype.requestMove = function(id1, id2)
 				requestString = requestString.concat("[" + prologBoard[i] + "]"); 
 			else requestString = requestString.concat(",[" + prologBoard[i] + "]"); 
 		}
-		requestString = requestString.concat("]," + id1 + ", " + id2 + ", " + player + "]");
+		requestString = requestString.concat("]," + id1 + "," + id2 + "," + player + "]");
 	}
-
+	console.log(requestString);
 	this.postGameRequest(requestString,this.moveHandler);
 	
 
@@ -1020,20 +1089,13 @@ XMLscene.prototype.requestMove = function(id1, id2)
 XMLscene.prototype.moveHandler = function(data){
 	response=JSON.parse(data.target.response);
 	console.log(response.message);
-	if(response.message != "Move Invalid"){/*
-		if(response.nx != "-1"){
-			neutron.x = parseInt(response.nx);
-		}
-		if(response.ny != "-1"){
-			neutron.y= parseInt(response.ny);
-		}*/
+	if(response.message != "Move Invalid"){
 
 		player = response.newPlayer;
 		nextPlay = response.newPlay;
 		lastBoard = prologBoard;
-		console.log(lastBoard.toString());
-		prologBoard = JSON.parse(response.newBoard);	
-		console.log(prologBoard.toString());
+		movie.push(lastBoard);
+		prologBoard = JSON.parse(response.newBoard);
 		animating = true;
 	}
 
@@ -1131,10 +1193,8 @@ XMLscene.prototype.display = function () {
 			this.winner=winner;
 			this.activeEndInterface=true;
 		}
-		if(nextPlay != "3"){
-			this.logPicking();
-		}
-
+		
+		this.logPicking();
 		this.clearPickRegistration();
 
 		if(clearBoard){	

@@ -99,20 +99,20 @@ jogada_neutrao(Board, NXi, NYi, NXf, NYf, Player, NewPlayer, NewPlay, NewBoard, 
 		Message = "The End"
 		;
     ( 
-      Player == 0,
-      NewPlayer is 0;
       Player == 1,
-      NewPlayer is 1
+      NewPlayer is 1;
+      Player == 2,
+      NewPlayer is 2
     ),
 		NewPlay is 2,
 		Message = "Move Valid"
 	);
 	NewPlay is 1,
 	(
-		Player == 0,
-		NewPlayer is 0;
 		Player == 1,
-		NewPlayer is 1
+		NewPlayer is 1;
+		Player == 2,
+		NewPlayer is 2
 	),
 	NX is -1, NY is -1,
 	NewBoard is -1,
