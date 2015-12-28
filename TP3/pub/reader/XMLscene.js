@@ -23,6 +23,8 @@ var clearBoard;
 var animating;
 var lastBoard;
 var checkBoard;
+var finished;
+var winner;
 var waiting;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -153,6 +155,25 @@ XMLscene.prototype.init = function (application) {
 
 	//this.materials[i].setEmission(r,g,b,a);
 
+	this.textinterface = new TextInterface(this, 10,10,"start");
+	this.modeinterface = new TextInterface(this,10,10,"mode");
+	this.difficultyinterface = new TextInterface(this, 10, 10, "diff");
+	this.endinterface = new TextInterface(this, 10, 10, "end");
+	this.undointerface = new TextInterface(this, 10,10, "undo");
+	this.resetinterface = new TextInterface(this, 10, 10, "reset");
+	
+	this.activeStartInterface = true;
+	this.activeDifficultyInterface = false;
+	this.activeModeInterface = false;
+	this.activeEndInterface = false;
+
+	this.winner = null;
+	this.finished = false;
+	this.hvhmode = false;
+	this.hvmmode = false;
+	this.mvmmode = false;
+	this.randomMachine=false;
+	this.intelMachine=false;
 
 };
 
@@ -220,6 +241,7 @@ XMLscene.prototype.initLights = function () {
 	}
 
 	this.lightsloaded = true;
+
  
 };
 
@@ -724,21 +746,69 @@ XMLscene.prototype.existsPos = function (pos){
 */
 XMLscene.prototype.logPicking = function ()
 {
-	if(!waiting && !animating){
-		if (this.pickMode == true) {
-			if (this.pickResults != null && this.pickResults.length > 0) {
-				for (var i=0; i< this.pickResults.length; i++) {
-					var obj = this.pickResults[i][0];
-					if (obj)
-					{
-						var customId = this.pickResults[i][1];
-						var pos = this.mapPos[customId - 1];				
-						//console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + pos);
-						
-						if(player == "1"){
-							if(this.player1){
-								if(this.existsPos(pos)){
-									this.requestMove(this.lastPicked, pos);
+if(!waiting && !animating){
+	if (this.pickMode == false) {
+		if (this.pickResults != null && this.pickResults.length > 0) {
+			for (var i=0; i< this.pickResults.length; i++) {
+				var obj = this.pickResults[i][0];
+				if (obj)
+				{
+					var customId = this.pickResults[i][1];
+					var pos = this.mapPos[customId - 1];				
+					//console.log("Picked object: " + obj + ", with pick id " + customId + " which will have pos: " + pos);
+					
+					if(customId >= 50){
+						if(customId == 50){
+							console.log("Game started");
+							this.activeStartInterface=false;
+							this.activeModeInterface=true;
+						}
+						if(customId == 51){
+							this.startReplay=true;
+						}
+						if(customId == 52){
+							this.randomMachine = true;
+							this.intelMachine = false;
+							this.activeDifficultyInterface=false;
+						}
+						if(customId == 53){
+							this.randomMachine=false;
+							this.intelMachine=true;
+							this.activeDifficultyInterface=false;
+						}
+						if(customId == 54){
+							this.hvhmode = true;
+							this.hvmmode = false;
+							this.mvmmode = false;
+							this.activeModeInterface=false;
+							this.activeDifficultyInterface=true;
+						}
+						if(customId== 55){
+							this.hvhmode = false;
+							this.hvmmode = true;
+							this.mvmmode = false;
+							this.activeModeInterface=false;
+							this.activeDifficultyInterface=true;
+						}
+						if(customId== 56){
+							this.hvhmode = false;
+							this.hvmmode = false;
+							this.mvmmode = true;
+							this.activeModeInterface=false;
+							this.activeDifficultyInterface=true;
+						}
+						if(customId == 57){
+							//undo function
+						}
+						if(customId == 58){
+							//reset function
+						}
+					}
+					else{
+					if(player == "1"){
+						if(this.player1){
+							if(this.existsPos(pos)){
+								this.requestMove(this.lastPicked, pos);
 								}
 								else if (nextPlay == "1"){
 									this.lastPicked = JSON.parse("[" + neutron.x + "," + neutron.y + "]");
@@ -782,6 +852,7 @@ XMLscene.prototype.logPicking = function ()
 							}
 						}
 					}
+				}
 				} // end if (obj)
 			} //end for
 			this.pickResults.splice(0,this.pickResults.length);
@@ -968,6 +1039,9 @@ XMLscene.prototype.moveHandler = function(data){
 
 	if (response.message == "The End"){
 		console.log("Player " + player + " won!!");
+		winner = player;
+		finished=true;
+		console.debug(this);
 	}
 	waiting = false;
 	clearBoard = true;
@@ -1053,6 +1127,10 @@ XMLscene.prototype.display = function () {
 	
 	if (this.graph.loadedOk && !animating)
 	{
+		if(finished){
+			this.winner=winner;
+			this.activeEndInterface=true;
+		}
 		if(nextPlay != "3"){
 			this.logPicking();
 		}
@@ -1122,6 +1200,87 @@ XMLscene.prototype.display = function () {
 				}
 			}
 		}
+		/*
+
+
+		for(piece in this.pieces){
+			this.pushMatrix();
+			this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
+			this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5);
+		//	console.debug(piece);
+			this.pieces[piece].obj.display();
+			this.popMatrix();
+		}*/
+
+			this.pushMatrix();
+				if(this.player1){
+					if(this.activeStartInterface){
+					this.translate(5,3,15);
+					this.textinterface.display();
+					}
+					else{
+						if(this.activeModeInterface){
+							this.translate(5,4,15);
+							this.modeinterface.display();
+						}
+						else if(this.activeDifficultyInterface){
+							this.translate(5,4,15);
+							this.difficultyinterface.display();
+						}
+						else if(this.activeEndInterface){
+							this.translate(5,3,15);
+							this.endinterface.display();
+						}
+						else{
+							this.pushMatrix();
+							this.translate(-3,3,15);
+							this.undointerface.display();
+							this.popMatrix();
+							this.pushMatrix();
+							this.translate(-3,2,15);
+							this.resetinterface.display();
+							this.popMatrix();
+						}
+					}
+					
+				}
+				else if(this.player2){
+					if(this.activeStartInterface){
+					this.rotate(degToRad(180),0,1,0);
+					this.translate(5,3,0);
+					this.textinterface.display();
+					}
+					else{
+						if(this.activeModeInterface){
+							this.rotate(degToRad(180),0,1,0);
+							this.translate(5,4,0);
+							this.modeinterface.display();
+						}
+						else if(this.activeDifficultyInterface){
+							this.rotate(degToRad(180),0,1,0);
+							this.translate(5,4,0);
+							this.difficultyinterface.display();
+						}
+						else if(this.activeEndInterface){
+							this.rotate(degToRad(180),0,1,0);
+							this.translate(5,3,0);
+							this.endinterface.display();
+						}
+						else{
+							this.pushMatrix();
+							this.rotate(degToRad(180),0,1,0);
+							this.translate(-3,3,0);
+							this.undointerface.display();
+							this.popMatrix();
+							this.pushMatrix();
+							this.rotate(degToRad(180),0,1,0);
+							this.translate(-3,2,0);
+							this.resetinterface.display();
+							this.popMatrix();
+						}
+					}
+				}
+			this.popMatrix();
 		
 
 		this.translate(this.graph.initials.tx, this.graph.initials.ty, this.graph.initials.tz);
@@ -1129,6 +1288,7 @@ XMLscene.prototype.display = function () {
 		this.rotate(degToRad(this.graph.initials.rotations[1]), 0,1,0);
 		this.rotate(degToRad(this.graph.initials.rotations[2]), 0,0,1);
 		this.scale(this.graph.initials.sx, this.graph.initials.sy, this.graph.initials.sz);
+
 
 
 		//nodes
