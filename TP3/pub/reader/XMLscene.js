@@ -1397,6 +1397,7 @@ XMLscene.prototype.display = function () {
 
 		//nodes
 		this.setDescMaterialsTextures(this.graph.nodes[this.graph.scene_id]);
+		this.clearPickRegistration();
 		this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
 
@@ -1558,6 +1559,7 @@ XMLscene.prototype.display = function () {
 
 		//nodes
 		this.setDescMaterialsTextures(this.graph.nodes[this.graph.scene_id]);
+		this.clearPickRegistration();
 		this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
 
@@ -1627,6 +1629,7 @@ XMLscene.prototype.display = function () {
 
 		//nodes
 		this.setDescMaterialsTextures(this.graph.nodes[this.graph.scene_id]);
+		this.clearPickRegistration();
 		this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	}	
 
