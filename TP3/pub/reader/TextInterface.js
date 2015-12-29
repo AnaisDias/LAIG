@@ -31,6 +31,7 @@ function TextInterface(scene, deltaX, deltaY, type) {
     else if(this.type == "end"){
         this.text = 'Player ' + this.scene.winner + ' wins!';
         this.button = 'Replay game';
+        this.button1 = 'Watch Replay';
     }
 
     else if(this.type == "diff"){
@@ -126,6 +127,9 @@ TextInterface.prototype.display = function () {
             this.scene.registerForPick(51,this.plane);
             this.scene.translate(0,-1,0);
             this.showString(this.button);
+            this.scene.registerForPick(59,this.plane);
+            this.scene.translate(0,-1,0);
+            this.showString(this.button1);
         }
         else if(this.type == "diff"){
             this.showString(this.title);
