@@ -1449,8 +1449,6 @@ XMLscene.prototype.display = function () {
 		this.popMatrix();
 
 		this.pushMatrix();
-			//this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
-			//this.materials["floor-mat"].apply();
 			this.materials[this.boardoptions.material].setTexture(this.texture[this.boardoptions.texture]);
 			this.materials[this.boardoptions.material];
 			this.board.display();
