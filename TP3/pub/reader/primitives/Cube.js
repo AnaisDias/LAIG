@@ -1,7 +1,7 @@
 function Cube(scene) {
 	CGFobject.call(this,scene);
 
-	this.rekt = new Rectangle(scene, 0, 1, 0, 1, 1, 1);
+	this.rekt = new Rectangle(scene, -0.5, 0.5, 0.5, -0.5, 1, 1);
 	
 	this.rekt.initBuffers();
 };
@@ -46,4 +46,4 @@ Cube.prototype.display = function() {
     this.scene.translate(0, 0, 0.5);
     this.rekt.display();
     this.scene.popMatrix();
-}
+};
