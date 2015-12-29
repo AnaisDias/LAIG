@@ -52,7 +52,7 @@ XMLscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
     this.enableTextures(true);
 
-    this.camera.zoom(-100);
+    this.camera.zoom(-20);
 	
    	this.gl.frontFace(this.gl.CCW);
    	this.gl.cullFace(this.gl.BACK);
@@ -243,7 +243,7 @@ XMLscene.prototype.initLights = function () {
  * Initializes the camera of the scene
  */
 XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(5, 10, 35), vec3.fromValues(0, 0, 0));
 
 };
 
@@ -924,6 +924,8 @@ XMLscene.prototype.logPicking = function ()
 								this.hvhmode = true;
 								this.hvmmode = false;
 								this.mvmmode = false;
+								this.player1 = true;
+								this.player2 = true;
 								this.activeModeInterface=false;
 								this.activeDifficultyInterface=true;
 							}
@@ -931,6 +933,8 @@ XMLscene.prototype.logPicking = function ()
 								this.hvhmode = false;
 								this.hvmmode = true;
 								this.mvmmode = false;
+								this.player1 = true;
+								this.player2 = false;
 								this.activeModeInterface=false;
 								this.activeDifficultyInterface=true;
 							}
@@ -938,6 +942,8 @@ XMLscene.prototype.logPicking = function ()
 								this.hvhmode = false;
 								this.hvmmode = false;
 								this.mvmmode = true;
+								this.player1 = false;
+								this.player2 = false;
 								this.activeModeInterface=false;
 								this.activeDifficultyInterface=true;
 							}
@@ -1315,6 +1321,7 @@ XMLscene.prototype.display = function () {
 					this.pushMatrix();
 						this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
 						this.materials[this.pieces[piece].material].apply();
+						this.graph.game.piece.p1.material;
 						this.pieces[piece].x = j;
 						this.pieces[piece].y = i;
 						this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
