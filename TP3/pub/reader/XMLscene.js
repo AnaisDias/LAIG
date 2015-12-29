@@ -289,6 +289,50 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.initLights();
 
+	for(var i=0; i<5; i++){
+		if(this.graph.game.piece.type == "ufo"){
+			this.pieces[i].obj = this.pieceufo;
+		}
+		else if(this.graph.game.piece.type == "sphere"){
+			this.pieces[i].obj = this.piecesphere;
+		}
+
+		else if(this.graph.game.piece.type == "cube"){
+			this.pieces[i].obj = this.piececube;
+		}
+
+
+		this.pieces[i].material = this.graph.game.piece.p1.material;
+		this.pieces[i].texture = this.graph.game.piece.p1.texture;
+	}
+
+	for(var i=5; i<10; i++){
+		if(this.graph.game.piece.type == "ufo"){
+			this.pieces[i].obj = this.pieceufo;
+		}
+		else if(this.graph.game.piece.type == "sphere"){
+			this.pieces[i].obj = this.piecesphere;
+		}
+
+		else if(this.graph.game.piece.type == "cube"){
+			this.pieces[i].obj = this.piececube;
+		}
+
+
+		this.pieces[i].material = this.graph.game.piece.p2.material;
+		this.pieces[i].texture = this.graph.game.piece.p2.texture;
+	}
+
+	this.boardoptions = [];
+
+	this.boardoptions.material = this.graph.game.board.material;
+	this.boardoptions.texture = this.graph.game.board.texture;
+
+	this.neutronoptions = [];
+	this.neutronoptions.material = this.graph.game.neutron.material;
+	this.neutronoptions.texture = this.graph.game.neutron.texture;
+
+
 	this.axis=new CGFaxis(this, this.graph.initials.rlength);
 
 	//Illumination
@@ -1220,6 +1264,8 @@ XMLscene.prototype.display = function () {
 		//initial transformations
 
 		this.pushMatrix();
+			this.materials[this.boardoptions.material].setTexture(this.texture[this.board.texture]);
+			this.materials[this.boardoptions.material].apply();
 			//this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
 			//this.materials["floor-mat"].apply();
 			this.board.display();
@@ -1233,8 +1279,10 @@ XMLscene.prototype.display = function () {
 				if(prologBoard[i][j] == 1 ){
 
 					this.pushMatrix();
-						this.p1Mat.apply();
-						this.pieces[piece].material = this.p1Mat;
+						this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
+						this.materials[this.pieces[piece].material].apply();
+						//this.p1Mat.apply();
+						//this.pieces[piece].material = this.p1Mat;
 						this.pieces[piece].x = j;
 						this.pieces[piece].y = i;
 						this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
@@ -1247,8 +1295,10 @@ XMLscene.prototype.display = function () {
 				else if( prologBoard[i][j] == 2){
 
 					this.pushMatrix();
-						this.p2Mat.apply();
-						this.pieces[piece].material = this.p2Mat;
+						this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
+						this.materials[this.pieces[piece].material].apply();
+						//this.p2Mat.apply();
+						//this.pieces[piece].material = this.p2Mat;
 						this.pieces[piece].x = j;
 						this.pieces[piece].y = i;
 						this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
@@ -1261,6 +1311,8 @@ XMLscene.prototype.display = function () {
 
 				else if( prologBoard[i][j] == 3){
 					this.pushMatrix();
+						this.materials[this.neutronoptions.material].setTexture(this.texture[this.neutronoptions.texture]);
+						this.materials[this.neutronoptions.material].apply();
 						//this.materials["floor-mat"].apply();
 						neutron.y = j;
 						neutron.x = i;
@@ -1399,12 +1451,16 @@ XMLscene.prototype.display = function () {
 		this.pushMatrix();
 			//this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
 			//this.materials["floor-mat"].apply();
+			this.materials[this.boardoptions.material].setTexture(this.texture[this.boardoptions.texture]);
+			this.materials[this.boardoptions.material];
 			this.board.display();
 		this.popMatrix();
 
 		for(var piece in this.pieces){
 			this.pushMatrix();
-				this.pieces[piece].material.apply();
+				this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
+				this.materials[this.pieces[piece].material].apply();
+				//this.pieces[piece].material.apply();
 
 				this.translate(this.pieces[piece].x*3+1.5, 0.5, this.pieces[piece].y*3+1.5); 
 				if(this.pieces[piece].moving){
