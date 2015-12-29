@@ -1434,7 +1434,8 @@ XMLscene.prototype.display = function () {
 		//initial transformations
 
 		this.pushMatrix();
-			//this.materials["floor-mat"].apply();
+			this.materials[this.neutronoptions.material].setTexture(this.texture[this.neutronoptions.texture]);
+			this.materials[this.neutronoptions.material].apply();
 			this.translate(neutron.y*3+1.5, 1, neutron.x*3+1.5);
 			for(var a in neutron.animation){
 				if(neutron.animation[a].current){
