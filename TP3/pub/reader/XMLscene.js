@@ -52,8 +52,8 @@ XMLscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
     this.enableTextures(true);
 
-    this.camera.zoom(-100);
-	
+    this.camera.zoom(-20);
+    	
    	this.gl.frontFace(this.gl.CCW);
    	this.gl.cullFace(this.gl.BACK);
 
@@ -177,6 +177,9 @@ XMLscene.prototype.init = function (application) {
 	this.mvmmode = false;
 	this.intelMachine=false;
 
+	this.pieceufo = new Piece(this);
+	this.piecesphere = new Sphere(this, 0.5, 15, 15, 1, 1);
+	this.piececube = new Cube(this);
 };
 
 XMLscene.prototype.positionToTranslation = function (position) {
@@ -252,7 +255,7 @@ XMLscene.prototype.initLights = function () {
  * Initializes the camera of the scene
  */
 XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(5, 10, 35), vec3.fromValues(0, 0, 0));
 
 };
 
@@ -842,10 +845,13 @@ if(!waiting && !animating){
 							this.activeDifficultyInterface=false;
 						}
 						if(customId == 53){
+							console.log(customId);
+							this.randomMachine=false;
 							this.intelMachine=true;
 							this.activeDifficultyInterface=false;
 						}
 						if(customId == 54){
+							console.log(customId);
 							this.hvhmode = true;
 							this.hvmmode = false;
 							this.mvmmode = false;
@@ -853,6 +859,7 @@ if(!waiting && !animating){
 							this.activeDifficultyInterface=true;
 						}
 						if(customId== 55){
+							console.log(customId);
 							this.hvhmode = false;
 							this.hvmmode = true;
 							this.mvmmode = false;
@@ -860,6 +867,7 @@ if(!waiting && !animating){
 							this.activeDifficultyInterface=true;
 						}
 						if(customId== 56){
+							console.log(customId);
 							this.hvhmode = false;
 							this.hvmmode = false;
 							this.mvmmode = true;
@@ -867,9 +875,12 @@ if(!waiting && !animating){
 							this.activeDifficultyInterface=true;
 						}
 						if(customId == 57){
+							console.log(customId);
+
 							this.undo();//undo function
 						}
 						if(customId == 58){
+							console.log(customId);
 							this.resetGame();//reset function
 						}
 					}
@@ -1209,8 +1220,8 @@ XMLscene.prototype.display = function () {
 		//initial transformations
 
 		this.pushMatrix();
-			this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
-			this.materials["floor-mat"].apply();
+			//this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
+			//this.materials["floor-mat"].apply();
 			this.board.display();
 		this.popMatrix();
 
@@ -1250,7 +1261,7 @@ XMLscene.prototype.display = function () {
 
 				else if( prologBoard[i][j] == 3){
 					this.pushMatrix();
-						this.materials["floor-mat"].apply();
+						//this.materials["floor-mat"].apply();
 						neutron.y = j;
 						neutron.x = i;
 						this.translate(neutron.y*3+1.5, 1, neutron.x*3+1.5);
@@ -1353,7 +1364,7 @@ XMLscene.prototype.display = function () {
 
 		//nodes
 		this.setDescMaterialsTextures(this.graph.nodes[this.graph.scene_id]);
-		//this.drawNode(this.graph.nodes[this.graph.scene_id]);
+		this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	
 
 	}
@@ -1371,7 +1382,7 @@ XMLscene.prototype.display = function () {
 		//initial transformations
 
 		this.pushMatrix();
-			this.materials["floor-mat"].apply();
+			//this.materials["floor-mat"].apply();
 			this.translate(neutron.y*3+1.5, 1, neutron.x*3+1.5);
 			for(var a in neutron.animation){
 				if(neutron.animation[a].current){
@@ -1386,8 +1397,8 @@ XMLscene.prototype.display = function () {
 		this.popMatrix();
 
 		this.pushMatrix();
-			this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
-			this.materials["floor-mat"].apply();
+			//this.materials["floor-mat"].setTexture(this.texture["metal-tex"]);
+			//this.materials["floor-mat"].apply();
 			this.board.display();
 		this.popMatrix();
 
@@ -1420,7 +1431,7 @@ XMLscene.prototype.display = function () {
 
 		//nodes
 		this.setDescMaterialsTextures(this.graph.nodes[this.graph.scene_id]);
-		//this.drawNode(this.graph.nodes[this.graph.scene_id]);
+		this.drawNode(this.graph.nodes[this.graph.scene_id]);
 	}	
 
 };

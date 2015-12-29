@@ -11,7 +11,7 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','TextInterface.js', 'primitives/TextPlane.js','primitives/Rectangle.js', 'primitives/Piece.js', 'primitives/Triangle.js','primitives/Cylinder.js','primitives/Sphere.js', 'Interface.js', 'primitives/Circle.js', 'primitives/ClosedCylinder.js', 'CircularAnimation.js', 'LinearAnimation.js', 'primitives/Plane.js', 'primitives/Patch.js', 'primitives/Terrain.js', 'primitives/Vehicle.js', 'primitives/Board.js',
+serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','TextInterface.js', 'primitives/Cube.js','primitives/TextPlane.js','primitives/Rectangle.js', 'primitives/Piece.js', 'primitives/Triangle.js','primitives/Cylinder.js','primitives/Sphere.js', 'Interface.js', 'primitives/Circle.js', 'primitives/ClosedCylinder.js', 'CircularAnimation.js', 'LinearAnimation.js', 'primitives/Plane.js', 'primitives/Patch.js', 'primitives/Terrain.js', 'primitives/Vehicle.js', 'primitives/Board.js',
 
 main=function()
 {
@@ -30,8 +30,27 @@ main=function()
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
 	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 	
-	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T04_G01_v2.lsx";
 
+    var file = prompt("Please enter the number of the game environment you want to load\n1: Dining Room\n2: Space\n3: Japanese Room", "1");
+        if (file != null) {
+            if(file=="1"){
+                var filename=getUrlVars()['file'] || "LAIG_TP3_LSX_Ambiance_1.lsx";
+            }
+            else if(file=="2"){
+                var filename=getUrlVars()['file'] || "LAIG_TP3_LSX_Ambiance_2.lsx";
+            }
+            else if(file=="3"){
+                var filename=getUrlVars()['file'] || "LAIG_TP3_LSX_Ambiance_3.lsx";
+            }
+            else{
+                console.log("Invalid game environment choice");
+                var filename=getUrlVars()['file'] || "LAIG_TP3_LSX_Ambiance_1.lsx";
+            }
+
+        }
+        else{
+	var filename=getUrlVars()['file'] || "LAIG_TP3_LSX_Ambiance_1.lsx";
+}
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors

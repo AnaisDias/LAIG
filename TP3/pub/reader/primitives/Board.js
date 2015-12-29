@@ -33,7 +33,7 @@ Board.prototype.display = function () {
 		if(this.squares[i].showMaterial == true)
 			this.scene.possMoveSquare.apply();
 		else{
-			this.scene.materials["floor-mat"].apply();
+			//this.scene.materials["floor-mat"].apply();
 		}
 		this.scene.registerForPick(i,this.squares[i]);
 		this.scene.translate(0,0,15);

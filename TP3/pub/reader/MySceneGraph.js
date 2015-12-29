@@ -77,6 +77,13 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}
 
+	error = this.parseGameOptions(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
 	error = this.parseLeaves(rootElement);
 
 	if (error != null) {
@@ -646,6 +653,60 @@ MySceneGraph.prototype.parseMaterials = function(rootElement){
 };
 
 /**
+* Function that parses game option elements
+* 
+* @param rootElement - Root element of lsx
+*/
+MySceneGraph.prototype.parseGameOptions = function(rootElement){
+ 
+	var elemsList =  rootElement.getElementsByTagName('GAME');
+	if (elemsList == null) {
+		return "GAME element is missing.";
+	}
+
+
+	if(elemsList.length != 1){
+		return "GAME element is missing or there is more than one.";
+	}
+
+
+	var pieceElems =  elemsList[0].getElementsByTagName('PIECE');
+
+	
+	console.log(pieceElems.length + " piece elements to be processed");
+	this.game = [];
+	this.game.piece =[];
+	this.game.piece.p1 = [];
+	this.game.piece.p2 = [];
+	this.game.board = [];
+	this.game.neutron = [];
+
+
+	this.game.piece.type=pieceElems[0].getElementsByTagName('TYPE')[0].attributes.getNamedItem("value").value;
+	this.game.piece.p1.material = pieceElems[0].getElementsByTagName('MATERIALP1')[0].attributes.getNamedItem("id").value;
+	this.game.piece.p2.material = pieceElems[0].getElementsByTagName('MATERIALP2')[0].attributes.getNamedItem("id").value;
+	this.game.piece.p1.texture = pieceElems[0].getElementsByTagName('TEXTUREP1')[0].attributes.getNamedItem("id").value;
+	this.game.piece.p2.texture = pieceElems[0].getElementsByTagName('TEXTUREP2')[0].attributes.getNamedItem("id").value;
+
+	var boardElems = elemsList[0].getElementsByTagName('BOARD');
+	this.game.board.material = boardElems[0].getElementsByTagName('MATERIAL')[0].attributes.getNamedItem("id").value;
+	this.game.board.texture = boardElems[0].getElementsByTagName('TEXTURE')[0].attributes.getNamedItem("id").value;
+
+	var neutronElems = elemsList[0].getElementsByTagName('NEUTRON');
+	this.game.neutron.material = neutronElems[0].getElementsByTagName('MATERIAL')[0].attributes.getNamedItem("id").value;
+	this.game.neutron.texture = neutronElems[0].getElementsByTagName('TEXTURE')[0].attributes.getNamedItem("id").value;
+
+	
+
+		console.log("Read game options, piece options type " + this.game.piece.type + ", player 1 material " + this.game.piece.p1.material 
+			+ ", player 2 material " + this.game.piece.p2.material + ", player 1 texture " + this.game.piece.p1.texture 
+			+ ", player 2 texture " + this.game.piece.p2.texture + ", board material " + this.game.board.material 
+			+ ", board texture " + this.game.board.texture + ", neutron material " + this.game.neutron.material 
+			+ ", neutron texture " + this.game.neutron.texture);
+	
+};
+
+/**
 * Function that parses leaf elements
 * 
 * @param rootElement - Root element of lsx
@@ -912,6 +973,7 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 		var id = nodesElems[i].attributes.getNamedItem("id").value;
 		if (this.nodes[id] != undefined || this.leaves[id] != undefined){
 			return "Node ids must not be repeated and must not be the same as a leaf id";
+
 		}
 
 		this.nodes[id]= [];
