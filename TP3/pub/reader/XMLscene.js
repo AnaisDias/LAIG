@@ -27,6 +27,9 @@ var finished;
 var winner;
 var waiting;
 var movie;
+var camerachange = false;
+var cameraangle = 0;
+var camerasetposition = false;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -243,7 +246,8 @@ XMLscene.prototype.initLights = function () {
  * Initializes the camera of the scene
  */
 XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(5, 10, 35), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(7.5, 9, -12), vec3.fromValues(7.5, 0, 7.5));
+    //this.camera.orbit(vec3.fromValues(0,1,0), degToRad(180));
 
 };
 
@@ -383,8 +387,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.texture[i].amplif = [];
 		this.texture[i].amplif.s = parseFloat(this.graph.textures[i].amplif.s);
 		this.texture[i].amplif.t = parseFloat(this.graph.textures[i].amplif.t);
-
-
 
 	}
 
@@ -1166,6 +1168,7 @@ XMLscene.prototype.requestMove = function(id1, id2)
 	}
 
 	this.postGameRequest(requestString,this.moveHandler);
+
 	
 
 };
@@ -1179,13 +1182,21 @@ XMLscene.prototype.moveHandler = function(data){
 	response=JSON.parse(data.target.response);
 	console.log(response.message);
 	if(response.message != "Move Invalid"){
-
+		if(player != response.newPlayer){
+			camerachange=true;
+			cameraangle=0;
+			if(player=="1"){
+			camerasetposition=true;
+		}
+		}
 		player = response.newPlayer;
 		nextPlay = response.newPlay;
 		lastBoard = prologBoard;
 		prologBoard = JSON.parse(response.newBoard);
 		movie.push(prologBoard);
 		animating = true;
+		
+
 	}
 
 	if (response.message == "The End"){
@@ -1271,6 +1282,16 @@ XMLscene.prototype.checkBoard = function () {
 	}
 };		
 
+XMLscene.prototype.updateCameraAngle = function(){
+	if(camerachange){
+	cameraangle+=2;
+	if(cameraangle>=182) {
+		camerachange = false;
+		cameraangle=0;
+}
+}
+};
+
 /**
 * Displays the scene
 */
@@ -1291,6 +1312,15 @@ XMLscene.prototype.display = function () {
 
 	// Draw axis
 	this.axis.display();
+
+	if(camerasetposition){
+		this.camera.setPosition(vec3.fromValues(7.5, 9, -12));
+		this.camera.zoom(-20);
+		camerasetposition=false;
+	}
+	if(camerachange){
+	this.camera.orbit(vec3.fromValues(0,1,0), degToRad(2));
+}
 
 	this.setDefaultAppearance();
 
@@ -1479,7 +1509,7 @@ XMLscene.prototype.display = function () {
 		}
 
 			this.pushMatrix();
-				if(this.player1){
+				if(player=="2"){
 					if(this.activeStartInterface){
 					this.translate(5,3,15);
 					this.textinterface.display();
@@ -1510,37 +1540,39 @@ XMLscene.prototype.display = function () {
 					}
 					
 				}
-				else if(this.player2){
+				else if(player=="1"){
 					if(this.activeStartInterface){
+					
+					this.translate(10,3,0);
 					this.rotate(degToRad(180),0,1,0);
-					this.translate(5,3,0);
 					this.textinterface.display();
 					}
 					else{
 						if(this.activeModeInterface){
+							this.translate(10,4,0);
 							this.rotate(degToRad(180),0,1,0);
-							this.translate(5,4,0);
 							this.modeinterface.display();
 						}
 						else if(this.activeDifficultyInterface){
+							this.translate(10,4,0);
 							this.rotate(degToRad(180),0,1,0);
-							this.translate(5,4,0);
 							this.difficultyinterface.display();
 						}
 						else if(this.activeEndInterface){
+							
+							this.translate(10,3,0);
 							this.rotate(degToRad(180),0,1,0);
-							this.translate(5,3,0);
 							this.endinterface.display();
 						}
 						else{
 							this.pushMatrix();
+							this.translate(17,3,0);
 							this.rotate(degToRad(180),0,1,0);
-							this.translate(-3,3,0);
 							this.undointerface.display();
 							this.popMatrix();
 							this.pushMatrix();
+							this.translate(17,2,0);
 							this.rotate(degToRad(180),0,1,0);
-							this.translate(-3,2,0);
 							this.resetinterface.display();
 							this.popMatrix();
 						}
@@ -1576,6 +1608,8 @@ XMLscene.prototype.display = function () {
 
 		this.updateLights();
 		//initial transformations
+
+
 
 		this.pushMatrix();
 			this.materials[this.neutronoptions.material].setTexture(this.texture[this.neutronoptions.texture]);
@@ -1737,6 +1771,8 @@ XMLscene.prototype.update = function (currTime){
 		}
 		checkBoard = true;
 	}
+
+	this.updateCameraAngle();
 	
 	for(var i in this.graph.nodes){
 
