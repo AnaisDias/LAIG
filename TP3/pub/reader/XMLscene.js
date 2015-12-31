@@ -842,13 +842,15 @@ XMLscene.prototype.resetGame = function ()
 	this.count = 1;
 	this.replay = false;
 
+	finished = false;
+	winner = null;
+
 	this.activeStartInterface = true;
 	this.activeDifficultyInterface = false;
 	this.activeModeInterface = false;
 	this.activeEndInterface = false;
 
-	this.winner = null;
-	this.finished = false;
+
 	this.hvhmode = false;
 	this.hvmmode = false;
 	this.mvmmode = false;
@@ -886,6 +888,7 @@ XMLscene.prototype.resetGame = function ()
 			this.pieces[i+5].moving = false;
 	}
 
+	console.log("Reseted game!");
 }
 
 /*
@@ -913,6 +916,7 @@ XMLscene.prototype.logPicking = function ()
 							}
 							else if(customId == 51){
 								this.resetGame();//reset function
+								this.activeEndInterface = false;
 							}
 							else if(customId == 52){
 								this.intelMachine = false;
@@ -954,6 +958,7 @@ XMLscene.prototype.logPicking = function ()
 							}
 							else if(customId == 58){
 								this.resetGame();//reset function
+								this.activeEndInterface = false;
 							}
 							else if(customId == 59){
 								console.log("Entering replay mode...");
@@ -1349,6 +1354,8 @@ XMLscene.prototype.display = function () {
 				if(movie[this.count-1][i][j] == 1 ){
 
 					this.pushMatrix();
+						this.pieces[piece].material = this.graph.game.piece.p1.material;
+						this.pieces[piece].texture = this.graph.game.piece.p1.texture;
 						this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
 						this.materials[this.pieces[piece].material].apply();
 						this.graph.game.piece.p1.material;
@@ -1373,6 +1380,8 @@ XMLscene.prototype.display = function () {
 				else if(movie[this.count-1][i][j] == 2){
 
 					this.pushMatrix();
+						this.pieces[piece].material = this.graph.game.piece.p2.material;
+						this.pieces[piece].texture = this.graph.game.piece.p2.texture;
 						this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
 						this.materials[this.pieces[piece].material].apply();
 						this.pieces[piece].x = j;
@@ -1468,6 +1477,8 @@ XMLscene.prototype.display = function () {
 				if(prologBoard[i][j] == 1 ){
 
 					this.pushMatrix();
+						this.pieces[piece].material = this.graph.game.piece.p1.material;
+						this.pieces[piece].texture = this.graph.game.piece.p1.texture;
 						this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
 						this.materials[this.pieces[piece].material].apply();
 						this.pieces[piece].x = j;
@@ -1482,6 +1493,8 @@ XMLscene.prototype.display = function () {
 				else if(prologBoard[i][j] == 2){
 
 					this.pushMatrix();
+						this.pieces[piece].material = this.graph.game.piece.p2.material;
+						this.pieces[piece].texture = this.graph.game.piece.p2.texture;
 						this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
 						this.materials[this.pieces[piece].material].apply();
 						this.pieces[piece].x = j;
@@ -1559,7 +1572,7 @@ XMLscene.prototype.display = function () {
 							this.difficultyinterface.display();
 						}
 						else if(this.activeEndInterface){
-							
+							console.log(this.activeEndInterface);
 							this.translate(10,3,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.endinterface.display();
@@ -1637,7 +1650,6 @@ XMLscene.prototype.display = function () {
 			this.pushMatrix();
 				this.materials[this.pieces[piece].material].setTexture(this.texture[this.pieces[piece].texture]);
 				this.materials[this.pieces[piece].material].apply();
-
 				this.translate(this.pieces[piece].x*3+1.5, 0.5, this.pieces[piece].y*3+1.5); 
 				if(this.pieces[piece].moving){
 					for(var a in this.pieces[piece].animation){
