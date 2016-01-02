@@ -961,12 +961,17 @@ XMLscene.prototype.logPicking = function ()
 								this.activeEndInterface = false;
 							}
 							else if(customId == 59){
+								for(var j in neutron.animation){
+									neutron.animation[j].current = false;
+									neutron.animation[j].ended = false;
+								}
 								console.log("Entering replay mode...");
 								this.replay = true;
 								this.count = 1;
 								this.activeEndInterface = false;
 								animating = true;
 								this.first_check = true;
+								
 							}
 						}
 						else if(!this.activeDifficultyInterface && !this.activeModeInterface && !this.activeStartInterface && !this.activeEndInterface && !this.replay){
@@ -1208,7 +1213,6 @@ XMLscene.prototype.moveHandler = function(data){
 		console.log("Player " + player + " won!!");
 		winner = player;
 		finished=true;
-		console.debug(this);
 	}
 	waiting = false;
 	clearBoard = true;
@@ -1232,10 +1236,22 @@ XMLscene.prototype.posMovesHandler = function (data){
 */
 XMLscene.prototype.checkBoard = function () {
 
+	
 	var xi;
 	var yi;
 	var xf;
 	var yf;
+	
+	if(this.first_check){
+		for(var i = 0; i<5; i++){
+			this.pieces[i].x = i;
+			this.pieces[i].y = 0;
+		}
+		for(var i = 5; i<10; i++){
+			this.pieces[i].x = i;
+			this.pieces[i].y = 4;
+		}
+	}
 
 	if(!this.replay){
 		for(var i = 0; i < 5; i++){
@@ -1256,6 +1272,8 @@ XMLscene.prototype.checkBoard = function () {
 	else{
 		console.log(movie[this.count-1].toString());
 		console.log(movie[this.count].toString());
+
+
 		for(var i = 0; i < 5; i++){
 			for (var j = 0; j < 5; j++){
 				if(movie[this.count-1][i][j] != movie[this.count][i][j]){
@@ -1271,14 +1289,18 @@ XMLscene.prototype.checkBoard = function () {
 			}
 		}
 	}
-
+	
 	if(neutron.x == xi && neutron.y == yi){
+		console.log("Neutron will move");
+
 		neutron.animation[1] = new LinearAnimation(this, this.linearTime, [[0,0,0],[(yf-yi)*3, 0, (xf-xi)*3]]);
 		neutron.moving = true;
 	}
 	else{
 		for (var piece in this.pieces){
+
 			if(this.pieces[piece].x == yi && this.pieces[piece].y == xi){
+				//console.log("Piece will move");
 				this.pieces[piece].animation[1] = new LinearAnimation(this, this.linearTime, [[0,0,0],[(yf-yi)*3, 0, (xf-xi)*3]]);
 				this.pieces[piece].moving = true;
 				break;
@@ -1289,12 +1311,12 @@ XMLscene.prototype.checkBoard = function () {
 
 XMLscene.prototype.updateCameraAngle = function(){
 	if(camerachange){
-	cameraangle+=2;
-	if(cameraangle>=182) {
-		camerachange = false;
-		cameraangle=0;
-}
-}
+		cameraangle+=2;
+		if(cameraangle>=182) {
+			camerachange = false;
+			cameraangle=0;
+		}
+	}
 };
 
 /**
@@ -1689,10 +1711,13 @@ XMLscene.prototype.update = function (currTime){
 	
 	if(animating){
 		if(this.first_check){
+			neutron.x = 2;
+			neutron.y = 2;
 			this.checkBoard();
 			this.first_check = false;
 		}
 		if(neutron.moving){
+			console.log("Neutron is updating");
 			if(neutron.animation[2].ended){
 				neutron.moving = false;
 				if(this.replay){
@@ -1731,39 +1756,41 @@ XMLscene.prototype.update = function (currTime){
 			}
 		}
 
-		for(var i in this.pieces){
-			if(this.pieces[i].moving){
-				if(this.pieces[i].animation[2].ended){
-					this.pieces[i].moving = false;
-					if(this.replay){
-						this.count++;
-						if(this.count < movie.length){
-							for(var j in this.pieces[i].animation){
-								this.pieces[i].animation[j].current = false;
-								this.pieces[i].animation[j].ended = false;
+		else {
+			for(var i in this.pieces){
+				if(this.pieces[i].moving){
+					if(this.pieces[i].animation[2].ended){
+						this.pieces[i].moving = false;
+						if(this.replay){
+							this.count++;
+							if(this.count < movie.length){
+								for(var j in this.pieces[i].animation){
+									this.pieces[i].animation[j].current = false;
+									this.pieces[i].animation[j].ended = false;
+								}
+								this.checkBoard();
 							}
-							this.checkBoard();
+							else{
+								animating = false;
+								this.replay = false;
+								this.activeEndInterface = true;
+							}
 						}
 						else{
 							animating = false;
-							this.replay = false;
-							this.activeEndInterface = true;
 						}
 					}
 					else{
-						animating = false;
-					}
-				}
-				else{
-					for(var j in this.pieces[i].animation){
-						if(this.pieces[i].animation[j].current){
-							this.pieces[i].animation[j].update(currTime);
-							break;
-						}
-						else if(!this.pieces[i].animation[j].ended){
-							this.pieces[i].animation[j].current = true;
-							this.pieces[i].animation[j].update(currTime);
-							break;
+						for(var j in this.pieces[i].animation){
+							if(this.pieces[i].animation[j].current){
+								this.pieces[i].animation[j].update(currTime);
+								break;
+							}
+							else if(!this.pieces[i].animation[j].ended){
+								this.pieces[i].animation[j].current = true;
+								this.pieces[i].animation[j].update(currTime);
+								break;
+							}
 						}
 					}
 				}
