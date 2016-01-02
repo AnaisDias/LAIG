@@ -6,6 +6,10 @@ function TextInterface(scene, deltaX, deltaY, type) {
 
     this.type = type;
 
+    this.timer = 0;
+    this.initTime = 0;
+    this.firstTime=true;
+
     this.appearance = new CGFappearance(this.scene);
     this.appearance.setAmbient(0.3, 0.3, 0.3, 1);
     this.appearance.setDiffuse(0.7, 0.7, 0.7, 1);
@@ -54,13 +58,15 @@ function TextInterface(scene, deltaX, deltaY, type) {
     else if(this.type == "reset"){
         this.button = 'Reset';
     }
+
+    else if(this.type == "timer"){
+        this.text = this.timer;
+    }
     this.ptext = 'Player ';
     this.p1wins = 0;
     this.p2wins = 0;
     this.currentPlayer = "1";
 
-    this.result1 = undefined;
-    this.result2 = undefined;
 };
 
 TextInterface.prototype = Object.create(CGFobject.prototype);
@@ -182,6 +188,9 @@ TextInterface.prototype.display = function () {
             this.scene.registerForPick(58,this.plane);
             this.showString(this.button);
         }
+        else if(this.type == "timer"){
+            this.showString('' + parseInt(this.timer) + '');
+        }
         else if(this.type == "info"){
             this.scene.clearPickRegistration();
             this.showString(this.ptext + this.currentPlayer);
@@ -197,3 +206,20 @@ TextInterface.prototype.display = function () {
 
     this.scene.setActiveShaderSimple(this.scene.defaultShader);
 };
+
+TextInterface.prototype.update = function(currTime, restart, stop){
+    if(!stop){
+    if(this.firstTime) {
+        this.initTime = currTime;
+        this.firstTime=false;
+    }
+
+    if(restart){
+        this.initTime=currTime;
+    }
+
+    this.timer = (currTime - this.initTime)/1000;
+}
+
+
+}

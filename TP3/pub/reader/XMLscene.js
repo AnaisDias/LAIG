@@ -30,6 +30,10 @@ var movie;
 var camerachange = false;
 var cameraangle = 0;
 var camerasetposition = false;
+var player1timerrestart = false;
+var player1timerstop = false;
+var player2timerrestart = false;
+var player2timerstop = false;
 var p1wins;
 var p2wins;
 
@@ -159,7 +163,11 @@ XMLscene.prototype.init = function (application) {
 	this.endinterface = new TextInterface(this, 10, 10, "end");
 	this.undointerface = new TextInterface(this, 10,10, "undo");
 	this.resetinterface = new TextInterface(this, 10, 10, "reset");
+	this.player1timer = new TextInterface(this, 10, 10, "timer");
+	this.player2timer = new TextInterface(this, 10,10, "timer");
+
 	this.infointerface = new TextInterface(this, 10, 10, "info");
+
 	
 	this.activeStartInterface = true;
 	this.activeDifficultyInterface = false;
@@ -919,6 +927,7 @@ XMLscene.prototype.logPicking = function ()
 						if(customId >= 50){
 							if(customId == 50){
 								console.log("Game started");
+								player1timerrestart=true;
 								this.activeStartInterface=false;
 								this.activeModeInterface=true;
 							}
@@ -1223,6 +1232,14 @@ XMLscene.prototype.moveHandler = function(data){
 			cameraangle=0;
 			if(player=="1"){
 			camerasetposition=true;
+			if(response.newPlayer == "1"){
+				player1timerrestart = true;
+				player2timerstop = true;
+			}
+			else if(response.newPlayer=="2"){
+				player2timerrestart = true;
+				player1timerstop = true;
+			}
 		}
 		}
 		player = response.newPlayer;
@@ -1343,6 +1360,8 @@ XMLscene.prototype.updateCameraAngle = function(){
 		if(cameraangle>=182) {
 			camerachange = false;
 			cameraangle=0;
+			if(player=="1") player1timerrestart=true;
+			else if(player=="2") player2timerrestart=true;
 		}
 	}
 };
@@ -1615,6 +1634,10 @@ XMLscene.prototype.display = function () {
 							this.translate(-3,2,15);
 							this.resetinterface.display();
 							this.popMatrix();
+							this.pushMatrix();
+							this.translate(17,3,15);
+							this.player2timer.display();
+							this.popMatrix();
 						}
 					}
 					
@@ -1668,6 +1691,11 @@ XMLscene.prototype.display = function () {
 							this.translate(17,2,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.resetinterface.display();
+							this.popMatrix();
+							this.pushMatrix();
+							this.translate(3,3,0);
+							this.rotate(degToRad(180),0,1,0);
+							this.player1timer.display();
 							this.popMatrix();
 						}
 					}
@@ -1871,6 +1899,23 @@ XMLscene.prototype.update = function (currTime){
 	}
 
 	this.updateCameraAngle();
+
+	if(player1timerrestart){
+		this.player1timer.update(currTime, true, false);
+		this.player2timer.update(currTime, false, true);
+		player1timerrestart=false;
+	}
+
+	else if(player2timerrestart){
+		this.player2timer.update(currTime, true, false);
+		this.player1timer.update(currTime, false, true);
+		player2timerrestart = false;
+	}
+
+	else{
+		this.player1timer.update(currTime, false, false);
+		this.player2timer.update(currTime, false, false);
+	}
 	
 	for(var i in this.graph.nodes){
 
