@@ -42,7 +42,9 @@ function TextInterface(scene, deltaX, deltaY, type) {
     else if(this.type == "mode"){
         this.button1 = 'Human vs Human';
         this.button2 = 'Human vs Machine';
-        this.button3 = 'Machine vs Machine';
+        this.button3 = 'Machine vs Human';
+        this.button4 = 'Machine vs Machine';
+
     }
 
     else if(this.type == "undo"){
@@ -52,6 +54,11 @@ function TextInterface(scene, deltaX, deltaY, type) {
     else if(this.type == "reset"){
         this.button = 'Reset';
     }
+    this.ptext = 'Player ';
+    this.p1wins = 0;
+    this.p2wins = 0;
+    this.currentPlayer = "1";
+
     this.result1 = undefined;
     this.result2 = undefined;
 };
@@ -121,6 +128,11 @@ TextInterface.prototype.display = function () {
             this.showString(this.button);
         }
         else if(this.type == "end"){
+            this.scene.clearPickRegistration();
+            this.showString('P1 Wins: ' + this.p1wins);
+            this.scene.translate(0,-1,0);
+            this.showString('P2 Wins: ' + this.p2wins);
+            this.scene.translate(0,-1,0);
             this.showString(this.title);
             this.scene.translate(0,-1,0);
             this.showString('Player '+ this.scene.winner + ' wins');
@@ -152,9 +164,12 @@ TextInterface.prototype.display = function () {
             this.scene.registerForPick(55,this.plane);
             this.scene.translate(0,-1,0);
             this.showString(this.button2);
-            this.scene.registerForPick(56,this.plane);
+            this.scene.registerForPick(65,this.plane);
             this.scene.translate(0,-1,0);
             this.showString(this.button3);
+            this.scene.registerForPick(56,this.plane);
+            this.scene.translate(0,-1,0);
+            this.showString(this.button4);
 
         }
 
@@ -166,6 +181,14 @@ TextInterface.prototype.display = function () {
         else if(this.type == "reset"){
             this.scene.registerForPick(58,this.plane);
             this.showString(this.button);
+        }
+        else if(this.type == "info"){
+            this.scene.clearPickRegistration();
+            this.showString(this.ptext + this.currentPlayer);
+            this.scene.translate(0,-3,0);
+            this.showString('P1:' + this.p1wins);
+            this.scene.translate(0,-1,0);
+            this.showString('P2:' + this.p2wins);
         }
             
 

@@ -30,6 +30,8 @@ var movie;
 var camerachange = false;
 var cameraangle = 0;
 var camerasetposition = false;
+var p1wins;
+var p2wins;
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
@@ -89,6 +91,9 @@ XMLscene.prototype.init = function (application) {
 						[2,2,2,2,2]];
 
 	lastBoard = prologBoard;
+
+	p1wins = 0;
+	p2wins = 0;
 
 	player = "1"; //"1" or "2"
 
@@ -154,6 +159,7 @@ XMLscene.prototype.init = function (application) {
 	this.endinterface = new TextInterface(this, 10, 10, "end");
 	this.undointerface = new TextInterface(this, 10,10, "undo");
 	this.resetinterface = new TextInterface(this, 10, 10, "reset");
+	this.infointerface = new TextInterface(this, 10, 10, "info");
 	
 	this.activeStartInterface = true;
 	this.activeDifficultyInterface = false;
@@ -164,6 +170,7 @@ XMLscene.prototype.init = function (application) {
 	this.finished = false;
 	this.hvhmode = false;
 	this.hvmmode = false;
+	this.mvhmode = false;
 	this.mvmmode = false;
 	this.intelMachine=false;
 	this.player1 = true;
@@ -853,6 +860,7 @@ XMLscene.prototype.resetGame = function ()
 
 	this.hvhmode = false;
 	this.hvmmode = false;
+	this.mvhmode = false;
 	this.mvmmode = false;
 	this.intelMachine=false;
 
@@ -929,30 +937,48 @@ XMLscene.prototype.logPicking = function ()
 							else if(customId == 54){
 								this.hvhmode = true;
 								this.hvmmode = false;
+								this.mvhmode = false;
 								this.mvmmode = false;
+
 								this.player1 = true;
 								this.player2 = true;
 								this.activeModeInterface=false;
-								this.activeDifficultyInterface=true;
 							}
 							else if(customId== 55){
 								this.hvhmode = false;
 								this.hvmmode = true;
+								this.mvhmode = false;
 								this.mvmmode = false;
+
 								this.player1 = true;
 								this.player2 = false;
 								this.activeModeInterface=false;
 								this.activeDifficultyInterface=true;
 							}
+							else if(customId== 65){
+								this.hvhmode = false;
+								this.hvmmode = false;
+								this.mvhmode = true;
+								this.mvmmode = false;
+								
+								this.player1 = false;
+								this.player2 = true;
+								this.activeModeInterface=false;
+								this.activeDifficultyInterface=true;
+							}
+							
 							else if(customId== 56){
 								this.hvhmode = false;
 								this.hvmmode = false;
+								this.mvhmode = false;
 								this.mvmmode = true;
+
 								this.player1 = false;
 								this.player2 = false;
 								this.activeModeInterface=false;
 								this.activeDifficultyInterface=true;
 							}
+							
 							else if(customId == 57){
 								this.undo();//undo function
 							}
@@ -999,7 +1025,7 @@ XMLscene.prototype.logPicking = function ()
 								}
 							}
 							else {
-								if(this.hvhmode){
+								if(this.hvhmode || this.mvhmode){
 									if(this.existsPos(pos)){
 										this.requestMove(this.lastPicked, pos);
 									}
@@ -1211,6 +1237,8 @@ XMLscene.prototype.moveHandler = function(data){
 
 	if (response.message == "The End"){
 		console.log("Player " + player + " won!!");
+		if(player == "1") p1wins++;
+		else p2wins++;
 		winner = player;
 		finished=true;
 	}
@@ -1241,7 +1269,7 @@ XMLscene.prototype.checkBoard = function () {
 	var yi;
 	var xf;
 	var yf;
-	
+
 	if(this.first_check){
 		for(var i = 0; i<5; i++){
 			this.pieces[i].x = i;
@@ -1551,7 +1579,7 @@ XMLscene.prototype.display = function () {
 					}
 					else{
 						if(this.activeModeInterface){
-							this.translate(5,4,15);
+							this.translate(5,5,15);
 							this.modeinterface.display();
 						}
 						else if(this.activeDifficultyInterface){
@@ -1559,10 +1587,26 @@ XMLscene.prototype.display = function () {
 							this.difficultyinterface.display();
 						}
 						else if(this.activeEndInterface){
-							this.translate(5,3,15);
+							this.endinterface.p1wins = p1wins;
+							this.endinterface.p2wins = p2wins;
+							this.translate(5,5,15);
 							this.endinterface.display();
 						}
 						else{
+							if(this.hvmmode || this.mvmmode){
+								this.infointerface.ptext = 'Machine ';
+							}
+							else{
+								this.infointerface.ptext = 'Player ';
+							}
+							this.infointerface.currentPlayer = player;
+							this.infointerface.p1wins = p1wins;
+							this.infointerface.p2wins = p2wins;
+
+							this.pushMatrix();
+							this.translate(-3,8,15);
+							this.infointerface.display();
+							this.popMatrix();
 							this.pushMatrix();
 							this.translate(-3,3,15);
 							this.undointerface.display();
@@ -1584,7 +1628,7 @@ XMLscene.prototype.display = function () {
 					}
 					else{
 						if(this.activeModeInterface){
-							this.translate(10,4,0);
+							this.translate(10,5,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.modeinterface.display();
 						}
@@ -1594,12 +1638,27 @@ XMLscene.prototype.display = function () {
 							this.difficultyinterface.display();
 						}
 						else if(this.activeEndInterface){
-							console.log(this.activeEndInterface);
-							this.translate(10,3,0);
+							this.endinterface.p1wins = p1wins;
+							this.endinterface.p2wins = p2wins;
+							this.translate(10,5,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.endinterface.display();
 						}
 						else{
+							if(this.mvhmode || this.mvmmode){
+								this.infointerface.ptext = 'Machine ';
+							}
+							else{
+								this.infointerface.ptext = 'Player ';
+							}
+							this.infointerface.currentPlayer = player;
+							this.infointerface.p1wins = p1wins;
+							this.infointerface.p2wins = p2wins;
+							this.pushMatrix();
+							this.translate(17,8,0);
+							this.rotate(degToRad(180),0,1,0);
+							this.infointerface.display();
+							this.popMatrix();
 							this.pushMatrix();
 							this.translate(17,3,0);
 							this.rotate(degToRad(180),0,1,0);
