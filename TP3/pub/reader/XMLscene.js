@@ -810,7 +810,9 @@ XMLscene.prototype.existsPos = function (pos){
 XMLscene.prototype.undo = function()
 {
 	if(movie.length > 1){
-		prologBoard = movie.pop();
+
+		movie.pop();
+		prologBoard = movie[movie.length-1];
 		lastBoard = prologBoard;
 		if(nextPlay == "2"){
 			nextPlay = "1";
