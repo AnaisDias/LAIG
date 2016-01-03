@@ -56,7 +56,11 @@ function TextInterface(scene, deltaX, deltaY, type) {
     }
 
     else if(this.type == "reset"){
-        this.button = 'Reset';
+        this.button = 'Restart';
+    }
+
+    else if(this.type == "camera"){
+        this.button = 'Camera';
     }
 
     else if(this.type == "timer"){
@@ -132,6 +136,11 @@ TextInterface.prototype.display = function () {
             this.scene.registerForPick(50,this.plane);
             this.scene.translate(0,-1,0);
             this.showString(this.button);
+            this.scene.clearPickRegistration();
+            this.scene.translate(0,-1,0);
+            this.showString('P1 wins:' + this.p1wins);
+            this.scene.translate(0,-1,0);
+            this.showString('P2 wins:' + this.p2wins);
         }
         else if(this.type == "end"){
             this.scene.clearPickRegistration();
@@ -199,7 +208,11 @@ TextInterface.prototype.display = function () {
             this.scene.translate(0,-1,0);
             this.showString('P2:' + this.p2wins);
         }
-            
+         else if(this.type == "camera"){
+            this.scene.clearPickRegistration();
+            this.scene.registerForPick(66, this.plane);
+            this.showString(this.button);
+         }
 
 
     this.scene.popMatrix();

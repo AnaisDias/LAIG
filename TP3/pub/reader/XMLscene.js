@@ -47,6 +47,11 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
+    this.initialPosition = vec3.fromValues(7.5, 9, -15);
+    this.p2Position = vec3.fromValues(7.5, 9, 35);
+    this.initialTarget = vec3.fromValues(7.5, 0, 7.5);
+    this.camZoom = -20;
+
     this.setUpdatePeriod(10);
     this.initCameras();
 
@@ -165,6 +170,7 @@ XMLscene.prototype.init = function (application) {
 	this.resetinterface = new TextInterface(this, 10, 10, "reset");
 	this.player1timer = new TextInterface(this, 10, 10, "timer");
 	this.player2timer = new TextInterface(this, 10,10, "timer");
+	this.camerainterface = new TextInterface(this,10,10, "camera");
 
 	this.infointerface = new TextInterface(this, 10, 10, "info");
 
@@ -262,7 +268,7 @@ XMLscene.prototype.initLights = function () {
  * Initializes the camera of the scene
  */
 XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 0.1, 1000, vec3.fromValues(7.5, 9, -12), vec3.fromValues(7.5, 0, 7.5));
+    this.camera = new CGFcamera(0.4, 0.1, 1000, this.initialPosition, this.initialTarget);
     //this.camera.orbit(vec3.fromValues(0,1,0), degToRad(180));
 
 };
@@ -814,9 +820,14 @@ XMLscene.prototype.undo = function()
 			if(player == "2")
 				player = "1";
 			else player = "2";
-
+			cameraangle=0;
+			camerachange = true;
 		}
 		
+	}
+	else {
+		prologBoard = movie[0];
+		lastBoard = prologBoard;
 	}
 	movesAllowed = [];
 	this.board.clearMat();
@@ -934,7 +945,6 @@ XMLscene.prototype.logPicking = function ()
 							}
 							else if(customId == 51){
 								var endplayer=player;
-								console.log("endplayer: " + endplayer);
 								if(this.timeout == true && endplayer=="2"){
 									cameraangle=0;
 								camerachange=true;
@@ -1010,6 +1020,16 @@ XMLscene.prototype.logPicking = function ()
 							else if(customId == 58){
 								this.resetGame();//reset function
 								this.activeEndInterface = false;
+							}
+							else if(customId == 66){
+								if(player == "1"){
+									this.camera.setPosition(this.initialPosition);
+								}
+								else{
+									this.camera.setPosition(this.p2Position);
+								}
+								this.camera.setTarget(this.initialTarget);
+								this.camera.zoom(this.camZoom);
 							}
 							else if(customId == 59){
 								for(var j in neutron.animation){
@@ -1329,9 +1349,6 @@ XMLscene.prototype.checkBoard = function () {
 		}
 	}
 	else{
-		console.log(movie[this.count-1].toString());
-		console.log(movie[this.count].toString());
-
 
 		for(var i = 0; i < 5; i++){
 			for (var j = 0; j < 5; j++){
@@ -1350,7 +1367,6 @@ XMLscene.prototype.checkBoard = function () {
 	}
 	
 	if(neutron.x == xi && neutron.y == yi){
-		console.log("Neutron will move");
 
 		neutron.animation[1] = new LinearAnimation(this, this.linearTime, [[0,0,0],[(yf-yi)*3, 0, (xf-xi)*3]]);
 		neutron.moving = true;
@@ -1359,7 +1375,7 @@ XMLscene.prototype.checkBoard = function () {
 		for (var piece in this.pieces){
 
 			if(this.pieces[piece].x == yi && this.pieces[piece].y == xi){
-				//console.log("Piece will move");
+
 				this.pieces[piece].animation[1] = new LinearAnimation(this, this.linearTime, [[0,0,0],[(yf-yi)*3, 0, (xf-xi)*3]]);
 				this.pieces[piece].moving = true;
 				break;
@@ -1368,6 +1384,9 @@ XMLscene.prototype.checkBoard = function () {
 	}
 };		
 
+/*
+* Updates the angle of the camera
+*/
 XMLscene.prototype.updateCameraAngle = function(){
 	if(camerachange){
 		cameraangle+=2;
@@ -1402,7 +1421,6 @@ XMLscene.prototype.display = function () {
 	// Initialize Model-View matrix as identity (no transformation
 	this.updateProjectionMatrix();
     this.loadIdentity();
-
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 
@@ -1440,7 +1458,6 @@ XMLscene.prototype.display = function () {
 	
 	if (this.replay)
 	{
-		console.log("Replaying..." + this.count);
 		this.clearPickRegistration();
 		this.board.clearMat();
 		
@@ -1661,16 +1678,20 @@ XMLscene.prototype.display = function () {
 							this.infointerface.p2wins = p2wins;
 
 							this.pushMatrix();
-							this.translate(-3,8,15);
+							this.translate(-4,9,15);
 							this.infointerface.display();
 							this.popMatrix();
 							this.pushMatrix();
-							this.translate(-3,3,15);
+							this.translate(-4,4,15);
 							this.undointerface.display();
 							this.popMatrix();
 							this.pushMatrix();
-							this.translate(-3,2,15);
+							this.translate(-4,3,15);
 							this.resetinterface.display();
+							this.popMatrix();
+							this.pushMatrix();
+							this.translate(-4,2,15);
+							this.camerainterface.display();
 							this.popMatrix();
 							this.pushMatrix();
 							this.translate(16,3,15);
@@ -1682,8 +1703,9 @@ XMLscene.prototype.display = function () {
 				}
 				else if(player=="1"){
 					if(this.activeStartInterface){
-					
-					this.translate(10,3,0);
+					this.textinterface.p1wins = p1wins;
+					this.textinterface.p2wins = p2wins;
+					this.translate(10,4,0);
 					this.rotate(degToRad(180),0,1,0);
 					this.textinterface.display();
 					}
@@ -1716,19 +1738,24 @@ XMLscene.prototype.display = function () {
 							this.infointerface.p1wins = p1wins;
 							this.infointerface.p2wins = p2wins;
 							this.pushMatrix();
-							this.translate(17,8,0);
+							this.translate(19,9,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.infointerface.display();
 							this.popMatrix();
 							this.pushMatrix();
-							this.translate(17,3,0);
+							this.translate(19,4,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.undointerface.display();
 							this.popMatrix();
 							this.pushMatrix();
-							this.translate(17,2,0);
+							this.translate(19,3,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.resetinterface.display();
+							this.popMatrix();
+							this.pushMatrix();
+							this.translate(19,2,0);
+							this.rotate(degToRad(180),0,1,0);
+							this.camerainterface.display();
 							this.popMatrix();
 							this.pushMatrix();
 							this.translate(-1,3,0);
@@ -1842,7 +1869,6 @@ XMLscene.prototype.update = function (currTime){
 			this.first_check = false;
 		}
 		if(neutron.moving){
-			console.log("Neutron is updating");
 			if(neutron.animation[2].ended){
 				neutron.moving = false;
 				if(this.replay){
