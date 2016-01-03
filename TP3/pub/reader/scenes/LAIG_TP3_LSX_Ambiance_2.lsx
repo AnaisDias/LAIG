@@ -222,7 +222,7 @@
 				<NODE id="tieFighter1">
         	<MATERIAL id="m1" />
 	        <TEXTURE id="t1" />
-					<TRANSLATION x="5" y="4" z="1" />
+					<TRANSLATION x="10" y="4" z="1" />
 	        <DESCENDANTS>
 							<DESCENDANT id="tieFighter" />
 	        </DESCENDANTS>
@@ -231,7 +231,7 @@
 				<NODE id="tieFighter2">
         	<MATERIAL id="m1" />
 	        <TEXTURE id="t1" />
-					<TRANSLATION x="7" y="3" z="1" />
+					<TRANSLATION x="13" y="3" z="1" />
 	        <DESCENDANTS>
 							<DESCENDANT id="tieFighter" />
 	        </DESCENDANTS>
@@ -240,7 +240,7 @@
 				<NODE id="tieFighter3">
         	<MATERIAL id="m1" />
 	        <TEXTURE id="t1" />
-					<TRANSLATION x="6" y="4" z="2" />
+					<TRANSLATION x="16" y="4" z="2" />
 	        <DESCENDANTS>
 							<DESCENDANT id="tieFighter" />
 	        </DESCENDANTS>

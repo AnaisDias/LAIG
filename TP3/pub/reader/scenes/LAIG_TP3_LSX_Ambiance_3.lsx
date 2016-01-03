@@ -152,8 +152,8 @@
         <TEXTUREP2 id="null"/>
     </PIECE>
     <BOARD>
-        <MATERIAL id="m01"/>
-        <TEXTURE id="t01"/>
+        <MATERIAL id="m02"/>
+        <TEXTURE id="floor"/>
     </BOARD>
     <NEUTRON>
         <MATERIAL id="m01"/>
