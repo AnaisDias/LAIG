@@ -927,21 +927,29 @@ XMLscene.prototype.logPicking = function ()
 						if(customId >= 50){
 							if(customId == 50){
 								console.log("Game started");
-								player1timerrestart=true;
 								this.activeStartInterface=false;
 								this.activeModeInterface=true;
 							}
 							else if(customId == 51){
+								var endplayer=player;
+
 								this.resetGame();//reset function
+								/*if(endplayer!=winner && endplayer!="1"){
+								camerachange=true;
+								cameraangle=0;
+								camerasetposition=true;
+							}*/
 								this.activeEndInterface = false;
 							}
 							else if(customId == 52){
 								this.intelMachine = false;
 								this.activeDifficultyInterface=false;
+								player1timerrestart=true;
 							}
 							else if(customId == 53){
 								this.intelMachine=true;
 								this.activeDifficultyInterface=false;
+								player1timerrestart=true;
 							}
 							else if(customId == 54){
 								this.hvhmode = true;
@@ -952,6 +960,7 @@ XMLscene.prototype.logPicking = function ()
 								this.player1 = true;
 								this.player2 = true;
 								this.activeModeInterface=false;
+								player1timerrestart=true;
 							}
 							else if(customId== 55){
 								this.hvhmode = false;
@@ -963,6 +972,7 @@ XMLscene.prototype.logPicking = function ()
 								this.player2 = false;
 								this.activeModeInterface=false;
 								this.activeDifficultyInterface=true;
+
 							}
 							else if(customId== 65){
 								this.hvhmode = false;
@@ -1232,6 +1242,7 @@ XMLscene.prototype.moveHandler = function(data){
 			cameraangle=0;
 			if(player=="1"){
 			camerasetposition=true;
+		}
 			if(response.newPlayer == "1"){
 				player1timerrestart = true;
 				player2timerstop = true;
@@ -1241,7 +1252,7 @@ XMLscene.prototype.moveHandler = function(data){
 				player1timerstop = true;
 			}
 		}
-		}
+		
 		player = response.newPlayer;
 		nextPlay = response.newPlay;
 		lastBoard = prologBoard;
@@ -1360,8 +1371,16 @@ XMLscene.prototype.updateCameraAngle = function(){
 		if(cameraangle>=182) {
 			camerachange = false;
 			cameraangle=0;
-			if(player=="1") player1timerrestart=true;
-			else if(player=="2") player2timerrestart=true;
+			if(player=="1") {
+				player1timerrestart=true;
+				player1timerstop=false;
+				player2timerstop=true;
+			}
+			else if(player=="2") {
+				player2timerrestart=true;
+				player2timerstop=false;
+				player1timerstop=true;
+			}
 		}
 	}
 };
@@ -1635,7 +1654,7 @@ XMLscene.prototype.display = function () {
 							this.resetinterface.display();
 							this.popMatrix();
 							this.pushMatrix();
-							this.translate(17,3,15);
+							this.translate(16,3,15);
 							this.player2timer.display();
 							this.popMatrix();
 						}
@@ -1693,7 +1712,7 @@ XMLscene.prototype.display = function () {
 							this.resetinterface.display();
 							this.popMatrix();
 							this.pushMatrix();
-							this.translate(3,3,0);
+							this.translate(-1,3,0);
 							this.rotate(degToRad(180),0,1,0);
 							this.player1timer.display();
 							this.popMatrix();
@@ -1913,8 +1932,8 @@ XMLscene.prototype.update = function (currTime){
 	}
 
 	else{
-		this.player1timer.update(currTime, false, false);
-		this.player2timer.update(currTime, false, false);
+		this.player1timer.update(currTime, false, player1timerstop);
+		this.player2timer.update(currTime, false, player2timerstop);
 	}
 	
 	for(var i in this.graph.nodes){
