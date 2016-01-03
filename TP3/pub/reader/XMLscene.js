@@ -932,13 +932,13 @@ XMLscene.prototype.logPicking = function ()
 							}
 							else if(customId == 51){
 								var endplayer=player;
-
-								this.resetGame();//reset function
-								/*if(endplayer!=winner && endplayer!="1"){
+								console.log("endplayer: " + endplayer);
+								if(endplayer==winner && endplayer!="1"){
+									cameraangle=0;
 								camerachange=true;
-								cameraangle=0;
-								camerasetposition=true;
-							}*/
+							}
+								this.resetGame();//reset function
+
 								this.activeEndInterface = false;
 							}
 							else if(customId == 52){
