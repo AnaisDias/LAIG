@@ -184,6 +184,7 @@ XMLscene.prototype.init = function (application) {
 	this.player1 = true;
 	this.player2 = true;
 
+	this.timeout=false;
 	this.pieceufo = new Piece(this);
 	this.piecesphere = new Sphere(this, 0.5, 15, 15, 1, 1);
 	this.piececube = new Cube(this);
@@ -876,6 +877,7 @@ XMLscene.prototype.resetGame = function ()
 	this.player1 = true;
 	this.player2 = true;
 
+	this.timeout = false;
 	this.board = new Board(this);
 
 	neutron = new Sphere(this, 1, 10, 10, 1, 1);
@@ -933,7 +935,11 @@ XMLscene.prototype.logPicking = function ()
 							else if(customId == 51){
 								var endplayer=player;
 								console.log("endplayer: " + endplayer);
-								if(endplayer==winner && endplayer!="1"){
+								if(this.timeout == true && endplayer=="2"){
+									cameraangle=0;
+								camerachange=true;
+								}
+								else if(endplayer==winner && endplayer!="1"){
 									cameraangle=0;
 								camerachange=true;
 							}
@@ -1243,14 +1249,11 @@ XMLscene.prototype.moveHandler = function(data){
 			if(player=="1"){
 			camerasetposition=true;
 		}
-			if(response.newPlayer == "1"){
-				player1timerrestart = true;
+				player2timerrestart=true;
 				player2timerstop = true;
-			}
-			else if(response.newPlayer=="2"){
-				player2timerrestart = true;
+				player1timerrestart=true;
 				player1timerstop = true;
-			}
+			
 		}
 		
 		player = response.newPlayer;
@@ -1414,6 +1417,22 @@ XMLscene.prototype.display = function () {
 	if(camerachange){
 	this.camera.orbit(vec3.fromValues(0,1,0), degToRad(2));
 }
+
+	if(this.player1timer.timer >60 && player=="1" && this.timeout==false && (this.hvhmode || this.hvmmode)){
+		console.log("Player 2 won!!");
+		p2wins++;
+		winner = "2";
+		finished=true;
+		this.timeout = true;
+	}
+
+	if(this.player2timer.timer >60 && player=="2" && this.timeout ==false & (this.hvhmode || this.mvhmode)){
+		console.log("Player 1 won!!");
+		p1wins++;
+		winner = "1";
+		finished=true;
+		this.timeout=true;
+	}
 
 	this.setDefaultAppearance();
 
