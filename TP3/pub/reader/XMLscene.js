@@ -1049,7 +1049,7 @@ XMLscene.prototype.logPicking = function ()
 							if(player == "1"){
 								if(this.hvhmode || this.hvmmode){
 									if(this.existsPos(pos)){
-									this.requestMove(this.lastPicked, pos);
+										this.requestMove(this.lastPicked, pos);
 									}
 									else if (nextPlay == "1"){
 										this.lastPicked = JSON.parse("[" + neutron.x + "," + neutron.y + "]");
@@ -1059,7 +1059,7 @@ XMLscene.prototype.logPicking = function ()
 										this.lastPicked = this.mapPos[customId - 1];
 										this.curPossibleMoves(this.mapPos[customId - 1]);
 									}
-									}
+								}
 								else{
 									if(this.intelMachine){
 										this.requestIntMove();
@@ -1608,7 +1608,9 @@ XMLscene.prototype.display = function () {
 						this.pieces[piece].x = j;
 						this.pieces[piece].y = i;
 						this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
-						this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
+						if(this.lastPicked[0] == i && this.lastPicked[1] == j)
+							this.translate(this.pieces[piece].x*3+1.5, 1 ,this.pieces[piece].y*3+1.5); 
+						else this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
 						this.pieces[piece].obj.display();
 					this.popMatrix();
 
@@ -1624,7 +1626,9 @@ XMLscene.prototype.display = function () {
 						this.pieces[piece].x = j;
 						this.pieces[piece].y = i;
 						this.registerForPick(5*this.pieces[piece].y+this.pieces[piece].x+1,this.pieces[piece]);
-						this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
+						if(this.lastPicked[0] == i && this.lastPicked[1] == j)
+							this.translate(this.pieces[piece].x*3+1.5, 1 ,this.pieces[piece].y*3+1.5); 
+						else this.translate(this.pieces[piece].x*3+1.5,0.5,this.pieces[piece].y*3+1.5); 
 						this.pieces[piece].obj.display();
 					this.popMatrix();
 
