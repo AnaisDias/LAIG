@@ -48,7 +48,7 @@ XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
     this.initialPosition = vec3.fromValues(7.5, 9, -15);
-    this.p2Position = vec3.fromValues(7.5, 9, 35);
+    this.p2Position = vec3.fromValues(7.5, 9, 30);
     this.initialTarget = vec3.fromValues(7.5, 0, 7.5);
     this.camZoom = -20;
 
@@ -125,6 +125,14 @@ XMLscene.prototype.init = function (application) {
 
 	this.count = 1;
 	this.replay = false;
+
+	camerachange = false;
+	cameraangle = 0;
+	camerasetposition = false;
+	player1timerrestart = false;
+	player1timerstop = false;
+	player2timerrestart = false;
+	player2timerstop = false;
 
 	this.board = new Board(this);
 
@@ -879,6 +887,8 @@ XMLscene.prototype.resetGame = function ()
 	this.activeModeInterface = false;
 	this.activeEndInterface = false;
 
+	player1timerrestart = true;
+	player2timerrestart = true;
 
 	this.hvhmode = false;
 	this.hvmmode = false;
