@@ -130,9 +130,9 @@ XMLscene.prototype.init = function (application) {
 	cameraangle = 0;
 	camerasetposition = false;
 	player1timerrestart = false;
-	player1timerstop = false;
+	player1timerstop = true;
 	player2timerrestart = false;
-	player2timerstop = false;
+	player2timerstop = true;
 
 	this.board = new Board(this);
 
@@ -827,9 +827,14 @@ XMLscene.prototype.undo = function()
 		}
 		else if(nextPlay == "1"){
 			nextPlay = "2";
-			if(player == "2")
+			if(player == "2"){
+				player1timerrestart=true;
 				player = "1";
-			else player = "2";
+			}
+			else {
+				player = "2";
+				player2timerrestart=true;
+			}
 			cameraangle=0;
 			camerachange = true;
 		}
@@ -889,6 +894,8 @@ XMLscene.prototype.resetGame = function ()
 
 	player1timerrestart = true;
 	player2timerrestart = true;
+	player1timerstop = true;
+	player2timerstop = true;
 
 	this.hvhmode = false;
 	this.hvmmode = false;
@@ -973,11 +980,13 @@ XMLscene.prototype.logPicking = function ()
 								this.intelMachine = false;
 								this.activeDifficultyInterface=false;
 								player1timerrestart=true;
+								player1timerstop = false;
 							}
 							else if(customId == 53){
 								this.intelMachine=true;
 								this.activeDifficultyInterface=false;
 								player1timerrestart=true;
+								player1timerstop = false;
 							}
 							else if(customId == 54){
 								this.hvhmode = true;
@@ -989,6 +998,7 @@ XMLscene.prototype.logPicking = function ()
 								this.player2 = true;
 								this.activeModeInterface=false;
 								player1timerrestart=true;
+								player1timerstop = false;
 							}
 							else if(customId== 55){
 								this.hvhmode = false;
